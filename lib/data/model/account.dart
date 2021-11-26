@@ -1,3 +1,5 @@
+import 'package:berikan/data/model/item.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart'
     show DocumentSnapshot, Timestamp, SnapshotOptions, SetOptions, CollectionReference;
 
