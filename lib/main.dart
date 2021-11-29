@@ -1,3 +1,6 @@
+import 'package:berikan/common/style.dart';
+import 'package:berikan/data/ui/home_page.dart';
+import 'package:berikan/data/ui/login_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,10 +16,12 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        textTheme: textTheme,
       ),
-      initialRoute: '',
+      initialRoute: LoginPage.routeName,
       routes: {
-
+        HomePage.routeName: (context) => const HomePage(),
+        LoginPage.routeName: (context) => const LoginPage(),
       },
     );
   }
