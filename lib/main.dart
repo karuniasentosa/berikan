@@ -1,7 +1,8 @@
 import 'package:berikan/common/style.dart';
-import 'package:berikan/data/ui/home_page.dart';
-import 'package:berikan/data/ui/login_page.dart';
-import 'package:berikan/data/ui/signup_page.dart';
+import 'package:berikan/ui/home_page.dart';
+import 'package:berikan/ui/login_page.dart';
+import 'package:berikan/ui/signup_page.dart';
+
 import 'package:flutter/material.dart';
 
 void main() {
