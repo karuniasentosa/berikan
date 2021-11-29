@@ -1,7 +1,9 @@
 import 'package:berikan/data/model/item.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart'
-    show DocumentSnapshot, Timestamp, SnapshotOptions, SetOptions, CollectionReference;
+    show CollectionReference, DocumentReference, DocumentSnapshot, FirebaseFirestore, SetOptions, SnapshotOptions, Timestamp;
+
+const String _collectionName = 'account';
 
 /// Account class from FireStore model.
 class Account {
@@ -27,11 +29,36 @@ class Account {
   final String phoneNumber;
 
   // The item which this account likes;
-  final List<Item> likedItem;
+  // final List<Item> likedItem;
 
-  const Account({required this.firstName, required this.lastName, required this.avatarUrl, required this.joinedSince, required this.phoneNumber, required this.likedItem});
+  const Account({required this.firstName, required this.lastName, required this.avatarUrl, required this.joinedSince, required this.phoneNumber, /*required this.likedItem*/});
 
-  /// Converts from a Firestore data to this class.
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Account &&
+          runtimeType == other.runtimeType &&
+          firstName == other.firstName &&
+          lastName == other.lastName &&
+          avatarUrl == other.avatarUrl &&
+          joinedSince == other.joinedSince &&
+          phoneNumber == other.phoneNumber;
+
+  @override
+  int get hashCode =>
+      firstName.hashCode ^
+      lastName.hashCode ^
+      avatarUrl.hashCode ^
+      joinedSince.hashCode ^
+      phoneNumber.hashCode;
+
+  @override
+  String toString() {
+    return 'Account{firstName: $firstName, lastName: $lastName, avatarUrl: $avatarUrl, joinedSince: $joinedSince, phoneNumber: $phoneNumber}';
+  }
+
+  /// Converts from a Firestore data to [Account] class.
   ///
   /// This function should not be called directly — and should be passed to
   /// [CollectionReference.withConverter] function.
@@ -47,7 +74,6 @@ class Account {
     final lastName = data['last_name'] as String;
     final joinedSince = (data['joined_since'] as Timestamp).toDate();
     final phoneNumber = data['phone_number'] as String;
-    final likedItem = data['likedItem'] as List<Item>; // TODO: Test this item
 
     return Account(
         firstName: firstName,
@@ -55,7 +81,6 @@ class Account {
         avatarUrl: avatarUrl,
         joinedSince: joinedSince,
         phoneNumber: phoneNumber,
-        likedItem: likedItem
     );
   }
 
@@ -74,8 +99,26 @@ class Account {
       'last_name' : model.lastName,
       'joined_since': Timestamp.fromDate(model.joinedSince),
       'phone_number': model.phoneNumber,
-      'liked_item': model.likedItem,
     };
   }
 }
 
+/// Returns a type-safe [CollectionReference] of [Account] class.
+///
+/// [instance] is required to... because uh... it is required!
+CollectionReference<Account> accountCollectionReference(FirebaseFirestore instance) =>
+    instance.collection(_collectionName).withConverter<Account>
+    (
+      fromFirestore: Account.fromFirestore,
+      toFirestore: Account.toFirestore,
+    );
+
+/// Returns a type-safe [DocumentReference] of [Account] class within the document [id].
+///
+/// [instance] is required to... because uh... it is required!
+DocumentReference<Account> accountDocumentReference(FirebaseFirestore instance, String id) =>
+    instance.collection(_collectionName).doc(id).withConverter<Account>
+    (
+      fromFirestore: Account.fromFirestore,
+      toFirestore: Account.toFirestore
+    );
