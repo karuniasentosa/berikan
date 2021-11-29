@@ -1,6 +1,6 @@
 import 'package:berikan/common/style.dart';
 import 'package:berikan/widget/black_button.dart';
-import 'package:berikan/widget/textfield_login.dart';
+import 'package:berikan/widget/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -54,7 +54,7 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(
                     height: 4,
                   ),
-                  const TextFieldLogin('Seperti: john.doe@mail.com'),
+                  const CustomTextField('Seperti: john.doe@mail.com'),
                   const SizedBox(
                     height: 16,
                   ),
@@ -65,7 +65,10 @@ class LoginPage extends StatelessWidget {
                       fontSize: 14,
                     ),
                   ),
-                  const TextFieldLogin('')
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  const CustomTextField('')
                 ],
               ),
             ),
@@ -74,10 +77,7 @@ class LoginPage extends StatelessWidget {
             ),
             const BlackButton(text: 'MASUK'),
             const SizedBox(
-              height: 16,
-            ),
-            const SizedBox(
-              height: 16,
+              height: 32,
             ),
             TextButton(
               onPressed: () {},
