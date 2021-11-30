@@ -1,5 +1,3 @@
-import 'package:berikan/data/model/item.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart'
     show CollectionReference, DocumentReference, DocumentSnapshot, FirebaseFirestore, SetOptions, SnapshotOptions, Timestamp;
 
@@ -28,10 +26,13 @@ class Account {
   /// The phone number of this account
   final String phoneNumber;
 
-  // The item which this account likes;
-  // final List<Item> likedItem;
-
-  const Account({required this.firstName, required this.lastName, required this.avatarUrl, required this.joinedSince, required this.phoneNumber, /*required this.likedItem*/});
+  const Account({
+    required this.firstName,
+    required this.lastName,
+    required this.avatarUrl,
+    required this.joinedSince,
+    required this.phoneNumber,
+  });
 
 
   @override
