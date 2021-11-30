@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 class BlackButton extends StatelessWidget {
   final String text;
-  const BlackButton({Key? key, required this.text}) : super(key: key);
+  final Function() onPressed;
+  const BlackButton({Key? key, required this.text, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class BlackButton extends StatelessWidget {
         width: 300,
         height: 72,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: onPressed,
           child: Text(
               text,
               style: GoogleFonts.roboto(
@@ -23,6 +24,7 @@ class BlackButton extends StatelessWidget {
               )
           ),
           style: ElevatedButton.styleFrom(
+            elevation: 10,
             primary: colorPrimaryDark,
             shape: const StadiumBorder(),
           ),
