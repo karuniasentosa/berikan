@@ -7,15 +7,16 @@ const String _collectionName = 'item';
 
 class Item
 {
+  final String id;
   final List<String> imagesUrl;
   final String name;
   final DateTime addedSince;
   final GeoPoint location;
   final String description;
   final String ownerId;
-  // final Map<String, String> detail;
 
-  const Item({
+  /// Constructs a new [Item] class
+  const Item(this.id, {
     required this.imagesUrl,
     required this.name,
     required this.addedSince,
@@ -23,6 +24,18 @@ class Item
     required this.description,
     required this.ownerId,
   });
+
+  /// Constructs a new [Item] class with no item id.
+  ///
+  /// This can be useful when you don't know what id
+  /// should be assigned for this [Item].
+  factory Item.create(String ownerId, {
+    required List<String> imagesUrl,
+    required String name,
+    required DateTime addedSince,
+    required GeoPoint location,
+    required String description,
+  }) => Item('', imagesUrl: imagesUrl, name: name, addedSince: addedSince, location: location, description: description, ownerId: ownerId);
 
 
   @override
@@ -46,6 +59,12 @@ class Item
       description.hashCode ^
       ownerId.hashCode;
 
+
+  @override
+  String toString() {
+    return 'Item{imagesUrl: $imagesUrl, name: $name, addedSince: $addedSince, location: $location, description: $description, ownerId: $ownerId}';
+  }
+
   /// Converts from a Firestore data to [Item] class.
   ///
   /// This function should not be called directly — and should be passed to
@@ -57,17 +76,28 @@ class Item
   static Item fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? _) {
     final data = snapshot.data()!;
 
+    final itemId = snapshot.reference.id; // TODO: I'm not really sure if this means the document's id.
     final addedSince = (data['added_since'] as Timestamp).toDate();
     final description = data['description'] as String;
     final imagesUrl = data['images'] as List<dynamic>;
-    // final detail = data['detail'] as String;
-    // final itemType = data['item_type'] as ItemType;
     final location = data['location'] as GeoPoint;
     final name = data['name'] as String;
     final ownerId = (data['owner'] as DocumentReference<Map<String, dynamic>>).id;
 
     return Item(
-        imagesUrl: imagesUrl.takeWhile((value) => value is String).map<String>((e) => e).toList(),
+        itemId,
+        // I am a little bit skeptical. So putting these check would
+        // be worth, i guess.
+        // Summary, the list only takes the String if the String is an url.
+        imagesUrl: imagesUrl.takeWhile((value) {
+          if (value is String) {
+            final uri = Uri.tryParse(value);
+            if (uri != null) {
+              return uri.isAbsolute;
+            }
+          }
+          return false;
+        }).map<String>((e) => e).toList(),
         name: name,
         addedSince: addedSince,
         location: location,

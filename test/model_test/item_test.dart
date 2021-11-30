@@ -14,9 +14,9 @@ void main() async
     final addedSinceDate = DateTime(2021, DateTime.february, 3);
     Item? expectedItem;
     final expectedAccount = Account(firstName: 'First', lastName: 'Last', avatarUrl: 'url1', joinedSince: accountCreated, phoneNumber: '0210');
-    late DocumentReference docref;
+    late DocumentReference accountDocRef;
     setUp(() async {
-      docref = await instance.collection('account').add({
+      accountDocRef = await instance.collection('account').add({
         'avatar_url'  : 'url1',
         'first_name'  : 'First',
         'last_name'   : 'Last',
@@ -24,22 +24,21 @@ void main() async
         'phone_number': '0210',
       });
 
-      expectedItem = Item(
-          imagesUrl: ['url1', 'url2', 'url3'],
+      expectedItem = Item.create(accountDocRef.id,
+          imagesUrl: ['http://url1', 'http://url2', 'http://url3'],
           name: 'Buku tulis',
           addedSince: addedSinceDate,
           location: const GeoPoint(1, 1),
           description: 'Buku yang masih dapat dibaca dan ditulis',
-          ownerId: docref.id,
       );
 
       await instance.collection('item').add({
         'added_since': Timestamp.fromDate(addedSinceDate),
         'description': 'Buku yang masih dapat dibaca dan ditulis',
-        'images'     : ['url1', 'url2', 'url3'],
+        'images'     : ['http://url1', 'http://url2', 'http://url3'],
         'location'   : const GeoPoint(1, 1),
         'name'       : 'Buku tulis',
-        'owner'      : docref,
+        'owner'      : accountDocRef,
       });
 
     });
@@ -52,6 +51,40 @@ void main() async
 
       if (expectedItem != null) {
         expect (await item, expectedItem);
+      }
+    });
+
+    // This test should be alone.
+    test('Item.id should match the document id', () async {
+      // create a stub method for toFirestore
+      Map<String, Object?> toFirestore(Item model, SetOptions? options) {
+        return {
+          'added_since'   :   Timestamp.fromDate(model.addedSince),
+          'description'   :   model.description,
+          'images'        :   model.imagesUrl,
+          'location'      :   model.location,
+          'name'          :   model.name,
+          'owner'         :   instance.collection('item').doc(model.ownerId),
+        };
+      }
+
+      final itemColRef = instance.collection('item').withConverter(fromFirestore: Item.fromFirestore, toFirestore: toFirestore);
+      final newItemDocRef = await itemColRef.add(
+          Item.create(
+              accountDocRef.id,
+              imagesUrl: ['https://i1'],
+              name: 'Item Name',
+              addedSince: DateTime.now(),
+              location: const GeoPoint(0, 0),
+              description: 'Item name good'
+          ));
+      final itemDocRef = itemDocumentReference(instance, newItemDocRef.id);
+      final itemSnapshot = await itemDocRef.get();
+      final item = itemSnapshot.data();
+
+      if (item != null) {
+        expect(item.id, newItemDocRef.id);
+        expect(item.id, itemDocRef.id);
       }
     });
 
@@ -98,13 +131,12 @@ void main() async
           fromFirestore: Item.fromFirestore, toFirestore: toFirestore
       );
 
-      final item = Item(
-          imagesUrl: ['h1'],
+      final item = Item.create(docref.id,
+          imagesUrl: ['https://h1'],
           name: 'Item1',
           addedSince: DateTime(2021,1,1),
           location: GeoPoint(1, 1),
           description: 'ini adalah item',
-          ownerId: docref.id,
       );
 
       final account = Account(
