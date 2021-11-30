@@ -1,11 +1,14 @@
 import 'package:berikan/common/style.dart';
-import 'package:berikan/widget/black_button.dart';
+import 'package:berikan/ui/signup_continue_page.dart';
+import 'package:berikan/widget/button/black_button.dart';
+import 'package:berikan/widget/button/kembali_button.dart';
 import 'package:berikan/widget/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignupPage extends StatelessWidget {
   static const routeName = '/signupPage';
+
   const SignupPage({Key? key}) : super(key: key);
 
   @override
@@ -82,20 +85,16 @@ class SignupPage extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
-            const BlackButton(text: 'LANJUT'),
+            BlackButton(
+              text: 'LANJUT',
+              onPressed: () {
+                Navigator.pushNamed(context, SignupContinuePage.routeName);
+              },
+            ),
             const SizedBox(
               height: 16,
             ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'KEMBALI',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.apply(decoration: TextDecoration.underline, fontSizeDelta: 4, letterSpacingDelta: 2),
-              ),
-            ),
+            const KembaliTextButton(),
           ],
         ),
       ),

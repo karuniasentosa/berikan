@@ -1,6 +1,8 @@
 import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
-import 'package:berikan/widget/black_button.dart';
+import 'package:berikan/ui/login_page.dart';
+import 'package:berikan/ui/signup_page.dart';
+import 'package:berikan/widget/button/black_button.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -49,7 +51,9 @@ class HomePage extends StatelessWidget {
             const SizedBox(
               height: 100,
             ),
-            const BlackButton(text: 'MASUK'),
+            BlackButton(text: 'MASUK', onPressed: (){
+              Navigator.pushNamed(context, LoginPage.routeName);
+            },),
             const SizedBox(
               height: 16,
             ),
@@ -62,7 +66,9 @@ class HomePage extends StatelessWidget {
                       shape: const StadiumBorder(),
                       side:
                           const BorderSide(width: 5, color: colorPrimaryDark)),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, SignupPage.routeName);
+                  },
                   child: Text(
                     'DAFTAR',
                     style: Theme.of(context)
