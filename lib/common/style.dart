@@ -10,7 +10,7 @@ const colorPrimaryDark = Color(0xFF005662);
 final blackTitle = GoogleFonts.roboto(
     color: Colors.black,
     fontSize: 54,
-    fontWeight: FontWeight.w600
+    fontWeight: FontWeight.w700
 );
 
 final textTheme = TextTheme(

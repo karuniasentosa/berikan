@@ -1,6 +1,7 @@
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/home_page.dart';
 import 'package:berikan/ui/login_page.dart';
+import 'package:berikan/ui/signup_continue_page.dart';
 import 'package:berikan/ui/signup_page.dart';
 
 import 'package:flutter/material.dart';
@@ -20,8 +21,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         textTheme: textTheme,
       ),
-      initialRoute: SignupPage.routeName,
+      initialRoute: HomePage.routeName,
       routes: {
+        SignupContinuePage.routeName: (context) => const SignupContinuePage(),
         SignupPage.routeName: (context) => const SignupPage(),
         HomePage.routeName: (context) => const HomePage(),
         LoginPage.routeName: (context) => const LoginPage(),
