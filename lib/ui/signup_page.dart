@@ -1,7 +1,7 @@
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/signup_continue_page.dart';
-import 'package:berikan/widget/button/black_button.dart';
-import 'package:berikan/widget/button/kembali_button.dart';
+import 'package:berikan/widget/button/primary_button.dart';
+import 'package:berikan/widget/button/custom_textbutton.dart';
 import 'package:berikan/widget/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,10 +27,11 @@ class SignupPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
           shrinkWrap: true,
           children: [
             const SizedBox(
-              height: 100,
+              height: 75,
             ),
             Center(
               child: Text(
@@ -41,51 +42,49 @@ class SignupPage extends StatelessWidget {
             const SizedBox(
               height: 50,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'ALAMAT SUREL',
-                    style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  const CustomTextField('Seperti: john.doe@mail.com'),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    'PASSWORD',
-                    style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const CustomTextField(''),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    'KETIK ULANG PASSWORD',
-                    style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const CustomTextField(''),
-                ],
+            Text(
+              'ALAMAT SUREL',
+              style: GoogleFonts.roboto(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
               ),
             ),
             const SizedBox(
+              height: 4,
+            ),
+            const CustomTextField('Seperti: john.doe@mail.com'),
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              'PASSWORD',
+              style: GoogleFonts.roboto(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(
+              height: 4,
+            ),
+            const CustomTextField(''),
+            const SizedBox(
+              height: 16,
+            ),
+            Text(
+              'KETIK ULANG PASSWORD',
+              style: GoogleFonts.roboto(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(
+              height: 4,
+            ),
+            const CustomTextField(''),
+            const SizedBox(
               height: 40,
             ),
-            BlackButton(
+            PrimaryButton(
               text: 'LANJUT',
               onPressed: () {
                 Navigator.pushNamed(context, SignupContinuePage.routeName);
@@ -94,7 +93,9 @@ class SignupPage extends StatelessWidget {
             const SizedBox(
               height: 16,
             ),
-            const KembaliTextButton(),
+            CustomTextButton(text: 'KEMBALI', onPressed: (){
+              Navigator.pop(context);
+            },),
           ],
         ),
       ),
