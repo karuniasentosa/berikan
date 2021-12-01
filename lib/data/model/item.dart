@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart'
 import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
 
-const String _collectionName = 'item';
-
 class Item
 {
+  static const String collectionName = 'item';
+
   final String id;
   final List<String> imagesUrl;
   final String name;
@@ -124,7 +124,7 @@ class Item
       'images'        :   model.imagesUrl,
       'location'      :   model.location,
       'name'          :   model.name,
-      'owner'         :   FirebaseFirestore.instance.collection(_collectionName).doc(model.ownerId),
+      'owner'         :   FirebaseFirestore.instance.collection(Item.collectionName).doc(model.ownerId),
     };
   }
 }
@@ -133,7 +133,7 @@ class Item
 ///
 /// [instance] is required to... because uh... it is required!
 CollectionReference<Item> itemCollectionReference(FirebaseFirestore instance) =>
-    instance.collection(_collectionName).withConverter<Item>
+    instance.collection(Item.collectionName).withConverter<Item>
     (
       fromFirestore: Item.fromFirestore,
       toFirestore: Item.toFirestore,
@@ -143,7 +143,7 @@ CollectionReference<Item> itemCollectionReference(FirebaseFirestore instance) =>
 ///
 /// [instance] is required to... because uh... it is required!
 DocumentReference<Item> itemDocumentReference(FirebaseFirestore instance, String id) =>
-    instance.collection(_collectionName).doc(id).withConverter<Item>
+    instance.collection(Item.collectionName).doc(id).withConverter<Item>
     (
       fromFirestore: Item.fromFirestore,
       toFirestore: Item.toFirestore

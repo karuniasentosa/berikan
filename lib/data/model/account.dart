@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
     show CollectionReference, DocumentReference, DocumentSnapshot, FirebaseFirestore, SetOptions, SnapshotOptions, Timestamp;
 
-const String _collectionName = 'account';
-
 /// Account class from FireStore model.
 class Account {
+  static const String collectionName = 'account';
+  
   /// The first name of the account
   final String firstName;
 
@@ -108,7 +108,7 @@ class Account {
 ///
 /// [instance] is required to... because uh... it is required!
 CollectionReference<Account> accountCollectionReference(FirebaseFirestore instance) =>
-    instance.collection(_collectionName).withConverter<Account>
+    instance.collection(Account.collectionName).withConverter<Account>
     (
       fromFirestore: Account.fromFirestore,
       toFirestore: Account.toFirestore,
@@ -118,7 +118,7 @@ CollectionReference<Account> accountCollectionReference(FirebaseFirestore instan
 ///
 /// [instance] is required to... because uh... it is required!
 DocumentReference<Account> accountDocumentReference(FirebaseFirestore instance, String id) =>
-    instance.collection(_collectionName).doc(id).withConverter<Account>
+    instance.collection(Account.collectionName).doc(id).withConverter<Account>
     (
       fromFirestore: Account.fromFirestore,
       toFirestore: Account.toFirestore
