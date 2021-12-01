@@ -7,12 +7,28 @@ class Item
 {
   static const String collectionName = 'item';
 
+  /// The item id
   final String id;
+
+  /// List of image urls.
+  ///
+  /// Stored in Firebase Storage url
+  /// example: gs://berikan-capstone.appspot.com/items_image/10ol970JjB43kPBmr6Zl/1265845835.jpg
   final List<String> imagesUrl;
+
+  /// The name of this item
   final String name;
+
+  /// The time when this item added
   final DateTime addedSince;
+
+  /// The place that the item is advertised
   final GeoPoint location;
+
+  /// The description of this item
   final String description;
+
+  /// The person who owns this item
   final String ownerId;
 
   /// Constructs a new [Item] class

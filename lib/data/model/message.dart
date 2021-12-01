@@ -6,9 +6,16 @@ class Message
 {
   static const String collectionName = 'message';
 
+  /// The sender of the [Message]
   final String accountId;
+
   final DateTime when;
   final String content;
+
+  /// The attached item to this [Message]
+  ///
+  /// This could be link to an item or
+  /// to an image (uploaded by [accountId])
   final String? attachment;
 
   /// Constructs a new [Message] instance.

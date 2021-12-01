@@ -11,6 +11,14 @@ class Chat
 
   Chat(this.id, {required this.endpointAccountId1, required this.endpointAccountId2});
 
+  /// Converts from a Firestore data to [Chat] class.
+  ///
+  /// This function should not be called directly — and should be passed to
+  /// [CollectionReference.withConverter] function.
+  ///
+  /// See: [CollectionReference.withConverter](https://pub.dev/documentation/cloud_firestore/latest/cloud_firestore/CollectionReference/withConverter.html)
+  ///
+  /// See also: [FromFirestore](https://pub.dev/documentation/cloud_firestore/latest/cloud_firestore/FromFirestore.html)
   static Chat fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? _) {
     final data = snapshot.data()!;
 
@@ -21,6 +29,17 @@ class Chat
     return Chat(id, endpointAccountId1: endpoint1, endpointAccountId2: endpoint2);
   }
 
+  /// Converts from this data class to Firestore data.
+  ///
+  /// This function should not be called directly — and should be passed to
+  /// [CollectionReference.withConverter] function.
+  ///
+  /// [Firebase.initializeApp] must be called before using this function,
+  /// otherwise, it will throw an exception.
+  ///
+  /// See: [CollectionReference.withConverter](https://pub.dev/documentation/cloud_firestore/latest/cloud_firestore/CollectionReference/withConverter.html)
+  ///
+  /// See also: [ToFirestore](https://pub.dev/documentation/cloud_firestore/latest/cloud_firestore/ToFirestore.html)
   static Map<String, Object?> toFirestore(Chat model, SetOptions? _) {
     return {
       'endpoint1': accountDocumentReference(FirebaseFirestore.instance, model.endpointAccountId1),
@@ -29,6 +48,9 @@ class Chat
   }
 }
 
+/// Returns a type-safe [CollectionReference] of [Chat] class.
+///
+/// [instance] is required to... because uh... it is required!
 CollectionReference<Chat> chatCollectionReference(FirebaseFirestore instance) {
   return instance.collection(Chat.collectionName)
       .withConverter<Chat>(
@@ -37,6 +59,9 @@ CollectionReference<Chat> chatCollectionReference(FirebaseFirestore instance) {
       );
 }
 
+/// Returns a type-safe [DocumentReference] of [Chat] class within the document [id].
+///
+/// [instance] is required to... because uh... it is required!
 DocumentReference<Chat> chatDocumentReference(FirebaseFirestore instance, String id) {
   return instance.collection(Chat.collectionName).doc(id)
       .withConverter(

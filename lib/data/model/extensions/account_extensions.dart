@@ -46,6 +46,7 @@ extension AccountService on Account
     return (await docRef.get()).data();
   }
 
+  /// Adds [item] from this account.
   Future<void> addItem(Item item) async {
     // create a copy of item
     // a bit sus
