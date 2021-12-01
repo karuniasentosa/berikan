@@ -63,10 +63,14 @@ final textTheme = TextTheme(
       letterSpacing: 0.25
   ),
   button: GoogleFonts.roboto(
-      fontSize: 14,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 1.25
+      fontSize: 32,
+      fontWeight: FontWeight.bold,
+      letterSpacing: 5,
+      textStyle: const TextStyle(
+        color: Colors.white,
+      ),
   ),
+
   caption: GoogleFonts.roboto(
       fontSize: 12,
       fontWeight: FontWeight.w400,
