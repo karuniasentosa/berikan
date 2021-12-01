@@ -2,7 +2,8 @@ import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/login_page.dart';
 import 'package:berikan/ui/signup_page.dart';
-import 'package:berikan/widget/button/black_button.dart';
+import 'package:berikan/widget/button/custom_textbutton.dart';
+import 'package:berikan/widget/button/primary_button.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -25,8 +26,7 @@ class HomePage extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: ListView(
-          shrinkWrap: true,
+        body: Column(
           children: [
             const SizedBox(
               height: 150,
@@ -51,7 +51,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(
               height: 100,
             ),
-            BlackButton(text: 'MASUK', onPressed: (){
+            PrimaryButton(text: 'MASUK', onPressed: (){
               Navigator.pushNamed(context, LoginPage.routeName);
             },),
             const SizedBox(
@@ -82,16 +82,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(
               height: 24,
             ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'TENTANG KAMI',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.apply(decoration: TextDecoration.underline),
-              ),
-            ),
+            CustomTextButton(text: 'TENTANG KAMI', onPressed: (){},),
           ],
         ),
       ),

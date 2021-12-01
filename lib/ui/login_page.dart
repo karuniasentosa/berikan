@@ -1,6 +1,6 @@
 import 'package:berikan/common/style.dart';
-import 'package:berikan/widget/button/black_button.dart';
-import 'package:berikan/widget/button/kembali_button.dart';
+import 'package:berikan/widget/button/primary_button.dart';
+import 'package:berikan/widget/button/custom_textbutton.dart';
 import 'package:berikan/widget/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,12 +24,12 @@ class LoginPage extends StatelessWidget {
         ),
       ),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
-        body: ListView(
-          shrinkWrap: true,
+        body: Column(
           children: [
             const SizedBox(
-              height: 100,
+              height: 75,
             ),
             Center(
               child: Text(
@@ -38,7 +38,7 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 75,
+              height: 50,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -74,23 +74,16 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 75,
+              height: 50,
             ),
-            BlackButton(text: 'MASUK', onPressed: (){},),
+            PrimaryButton(text: 'MASUK', onPressed: (){},),
             const SizedBox(
               height: 32,
             ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'LUPA PASSWORD?',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.apply(decoration: TextDecoration.underline),
-              ),
-            ),
-            const KembaliTextButton(),
+            CustomTextButton(text: 'LUPA PASSWORD?', onPressed: (){},),
+            CustomTextButton(text: 'KEMBALI', onPressed: (){
+              Navigator.pop(context);
+            },),
           ],
         ),
       ),
