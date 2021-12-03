@@ -81,21 +81,16 @@ class Message
 /// Returns a type-safe [CollectionReference] of [Message] class from [chatDocumentId].
 ///
 /// [instance] is required to... because uh... it is required!
-CollectionReference<Message> messageCollectionReference(FirebaseFirestore instance, String chatDocumentId)
-{
-  return instance.collection(Chat.collectionName).doc(chatDocumentId)
+CollectionReference<Message> messageCollectionReference(
+    FirebaseFirestore instance, String chatDocumentId) =>
+  instance.collection(Chat.collectionName).doc(chatDocumentId)
       .collection(Message.collectionName).withConverter<Message>(
         fromFirestore: Message.fromFirestore,
         toFirestore: Message.toFirestore
   );
-}
 
-DocumentReference<Message> messageDocumentReference(FirebaseFirestore instance, String chatDocumentId, String id)
-{
-  return instance.collection(Chat.collectionName).doc(chatDocumentId).collection(Message.collectionName)
-      .doc(id).withConverter<Message>(
-        fromFirestore: Message.fromFirestore,
-        toFirestore: Message.toFirestore
-  );
-}
+
+DocumentReference<Message> messageDocumentReference(
+    FirebaseFirestore instance, String chatDocumentId, String id) =>
+  messageCollectionReference(instance, chatDocumentId).doc(id);
 

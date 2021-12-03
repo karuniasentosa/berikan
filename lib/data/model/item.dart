@@ -159,8 +159,4 @@ CollectionReference<Item> itemCollectionReference(FirebaseFirestore instance) =>
 ///
 /// [instance] is required to... because uh... it is required!
 DocumentReference<Item> itemDocumentReference(FirebaseFirestore instance, String id) =>
-    instance.collection(Item.collectionName).doc(id).withConverter<Item>
-    (
-      fromFirestore: Item.fromFirestore,
-      toFirestore: Item.toFirestore
-    );
+    itemCollectionReference(instance).doc(id);

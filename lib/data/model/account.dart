@@ -118,8 +118,4 @@ CollectionReference<Account> accountCollectionReference(FirebaseFirestore instan
 ///
 /// [instance] is required to... because uh... it is required!
 DocumentReference<Account> accountDocumentReference(FirebaseFirestore instance, String id) =>
-    instance.collection(Account.collectionName).doc(id).withConverter<Account>
-    (
-      fromFirestore: Account.fromFirestore,
-      toFirestore: Account.toFirestore
-    );
+    accountCollectionReference(instance).doc(id);

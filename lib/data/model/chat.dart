@@ -51,21 +51,16 @@ class Chat
 /// Returns a type-safe [CollectionReference] of [Chat] class.
 ///
 /// [instance] is required to... because uh... it is required!
-CollectionReference<Chat> chatCollectionReference(FirebaseFirestore instance) {
-  return instance.collection(Chat.collectionName)
-      .withConverter<Chat>(
-        fromFirestore: Chat.fromFirestore,
-        toFirestore: Chat.toFirestore
-      );
-}
+CollectionReference<Chat> chatCollectionReference(FirebaseFirestore instance) =>
+  instance.collection(Chat.collectionName)
+    .withConverter<Chat>(
+      fromFirestore: Chat.fromFirestore,
+      toFirestore: Chat.toFirestore
+    );
+
 
 /// Returns a type-safe [DocumentReference] of [Chat] class within the document [id].
 ///
 /// [instance] is required to... because uh... it is required!
-DocumentReference<Chat> chatDocumentReference(FirebaseFirestore instance, String id) {
-  return instance.collection(Chat.collectionName).doc(id)
-      .withConverter(
-        fromFirestore: Chat.fromFirestore,
-        toFirestore: Chat.toFirestore
-      );
-}
+DocumentReference<Chat> chatDocumentReference(FirebaseFirestore instance, String id) =>
+  chatCollectionReference(instance).doc(id);
