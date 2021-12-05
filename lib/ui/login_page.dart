@@ -1,4 +1,5 @@
 import 'package:berikan/common/style.dart';
+import 'package:berikan/ui/main_page.dart';
 import 'package:berikan/widget/button/primary_button.dart';
 import 'package:berikan/widget/button/custom_textbutton.dart';
 import 'package:berikan/widget/custom_textfield.dart';
@@ -37,11 +38,8 @@ class LoginPage extends StatelessWidget {
                 style: blackTitle,
               ),
             ),
-            const SizedBox(
-              height: 50,
-            ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 50),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -73,17 +71,18 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 50,
-            ),
-            PrimaryButton(text: 'MASUK', onPressed: (){},),
+            PrimaryButton(text: 'MASUK', onPressed: (){
+              Navigator.pushNamed(context, MainPage.routeName);
+            },),
             const SizedBox(
               height: 32,
             ),
-            CustomTextButton(text: 'LUPA PASSWORD?', onPressed: (){},),
-            CustomTextButton(text: 'KEMBALI', onPressed: (){
-              Navigator.pop(context);
-            },),
+            Flexible(child: CustomTextButton(text: 'LUPA PASSWORD?', onPressed: (){},)),
+            Flexible(
+              child: CustomTextButton(text: 'KEMBALI', onPressed: (){
+                Navigator.pop(context);
+              },),
+            ),
           ],
         ),
       ),
