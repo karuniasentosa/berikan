@@ -1,5 +1,6 @@
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
+import 'package:berikan/ui/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:berikan/common/constant.dart';
@@ -33,6 +34,14 @@ class MainPage extends StatelessWidget {
                 color: Colors.black,
               ),
               onPressed: () {},
+            ),
+          ),
+          IconButton(
+            onPressed: (){
+              Navigator.pushNamed(context, ChatPage.routeName);
+            },
+            icon: const Icon(
+              Icons.chat_outlined
             ),
           )
         ],
