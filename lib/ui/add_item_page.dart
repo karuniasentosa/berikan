@@ -40,59 +40,74 @@ class AddItemPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                    color: Colors.grey
-                  ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.add_a_photo),
-                  ),
-                ),
-                Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                      color: Colors.grey
-                  ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.add_a_photo),
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1/1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add_a_photo),
+                      ),
+                    ),
                   ),
                 ),
-                Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                      color: Colors.grey
-                  ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.add_a_photo),
-                  ),
-                ),
-                Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                      color: Colors.grey
-                  ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.add_a_photo),
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1/1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add_a_photo),
+                      ),
+                    ),
                   ),
                 ),
-                Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                      color: Colors.grey
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1/1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add_a_photo),
+                      ),
+                    ),
                   ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.add_a_photo),
+                ),
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1/1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add_a_photo),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1/1,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add_a_photo),
+                      ),
+                    ),
                   ),
                 ),
               ],
