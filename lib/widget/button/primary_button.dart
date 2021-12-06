@@ -11,7 +11,7 @@ class PrimaryButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 67, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 37, vertical: 15),
         child: Text(
             text,
           style: Theme.of(context).textTheme.button,
