@@ -33,20 +33,46 @@ class SignupContinuePage extends StatelessWidget {
               height: 35,
             ),
             Center(
-              child: Text(
-                'Sedikit Lagi',
-                style: blackTitle.copyWith(
-                  fontSize: 45
-                )
-              ),
+              child: Text('Sedikit Lagi',
+                  style: blackTitle.copyWith(fontSize: 45)),
             ),
             const SizedBox(
               height: 10,
             ),
-            SizedBox(
-                width: 120,
-                height: 150,
-                child: Image.asset('lib/data/assets/profile.png')),
+            Column(
+              children: [
+                Text(
+                  'Foto Profil',
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Stack(children: [
+                  CircleAvatar(
+                    radius: 70.0,
+                    backgroundColor: Colors.white,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(65),
+                      child: Image.asset('lib/data/assets/profile1.png'),
+                    ),
+                  ),
+                  Positioned(bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey,
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.add_a_photo), onPressed: () { },
+                        ),
+                      ))
+                ]),
+              ],
+            ),
             const SizedBox(
               height: 25,
             ),
@@ -92,18 +118,22 @@ class SignupContinuePage extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
-            PrimaryButton(text: 'SELESAI', onPressed: (){},),
+            PrimaryButton(
+              text: 'SELESAI',
+              onPressed: () {},
+            ),
             const SizedBox(
               height: 12,
             ),
-            CustomTextButton(text: 'KEMBALI', onPressed: () {
-              Navigator.pop(context);
-            },),
+            CustomTextButton(
+              text: 'KEMBALI',
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-
