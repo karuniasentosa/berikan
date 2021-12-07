@@ -9,24 +9,21 @@ class CustomOutlinedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      child: SizedBox(
-        width: 300,
-        height: 72,
-        child: OutlinedButton(
-          style: OutlinedButton.styleFrom(
-              shape: const StadiumBorder(),
-              side: const BorderSide(width: 5, color: colorPrimaryDark)),
-          onPressed: () {
-            Navigator.pushNamed(context, SignupPage.routeName);
-          },
-          child: Text(
-            text,
-            style: Theme.of(context)
-                .textTheme
-                .button!
-                .copyWith(color: colorPrimaryDark),
-          ),
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+          shape: const StadiumBorder(),
+          side: const BorderSide(width: 5, color: colorPrimaryDark)),
+      onPressed: () {
+        Navigator.pushNamed(context, SignupPage.routeName);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 37, vertical: 15),
+        child: Text(
+          text,
+          style: Theme.of(context)
+              .textTheme
+              .button!
+              .copyWith(color: colorPrimaryDark),
         ),
       ),
     );
