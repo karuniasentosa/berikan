@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../account.dart';
 import '../item.dart';
 
-extension AccountService on Account
+extension AccountExtension on Account
 {
   /// The associated [User] for this [Account]
   User? get user => FirebaseAuth.instance.currentUser;
@@ -28,22 +28,6 @@ extension AccountService on Account
     }
 
     return _likedItems;
-  }
-
-  /// Gets the current account
-  ///
-  /// Returns [null] if there is no user logged in
-  /// through [FirebaseAuth].
-  ///
-  /// It is recommended to use this function before accessing
-  /// the member inside.
-  ///
-  static Future<Account?> getCurrentAccount() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) return null;
-
-    final docRef = accountDocumentReference(FirebaseFirestore.instance, uid);
-    return (await docRef.get()).data();
   }
 
   /// Adds [item] from this account.
@@ -82,7 +66,7 @@ extension AccountService on Account
 
     for (Item item in _likedItems) {
       // Again, i am a bit skeptical.
-      // Making sure there is no duplicate data.
+      // Making sure there is no duplicate api.
       if (await isItemLiked(item)) continue;
       // If the item id is empty, create a new documentId
       // should I???
@@ -103,16 +87,5 @@ extension AccountService on Account
     final _likedItems = await likedItems;
 
     return _likedItems.any((Item _item) => _item.id == item.id);
-  }
-
-  static Future<void> signIn(String email, String password) async {
-    FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-    // Should we put credentials inside secure shared preferences?
-    // I think we should use native function (Android Kotlin)
-    // For now, the credential is persisted until the app is closed.
-  }
-
-  static Future<void> signOut() async {
-    FirebaseAuth.instance.signOut();
   }
 }

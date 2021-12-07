@@ -1,6 +1,6 @@
-import 'package:berikan/data/model/account.dart' show accountDocumentReference;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'chat.dart';
+import 'account.dart' show accountDocumentReference;
 
 class Message
 {
@@ -33,7 +33,7 @@ class Message
     );
   }
 
-  /// Converts from a Firestore data to [Message] class.
+  /// Converts from a Firestore api to [Message] class.
   ///
   /// This function should not be called directly — and should be passed to
   /// [CollectionReference.withConverter] function.
@@ -57,7 +57,7 @@ class Message
     );
   }
 
-  /// Converts from this data class to Firestore data.
+  /// Converts from this api class to Firestore api.
   ///
   /// This function should not be called directly — and should be passed to
   /// [CollectionReference.withConverter] function.

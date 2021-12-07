@@ -81,7 +81,7 @@ class Item
     return 'Item{imagesUrl: $imagesUrl, name: $name, addedSince: $addedSince, location: $location, description: $description, ownerId: $ownerId}';
   }
 
-  /// Converts from a Firestore data to [Item] class.
+  /// Converts from a Firestore api to [Item] class.
   ///
   /// This function should not be called directly — and should be passed to
   /// [CollectionReference.withConverter] function.
@@ -122,7 +122,7 @@ class Item
     );
   }
 
-  /// Converts from this data class to Firestore data.
+  /// Converts from this api class to Firestore api.
   ///
   /// This function should not be called directly — and should be passed to
   /// [CollectionReference.withConverter] function.

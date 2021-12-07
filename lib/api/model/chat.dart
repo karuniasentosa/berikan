@@ -1,5 +1,6 @@
-import 'package:berikan/data/model/account.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'account.dart';
 
 class Chat
 {
@@ -11,7 +12,7 @@ class Chat
 
   Chat(this.id, {required this.endpointAccountId1, required this.endpointAccountId2});
 
-  /// Converts from a Firestore data to [Chat] class.
+  /// Converts from a Firestore api to [Chat] class.
   ///
   /// This function should not be called directly — and should be passed to
   /// [CollectionReference.withConverter] function.
@@ -29,7 +30,7 @@ class Chat
     return Chat(id, endpointAccountId1: endpoint1, endpointAccountId2: endpoint2);
   }
 
-  /// Converts from this data class to Firestore data.
+  /// Converts from this api class to Firestore api.
   ///
   /// This function should not be called directly — and should be passed to
   /// [CollectionReference.withConverter] function.

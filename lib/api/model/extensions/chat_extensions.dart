@@ -1,9 +1,9 @@
-import 'package:berikan/data/model/chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../message.dart';
+import '../chat.dart';
 
-extension ChatService on Chat
+extension ChatExtension on Chat
 {
   /// The stream of this chat
   Stream<QuerySnapshot<Message>> get messages {

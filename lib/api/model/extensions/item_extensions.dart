@@ -1,9 +1,10 @@
-import 'package:berikan/data/model/account.dart';
-import 'package:berikan/data/model/item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'
     show FirebaseFirestore;
 
-extension ItemService on Item
+import '../item.dart';
+import '../account.dart' show Account, accountDocumentReference;
+
+extension ItemExtension on Item
 {
   /// Gets the owner of this item
   ///
