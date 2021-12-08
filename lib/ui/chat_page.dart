@@ -1,7 +1,10 @@
+import 'package:berikan/ui/chat_detail_page.dart';
+import 'package:berikan/utills/arguments.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatelessWidget {
   static const routeName = '/chatPage';
+
   const ChatPage({Key? key}) : super(key: key);
 
   @override
@@ -14,7 +17,7 @@ class ChatPage extends StatelessWidget {
         children: [
           Padding(
             padding:
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             child: Stack(alignment: Alignment.centerRight, children: [
               TextField(
                 style: Theme.of(context).textTheme.overline,
@@ -28,15 +31,27 @@ class ChatPage extends StatelessWidget {
             ]),
           ),
           Expanded(
-            child: ListView.builder(itemBuilder: (context, index){
-              return Card(
-                child: ListTile(
-                  leading: Image.network('https://asset.kompas.com/crops/1g9P4L73NLmOshdRUptmBe_oQgQ=/0x0:698x465/750x500/data/photo/2020/12/07/5fce3837c4f6d.jpg'),
-                  title: Text('John Doe'),
-                  subtitle: Text('Siap, saya segera kesana!'),
-                ),
-              );
-            }, itemCount: 8,),
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return Card(
+                  child: ListTile(
+                    onTap: () {
+                      Navigator.pushNamed(context, ChatDetailPage.routeName,
+                          arguments: Arguments('John Doe',
+                              'https://asset.kompas.com/crops/1g9P4L73NLmOshdRUptmBe_oQgQ=/0x0:698x465/750x500/data/photo/2020/12/07/5fce3837c4f6d.jpg'));
+                    },
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.network(
+                          'https://asset.kompas.com/crops/1g9P4L73NLmOshdRUptmBe_oQgQ=/0x0:698x465/750x500/data/photo/2020/12/07/5fce3837c4f6d.jpg'),
+                    ),
+                    title: Text('John Doe'),
+                    subtitle: Text('Siap, saya segera kesana!'),
+                  ),
+                );
+              },
+              itemCount: 8,
+            ),
           ),
         ],
       ),

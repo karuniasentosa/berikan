@@ -7,6 +7,7 @@ const gradientSecondaryPrimaryStart = Color(0xFFD2FBE7);
 const gradientSecondaryPrimaryEnd = Color(0xFF4FB3BF);
 const colorPrimaryDark = Color(0xFF005662);
 const colorPrimary = Color(0xFF00838F);
+const colorPrimaryLight = Color(0xFF4FB3BF);
 
 
 ThemeData lightTheme = ThemeData(
