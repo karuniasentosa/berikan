@@ -2,6 +2,9 @@ import 'package:berikan/api/model/item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ItemService {
+  /// No constructor.
+  ItemService._() { }
+
   static Future<List<Item>> getAllItems(FirebaseFirestore instance) async {
     final collectionReference = itemCollectionReference(instance);
     final snapshot = await collectionReference.get();
