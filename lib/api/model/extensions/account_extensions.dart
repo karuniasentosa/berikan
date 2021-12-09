@@ -30,6 +30,30 @@ extension AccountExtension on Account
     return _likedItems;
   }
 
+  /// Gets the location until second-order administrative division
+  /// (Kabupaten/Kota).
+  ///
+  /// e.g. Cilincing, Kota Jakarta Utara
+  Future<String> get location2 async {
+    final accountDocRef = FirebaseFirestore.instance
+        .collection('account').doc(user!.uid);
+    final snapshot = await accountDocRef.get();
+
+    final location = snapshot.data()!['location'] as List<String>;
+
+    return '${location[3]}, ${location[2]}';
+  }
+
+  Future<String> get location3 async {
+    final accountDocRef = FirebaseFirestore.instance
+        .collection('account').doc(user!.uid);
+    final snapshot = await accountDocRef.get();
+
+    final location = snapshot.data()!['location'] as List<String>;
+
+    return location[3];
+  }
+
   /// Adds [item] from this account.
   Future<void> addItem(Item item) async {
     // create a copy of item
@@ -39,7 +63,6 @@ extension AccountExtension on Account
         imagesUrl: item.imagesUrl,
         name: item.name,
         addedSince: item.addedSince,
-        location: item.location,
         description: item.description
     );
 
