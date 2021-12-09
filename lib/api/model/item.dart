@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
-    show FirebaseFirestore, CollectionReference, DocumentReference, DocumentSnapshot, GeoPoint, SetOptions, SnapshotOptions, Timestamp;
+    show FirebaseFirestore, CollectionReference, DocumentReference, DocumentSnapshot, SetOptions, SnapshotOptions, Timestamp;
 import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
 
@@ -22,9 +22,6 @@ class Item
   /// The time when this item added
   final DateTime addedSince;
 
-  /// The place that the item is advertised
-  final GeoPoint location;
-
   /// The description of this item
   final String description;
 
@@ -36,7 +33,6 @@ class Item
     required this.imagesUrl,
     required this.name,
     required this.addedSince,
-    required this.location,
     required this.description,
     required this.ownerId,
   });
@@ -49,9 +45,8 @@ class Item
     required List<String> imagesUrl,
     required String name,
     required DateTime addedSince,
-    required GeoPoint location,
     required String description,
-  }) => Item('', imagesUrl: imagesUrl, name: name, addedSince: addedSince, location: location, description: description, ownerId: ownerId);
+  }) => Item('', imagesUrl: imagesUrl, name: name, addedSince: addedSince, description: description, ownerId: ownerId);
 
 
   @override
@@ -62,7 +57,6 @@ class Item
           const ListEquality().equals(imagesUrl, other.imagesUrl) &&
           name == other.name &&
           addedSince == other.addedSince &&
-          location == other.location &&
           description == other.description &&
           ownerId == other.ownerId;
 
@@ -71,14 +65,13 @@ class Item
       imagesUrl.hashCode ^
       name.hashCode ^
       addedSince.hashCode ^
-      location.hashCode ^
       description.hashCode ^
       ownerId.hashCode;
 
 
   @override
   String toString() {
-    return 'Item{imagesUrl: $imagesUrl, name: $name, addedSince: $addedSince, location: $location, description: $description, ownerId: $ownerId}';
+    return 'Item{imagesUrl: $imagesUrl, name: $name, addedSince: $addedSince, description: $description, ownerId: $ownerId}';
   }
 
   /// Converts from a Firestore api to [Item] class.
@@ -92,11 +85,10 @@ class Item
   static Item fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? _) {
     final data = snapshot.data()!;
 
-    final itemId = snapshot.reference.id; // TODO: I'm not really sure if this means the document's id.
+    final itemId = snapshot.reference.id;
     final addedSince = (data['added_since'] as Timestamp).toDate();
     final description = data['description'] as String;
     final imagesUrl = data['images'] as List<dynamic>;
-    final location = data['location'] as GeoPoint;
     final name = data['name'] as String;
     final ownerId = (data['owner'] as DocumentReference<Map<String, dynamic>>).id;
 
@@ -116,7 +108,6 @@ class Item
         }).map<String>((e) => e).toList(),
         name: name,
         addedSince: addedSince,
-        location: location,
         description: description,
         ownerId: ownerId,
     );
@@ -138,7 +129,6 @@ class Item
       'added_since'   :   Timestamp.fromDate(model.addedSince),
       'description'   :   model.description,
       'images'        :   model.imagesUrl,
-      'location'      :   model.location,
       'name'          :   model.name,
       'owner'         :   FirebaseFirestore.instance.collection(Item.collectionName).doc(model.ownerId),
     };
