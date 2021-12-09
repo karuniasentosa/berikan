@@ -53,7 +53,7 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(
                     height: 4,
                   ),
-                  const CustomTextField('Seperti: john.doe@mail.com'),
+                  const CustomTextField('Seperti: john.doe@mail.com', type: TextInputType.emailAddress, isObscure: false,),
                   const SizedBox(
                     height: 16,
                   ),
@@ -67,7 +67,7 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(
                     height: 4,
                   ),
-                  const CustomTextField('')
+                  const CustomTextField('', type: TextInputType.visiblePassword, isObscure: true,)
                 ],
               ),
             ),

@@ -52,7 +52,7 @@ class SignupPage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField('Seperti: john.doe@mail.com'),
+            const CustomTextField('Seperti: john.doe@mail.com', isObscure: false, type: TextInputType.emailAddress,),
             const SizedBox(
               height: 16,
             ),
@@ -66,7 +66,7 @@ class SignupPage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField(''),
+            const CustomTextField('', type: TextInputType.visiblePassword, isObscure: true),
             const SizedBox(
               height: 16,
             ),
@@ -80,7 +80,7 @@ class SignupPage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField(''),
+            const CustomTextField('', type: TextInputType.visiblePassword, isObscure: true),
             const SizedBox(
               height: 40,
             ),

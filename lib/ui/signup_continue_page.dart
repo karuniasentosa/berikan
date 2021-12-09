@@ -86,7 +86,7 @@ class SignupContinuePage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField(''),
+            const CustomTextField('', type: TextInputType.text, isObscure: false,),
             const SizedBox(
               height: 16,
             ),
@@ -100,7 +100,7 @@ class SignupContinuePage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField(''),
+            const CustomTextField('', type: TextInputType.text, isObscure: false,),
             const SizedBox(
               height: 16,
             ),
@@ -114,7 +114,7 @@ class SignupContinuePage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField('Diawali dengan +62'),
+            const CustomTextField('Diawali dengan +62', type: TextInputType.phone, isObscure: false,),
             const SizedBox(
               height: 40,
             ),
