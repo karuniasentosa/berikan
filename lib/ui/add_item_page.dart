@@ -17,8 +17,8 @@ class AddItemPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Nama Barang'),
-            CustomTextField('Seperti: Sepatu Adidas KW'),
+            const Text('Nama Barang'),
+            const CustomTextField('Seperti: Sepatu Adidas KW', type: TextInputType.text, isObscure: false,),
             SizedBox(
               height: 16,
             ),
