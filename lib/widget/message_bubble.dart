@@ -30,26 +30,29 @@ class MessageBubble extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
-        crossAxisAlignment: isMyChat? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isMyChat ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 8,),
+          const SizedBox(
+            height: 8,
+          ),
           Material(
-            color: isMyChat? colorPrimaryLight : Colors.white,
-            borderRadius: isMyChat? myBorderRadius : otherBorderRadius,
+            color: isMyChat ? colorPrimaryLight : Colors.white,
+            borderRadius: isMyChat ? myBorderRadius : otherBorderRadius,
             elevation: 5.0,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+              child: Wrap(
+                spacing: 16,
+                direction: Axis.horizontal,
+                alignment: WrapAlignment.end,
                 children: [
                   Text(
                     text,
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  const Text('11:00')
+                  const Text('11:00'),
                 ],
               ),
             ),
