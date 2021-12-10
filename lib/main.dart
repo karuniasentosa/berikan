@@ -7,11 +7,14 @@ import 'package:berikan/ui/login_page.dart';
 import 'package:berikan/ui/main_page.dart';
 import 'package:berikan/ui/signup_continue_page.dart';
 import 'package:berikan/ui/signup_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'common/style.dart';
 
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -25,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       initialRoute: HomePage.routeName,
       routes: {
-        MainPage.routeName: (context) => const MainPage(),
+        MainPage.routeName: (context) => MainPage(),
         SignupContinuePage.routeName: (context) => const SignupContinuePage(),
         SignupPage.routeName: (context) => const SignupPage(),
         HomePage.routeName: (context) => const HomePage(),
