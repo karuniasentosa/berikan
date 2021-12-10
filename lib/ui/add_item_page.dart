@@ -1,11 +1,18 @@
 import 'package:berikan/widget/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
-class AddItemPage extends StatelessWidget {
+class AddItemPage extends StatefulWidget {
   static const routeName = '/addItemPage';
 
   const AddItemPage({Key? key}) : super(key: key);
 
+  @override
+  State<AddItemPage> createState() => _AddItemPageState();
+}
+
+class _AddItemPageState extends State<AddItemPage> {
+  final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,12 +25,13 @@ class AddItemPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Nama Barang'),
-            const CustomTextField('Seperti: Sepatu Adidas KW', type: TextInputType.text, isObscure: false,),
+            CustomTextField('Seperti: Sepatu Adidas KW', type: TextInputType.text, isObscure: false, controller: _nameController,),
             SizedBox(
               height: 16,
             ),
             Text('Deskripsi Barang'),
             TextField(
+              controller: _descriptionController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: InputDecoration(
@@ -116,5 +124,12 @@ class AddItemPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _descriptionController.dispose();
   }
 }
