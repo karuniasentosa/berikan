@@ -81,55 +81,64 @@ class MainPage extends StatelessWidget {
                     child: FutureBuilder<List<Item>>(
                       future: ItemService.getAllItems(_fireStore),
                       builder: (BuildContext context, snapshot) {
-                        final imageRef = _fireStorage
-                            .refFromURL(snapshot.data![0].imagesUrl[0]);
-                        return FutureBuilder<Uint8List?>(
-                          future: StorageService.getData(imageRef),
-                          builder: (context, storageSnap) {
-                            return GridView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  elevation: 5,
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        child: Image.memory(
-                                          storageSnap.data!,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        height: 200,
-                                        width: 200,
-                                      ),
-                                      SizedBox(
-                                        height: 1,
-                                      ),
-                                      Align(
-                                        child: Text(snapshot.data![0].name),
-                                        alignment: Alignment.centerLeft,
-                                      ),
-                                      SizedBox(
-                                        height: 12,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('JAKARTA BARAT'),
-                                          Text('3 HARI LALU')
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                );
-                              },
-                              itemCount: myProducts.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2),
-                            );
-                          },
-                        );
+                        if (!snapshot.hasData) {
+                          return CircularProgressIndicator();
+                        } else {
+                          final imageRef = _fireStorage
+                              .refFromURL(snapshot.data![0].imagesUrl[0]);
+                          return GridView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                elevation: 5,
+                                child: Column(
+                                  children: [
+                                    FutureBuilder<Uint8List?>(
+                                      future: StorageService.getData(imageRef),
+                                      builder: (context, storageSnap) {
+                                        if (!storageSnap.hasData){
+                                          return CircularProgressIndicator();
+                                        } else{
+                                          return SizedBox(
+                                            child: Image.memory(
+                                              storageSnap.data!,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            height: 200,
+                                            width: 200,
+                                          );
+                                        }
+
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 1,
+                                    ),
+                                    Align(
+                                      child: Text(snapshot.data![0].name),
+                                      alignment: Alignment.centerLeft,
+                                    ),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('JAKARTA BARAT'),
+                                        Text('3 HARI LALU')
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                            itemCount: myProducts.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2),
+                          );
+                        }
                       },
                     ),
                   ),
