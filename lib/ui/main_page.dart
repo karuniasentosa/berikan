@@ -238,9 +238,13 @@ class MainPage extends StatelessWidget {
               } else {
                 return Expanded(
                   flex: 6,
-                  child: Image.memory(
-                    storageSnap.data!,
-                    fit: BoxFit.fill,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.height,
+                    child: Image.memory(
+                      storageSnap.data!,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 );
               }
