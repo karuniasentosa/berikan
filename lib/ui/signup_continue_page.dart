@@ -5,11 +5,19 @@ import 'package:berikan/widget/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignupContinuePage extends StatelessWidget {
+class SignupContinuePage extends StatefulWidget {
   static const routeName = '/signupContinuePage';
 
   const SignupContinuePage({Key? key}) : super(key: key);
 
+  @override
+  State<SignupContinuePage> createState() => _SignupContinuePageState();
+}
+
+class _SignupContinuePageState extends State<SignupContinuePage> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,7 +94,7 @@ class SignupContinuePage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField('', type: TextInputType.text, isObscure: false,),
+            CustomTextField('', type: TextInputType.text, isObscure: false, controller: _firstNameController,),
             const SizedBox(
               height: 16,
             ),
@@ -100,7 +108,7 @@ class SignupContinuePage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField('', type: TextInputType.text, isObscure: false,),
+            CustomTextField('', type: TextInputType.text, isObscure: false, controller: _lastNameController,),
             const SizedBox(
               height: 16,
             ),
@@ -114,7 +122,7 @@ class SignupContinuePage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField('Diawali dengan +62', type: TextInputType.phone, isObscure: false,),
+            CustomTextField('Diawali dengan +62', type: TextInputType.phone, isObscure: false, controller: _phoneNumberController,),
             const SizedBox(
               height: 40,
             ),
@@ -135,5 +143,13 @@ class SignupContinuePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _phoneNumberController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
   }
 }
