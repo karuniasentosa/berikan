@@ -77,7 +77,7 @@ class MainPage extends StatelessWidget {
                       style:
                           blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
                   SizedBox(
-                    height: 525,
+                    height: 500,
                     child: FutureBuilder<List<Item>>(
                       future: ItemService.getAllItems(_fireStore),
                       builder: (BuildContext context, snapshot) {
@@ -89,49 +89,7 @@ class MainPage extends StatelessWidget {
                           return GridView.builder(
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return Card(
-                                elevation: 5,
-                                child: Column(
-                                  children: [
-                                    FutureBuilder<Uint8List?>(
-                                      future: StorageService.getData(imageRef),
-                                      builder: (context, storageSnap) {
-                                        if (!storageSnap.hasData){
-                                          return CircularProgressIndicator();
-                                        } else{
-                                          return SizedBox(
-                                            child: Image.memory(
-                                              storageSnap.data!,
-                                              fit: BoxFit.cover,
-                                            ),
-                                            height: 200,
-                                            width: 200,
-                                          );
-                                        }
-
-                                      },
-                                    ),
-                                    SizedBox(
-                                      height: 1,
-                                    ),
-                                    Align(
-                                      child: Text(snapshot.data![0].name),
-                                      alignment: Alignment.centerLeft,
-                                    ),
-                                    SizedBox(
-                                      height: 12,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('JAKARTA BARAT'),
-                                        Text('3 HARI LALU')
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              );
+                              return _buildCard(imageRef, snapshot);
                             },
                             itemCount: myProducts.length,
                             gridDelegate:
@@ -260,6 +218,46 @@ class MainPage extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Card _buildCard(Reference imageRef, AsyncSnapshot<List<Item>> snapshot) {
+    return Card(
+      elevation: 5,
+      child: Column(
+        children: [
+          FutureBuilder<Uint8List?>(
+            future: StorageService.getData(imageRef),
+            builder: (context, storageSnap) {
+              if (!storageSnap.hasData) {
+                return CircularProgressIndicator();
+              } else {
+                return Expanded(
+                  flex: 6,
+                  child: Image.memory(
+                    storageSnap.data!,
+                    fit: BoxFit.fill,
+                  ),
+                );
+              }
+            },
+          ),
+          Expanded(
+            flex: 1,
+            child: Align(
+              child: Text(snapshot.data![0].name),
+              alignment: Alignment.centerLeft,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text('JAKARTA BARAT'), Text('3 HARI LALU')],
             ),
           ),
         ],
