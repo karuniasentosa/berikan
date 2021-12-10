@@ -1,6 +1,13 @@
+import 'dart:typed_data';
+
+import 'package:berikan/api/item_service.dart';
+import 'package:berikan/api/model/item.dart';
+import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
 import 'package:berikan/ui/chat_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:berikan/common/constant.dart';
@@ -8,7 +15,10 @@ import 'package:berikan/common/constant.dart';
 class MainPage extends StatelessWidget {
   static const routeName = '/mainPage';
 
-  const MainPage({Key? key}) : super(key: key);
+  final _fireStore = FirebaseFirestore.instance;
+  final _fireStorage = FirebaseStorage.instance;
+
+  MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +47,10 @@ class MainPage extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: (){
+            onPressed: () {
               Navigator.pushNamed(context, ChatPage.routeName);
             },
-            icon: const Icon(
-              Icons.chat_outlined
-            ),
+            icon: const Icon(Icons.chat_outlined),
           )
         ],
       ),
@@ -70,47 +78,59 @@ class MainPage extends StatelessWidget {
                           blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
                   SizedBox(
                     height: 525,
-                    child: GridView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          elevation: 5,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                child: Image.network(
-                                  'https://caps.team/assets/img/merchandise/test1.png',
-                                  fit: BoxFit.cover,
-                                ),
-                                height: 200,
-                                width: 200,
-                              ),
-                              SizedBox(
-                                height: 1,
-                              ),
-                              Align(
-                                child: Text(myProducts[index]['name']),
-                                alignment: Alignment.centerLeft,
-                              ),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('JAKARTA BARAT'),
-                                  Text('3 HARI LALU')
-                                ],
-                              )
-                            ],
-                          ),
+                    child: FutureBuilder<List<Item>>(
+                      future: ItemService.getAllItems(_fireStore),
+                      builder: (BuildContext context, snapshot) {
+                        final imageRef = _fireStorage
+                            .refFromURL(snapshot.data![0].imagesUrl[0]);
+                        return FutureBuilder<Uint8List?>(
+                          future: StorageService.getData(imageRef),
+                          builder: (context, storageSnap) {
+                            return GridView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  elevation: 5,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        child: Image.memory(
+                                          storageSnap.data!,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        height: 200,
+                                        width: 200,
+                                      ),
+                                      SizedBox(
+                                        height: 1,
+                                      ),
+                                      Align(
+                                        child: Text(snapshot.data![0].name),
+                                        alignment: Alignment.centerLeft,
+                                      ),
+                                      SizedBox(
+                                        height: 12,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('JAKARTA BARAT'),
+                                          Text('3 HARI LALU')
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                              itemCount: myProducts.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2),
+                            );
+                          },
                         );
                       },
-                      itemCount: myProducts.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2),
                     ),
                   ),
                 ],
@@ -160,7 +180,7 @@ class MainPage extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text('JAKARTA BARAT'),
-                                    Text('3 HARI LALU')
+                                    Text('3 HARI LALU'),
                                   ],
                                 )
                               ],
