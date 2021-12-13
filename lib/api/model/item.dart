@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart'
 import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
 
+import 'account.dart';
+
 class Item
 {
   static const String collectionName = 'item';
@@ -130,7 +132,7 @@ class Item
       'description'   :   model.description,
       'images'        :   model.imagesUrl,
       'name'          :   model.name,
-      'owner'         :   FirebaseFirestore.instance.collection(Item.collectionName).doc(model.ownerId),
+      'owner'         :   FirebaseFirestore.instance.collection(Account.collectionName).doc(model.ownerId),
     };
   }
 }

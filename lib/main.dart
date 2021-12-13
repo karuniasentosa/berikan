@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         SignupPage.routeName: (context) => const SignupPage(),
         HomePage.routeName: (context) => const HomePage(),
         LoginPage.routeName: (context) => const LoginPage(),
-        AddItemPage.routeName: (context) => const AddItemPage(),
+        AddItemPage.routeName: (context) => AddItemPage(),
         ChatPage.routeName: (context) => const ChatPage(),
         ChatDetailPage.routeName: (context) => ChatDetailPage(),
       },

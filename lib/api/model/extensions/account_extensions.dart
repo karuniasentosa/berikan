@@ -55,7 +55,7 @@ extension AccountExtension on Account
   }
 
   /// Adds [item] from this account.
-  Future<void> addItem(Item item) async {
+  Future<DocumentReference<Item>> addItem(Item item) async {
     // create a copy of item
     // a bit sus
     final _item = Item.create(
@@ -67,7 +67,7 @@ extension AccountExtension on Account
     );
 
     final itemColRef = itemCollectionReference(FirebaseFirestore.instance);
-    itemColRef.add(_item);
+    return await itemColRef.add(_item);
   }
 
   /// Adds [item] that is liked to this account.
