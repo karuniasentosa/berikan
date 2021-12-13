@@ -9,20 +9,18 @@ class IconWithText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: Row(
-          children: <Widget>[
-            icon,
-            const SizedBox(width: 4),
-            Flexible(
-              child: Text(
-              text,
-              style: textStyle,
-              maxLines: 2,
-            ),
-          )
-        ]
-      ),
+    return Row(
+        children: <Widget>[
+          icon,
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+            text,
+            style: textStyle,
+            maxLines: 2,
+          ),
+        )
+      ]
     );
   }
 }
