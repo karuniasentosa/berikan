@@ -1,10 +1,24 @@
+import 'dart:io';
+import 'dart:math';
+import 'package:berikan/api/account_service.dart';
+import 'package:berikan/api/model/account.dart';
+import 'package:berikan/api/model/item.dart';
+import 'package:berikan/api/storage_service.dart';
+import 'package:berikan/widget/button/primary_button.dart';
 import 'package:berikan/widget/custom_textfield.dart';
+import 'package:berikan/widget/icon_with_text.dart';
+
+import 'package:berikan/api/model/extensions/account_extensions.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddItemPage extends StatefulWidget {
   static const routeName = '/addItemPage';
 
-  const AddItemPage({Key? key}) : super(key: key);
+  AddItemPage({Key? key}) : super(key: key);
 
   @override
   State<AddItemPage> createState() => _AddItemPageState();
@@ -13,6 +27,11 @@ class AddItemPage extends StatefulWidget {
 class _AddItemPageState extends State<AddItemPage> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  static const _imagePickWidth = 120.0;
+
+  final List<File?> imageFile = List<File?>.filled(5, null, growable: true);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
