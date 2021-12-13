@@ -166,7 +166,7 @@ class _AddItemPageState extends State<AddItemPage> {
   }
 }
 
-typedef void ReceiveImageCallback(File file);
+typedef ReceiveImageCallback = void Function(File file);
 
 class _ImagePick extends StatefulWidget {
   final double width;
