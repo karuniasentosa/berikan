@@ -27,7 +27,7 @@ class _AddItemPageState extends State<AddItemPage> {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Text('Nama Barang'),
                   CustomTextField(
@@ -58,20 +58,23 @@ class _AddItemPageState extends State<AddItemPage> {
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
-                    alignment: WrapAlignment.center,
+                    alignment: WrapAlignment.spaceEvenly,
                     children: [
                       _ImagePick(
                           width: _imagePickWidth,
                           height: _imagePickWidth,
                           onImageSelect: (file) {
                             imageFile[0] = file;
-                          }),
+                          },
+                          onImageDrop: () { imageFile[0] = null; },
+                      ),
                       _ImagePick(
                         width: _imagePickWidth,
                         height: _imagePickWidth,
                         onImageSelect: (file) {
                           imageFile[1] = file;
                         },
+                        onImageDrop: () { imageFile[1] = null; },
                       ),
                       _ImagePick(
                         width: _imagePickWidth,
@@ -79,6 +82,7 @@ class _AddItemPageState extends State<AddItemPage> {
                         onImageSelect: (file) {
                           imageFile[2] = file;
                         },
+                        onImageDrop: () { imageFile[2] = null; },
                       ),
                       _ImagePick(
                         width: _imagePickWidth,
@@ -86,6 +90,7 @@ class _AddItemPageState extends State<AddItemPage> {
                         onImageSelect: (file) {
                           imageFile[3] = file;
                         },
+                        onImageDrop: () { imageFile[3] = null; },
                       ),
                       _ImagePick(
                         width: _imagePickWidth,
@@ -93,6 +98,7 @@ class _AddItemPageState extends State<AddItemPage> {
                         onImageSelect: (file) {
                           imageFile[4] = file;
                         },
+                        onImageDrop: () { imageFile[4] = null; },
                       ),
                     ],
                   ),
@@ -102,9 +108,38 @@ class _AddItemPageState extends State<AddItemPage> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-            child: ElevatedButton(
-              child: const Text('Tambahkan'),
+            child: PrimaryButton(
+              text: 'Tambahkan',
               onPressed: () async {
+                // do check
+                if (_nameController.text.isEmpty) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                        const SnackBar(
+                            content: Text('Isi nama barang terlebih dahulu!')
+                        )
+                  );
+                  return;
+                }
+                if (_descriptionController.text.isEmpty) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                      const SnackBar(
+                          content: Text('Isi deskripsi terlebih dahulu!')
+                      )
+                  );
+                  return;
+                }
+                if (imageFile.every((element) => element == null)) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                      const SnackBar(
+                          content: Text('Tambahkan foto sebelum mengunggah!')
+                      )
+                  );
+                  return;
+                }
+
                 // get account and uid
                 Account? account = await AccountService.getCurrentAccount();
                 String? uid = account?.user?.uid;
@@ -172,8 +207,9 @@ class _ImagePick extends StatefulWidget {
   final double width;
   final double height;
   final ReceiveImageCallback? onImageSelect;
+  final Function()? onImageDrop;
 
-  _ImagePick({required this.width, required this.height, this.onImageSelect});
+  _ImagePick({required this.width, required this.height, this.onImageSelect, this.onImageDrop});
 
   @override
   State<StatefulWidget> createState() => _ImagePickState();
@@ -224,6 +260,9 @@ class _ImagePickState extends State<_ImagePick> {
                         textStyle: const TextStyle(color: Colors.red)),
                     onPressed: () {
                       dropImage();
+                      if (widget.onImageDrop != null) {
+                        widget.onImageDrop!();
+                      }
                       Navigator.pop(context);
                     })
               ]);
