@@ -6,14 +6,13 @@ import 'package:berikan/api/model/item.dart';
 import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/widget/button/primary_button.dart';
 import 'package:berikan/widget/custom_textfield.dart';
-import 'package:berikan/widget/icon_with_text.dart';
 
 import 'package:berikan/api/model/extensions/account_extensions.dart';
+import 'package:berikan/widget/image_pick.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AddItemPage extends StatefulWidget {
   static const routeName = '/addItemPage';
@@ -79,7 +78,7 @@ class _AddItemPageState extends State<AddItemPage> {
                     runSpacing: 8.0,
                     alignment: WrapAlignment.spaceEvenly,
                     children: [
-                      _ImagePick(
+                      ImagePick(
                           width: _imagePickWidth,
                           height: _imagePickWidth,
                           onImageSelect: (file) {
@@ -87,7 +86,7 @@ class _AddItemPageState extends State<AddItemPage> {
                           },
                           onImageDrop: () { imageFile[0] = null; },
                       ),
-                      _ImagePick(
+                      ImagePick(
                         width: _imagePickWidth,
                         height: _imagePickWidth,
                         onImageSelect: (file) {
@@ -95,7 +94,7 @@ class _AddItemPageState extends State<AddItemPage> {
                         },
                         onImageDrop: () { imageFile[1] = null; },
                       ),
-                      _ImagePick(
+                      ImagePick(
                         width: _imagePickWidth,
                         height: _imagePickWidth,
                         onImageSelect: (file) {
@@ -103,7 +102,7 @@ class _AddItemPageState extends State<AddItemPage> {
                         },
                         onImageDrop: () { imageFile[2] = null; },
                       ),
-                      _ImagePick(
+                      ImagePick(
                         width: _imagePickWidth,
                         height: _imagePickWidth,
                         onImageSelect: (file) {
@@ -111,7 +110,7 @@ class _AddItemPageState extends State<AddItemPage> {
                         },
                         onImageDrop: () { imageFile[3] = null; },
                       ),
-                      _ImagePick(
+                      ImagePick(
                         width: _imagePickWidth,
                         height: _imagePickWidth,
                         onImageSelect: (file) {
@@ -217,146 +216,6 @@ class _AddItemPageState extends State<AddItemPage> {
     super.dispose();
     _nameController.dispose();
     _descriptionController.dispose();
-  }
-}
-
-typedef ReceiveImageCallback = void Function(File file);
-
-class _ImagePick extends StatefulWidget {
-  final double width;
-  final double height;
-  final ReceiveImageCallback? onImageSelect;
-  final Function()? onImageDrop;
-
-  _ImagePick({required this.width, required this.height, this.onImageSelect, this.onImageDrop});
-
-  @override
-  State<StatefulWidget> createState() => _ImagePickState();
-}
-
-class _ImagePickState extends State<_ImagePick> {
-  File? imageFile;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: imageFile == null
-          ? noImage()
-          : Image.file(
-              imageFile!,
-              width: widget.width,
-              height: widget.height,
-              fit: BoxFit.none,
-              cacheWidth: widget.width.round(),
-              cacheHeight: widget.height.round(),
-            ),
-      onTap: () {
-        if (imageFile != null) {
-          // TODO: preview image
-
-        } else {
-          showImageSourceChooser(context);
-        }
-      },
-      onLongPress: () async {
-        if (imageFile == null) return;
-        await showDialog(
-            context: context,
-            builder: (context) {
-              return SimpleDialog(children: [
-                SimpleDialogOption(
-                  child: IconWithText(
-                      icon: Icon(Icons.change_circle), text: 'Ganti gambar'),
-                  onPressed: () async {
-                    Navigator.pop(context);
-                    showImageSourceChooser(context);
-                  },
-                ),
-                SimpleDialogOption(
-                    child: IconWithText(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        text: 'Hapus gambar',
-                        textStyle: const TextStyle(color: Colors.red)),
-                    onPressed: () {
-                      dropImage();
-                      if (widget.onImageDrop != null) {
-                        widget.onImageDrop!();
-                      }
-                      Navigator.pop(context);
-                    })
-              ]);
-            });
-      },
-    );
-  }
-
-  void chooseImageCamera() async {
-    final XFile? file = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-      imageQuality: 80,
-    );
-    if (file != null) {
-      if (widget.onImageSelect != null) {
-        widget.onImageSelect!(File(file.path));
-      }
-      setState(() {
-        imageFile = File(file.path);
-      });
-    }
-  }
-
-  void chooseImageGallery() async {
-    final XFile? file = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
-    if (file != null) {
-      if (widget.onImageSelect != null) {
-        widget.onImageSelect!(File(file.path));
-      }
-      setState(() {
-        imageFile = File(file.path);
-      });
-    }
-  }
-
-  void showImageSourceChooser(BuildContext context) async {
-    await showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(title: Text('Ambil gambar dari...'), children: [
-            SimpleDialogOption(
-              child:
-                  IconWithText(icon: const Icon(Icons.image), text: 'Galeri'),
-              onPressed: () async {
-                chooseImageGallery();
-                Navigator.pop(context);
-              },
-            ),
-            SimpleDialogOption(
-                child: IconWithText(
-                    icon: const Icon(Icons.camera), text: 'Kamera'),
-                onPressed: () {
-                  chooseImageCamera();
-                  Navigator.pop(context);
-                })
-          ]);
-        });
-  }
-
-  void dropImage() {
-    setState(() {
-      imageFile = null;
-    });
-  }
-
-  Widget noImage() {
-    return Container(
-      width: widget.width,
-      height: widget.height,
-      decoration: const BoxDecoration(color: Colors.grey),
-      child: Icon(Icons.add_a_photo),
-    );
   }
 }
 
