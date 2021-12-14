@@ -6,11 +6,19 @@ import 'package:berikan/widget/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
   static const routeName = '/signupPage';
 
   const SignupPage({Key? key}) : super(key: key);
 
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _retypePasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,7 +60,7 @@ class SignupPage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField('Seperti: john.doe@mail.com'),
+            CustomTextField('Seperti: john.doe@mail.com', isObscure: false, type: TextInputType.emailAddress, controller: _emailController,),
             const SizedBox(
               height: 16,
             ),
@@ -66,7 +74,7 @@ class SignupPage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField(''),
+            CustomTextField('', type: TextInputType.visiblePassword, isObscure: true, controller: _passwordController,),
             const SizedBox(
               height: 16,
             ),
@@ -80,7 +88,7 @@ class SignupPage extends StatelessWidget {
             const SizedBox(
               height: 4,
             ),
-            const CustomTextField(''),
+            CustomTextField('', type: TextInputType.visiblePassword, isObscure: true, controller: _retypePasswordController,),
             const SizedBox(
               height: 40,
             ),
@@ -100,5 +108,13 @@ class SignupPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _retypePasswordController.dispose();
+    _passwordController.dispose();
+    _emailController.dispose();
   }
 }
