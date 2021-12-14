@@ -1,3 +1,4 @@
+import 'package:berikan/api/model/account.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model/chat.dart';
@@ -16,7 +17,7 @@ class ChatService
     final uid = account.user!.uid;
     // TODO: Comeback later and check this code.
     final query = chatCollectionReference(FirebaseFirestore.instance)
-        .where('endpoint1', isEqualTo: uid);
+        .where('endpoints', arrayContains: accountDocumentReference(FirebaseFirestore.instance, uid));
     final snapshot = await query.get();
 
     return snapshot.docs.map((e) => e.data()).toList();
