@@ -1,8 +1,6 @@
-import 'dart:typed_data';
 
 import 'package:berikan/api/item_service.dart';
 import 'package:berikan/api/model/item.dart';
-import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
@@ -10,12 +8,8 @@ import 'package:berikan/ui/chat_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:functional_widget_annotation/functional_widget_annotation.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-///Generated file for functional widget converter, see line 237 on this file.
-///Remember to add *.g.dart on gitignore if it haven't added already.
-part 'main_page.g.dart';
+import 'package:berikan/widget/card/main_card.dart';
 
 
 class MainPage extends StatelessWidget {
@@ -95,7 +89,7 @@ class MainPage extends StatelessWidget {
                           return GridView.builder(
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return CustomCard(imageRef, snapshot);
+                              return CardWidget(imageRef: imageRef, snapshot: snapshot,);
                             },
                             itemCount: myProducts.length,
                             gridDelegate:
@@ -233,53 +227,10 @@ class MainPage extends StatelessWidget {
 
 }
 
-/// Converted method into functional widget with functional_widget package for best practice.
-/// Remember to do pub get and then run "flutter pub run build_runner watch" when you build the app
-/// for the first time or when you change dependencies.
-@swidget
-Widget customCard(Reference imageRef, AsyncSnapshot<List<Item>> snapshot) {
-  return Card(
-    elevation: 5,
-    child: Column(
-      children: [
-        FutureBuilder<Uint8List?>(
-          future: StorageService.getData(imageRef),
-          builder: (context, storageSnap) {
-            if (!storageSnap.hasData) {
-              return CircularProgressIndicator();
-            } else {
-              return Expanded(
-                flex: 6,
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.height,
-                  child: Image.memory(
-                    storageSnap.data!,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              );
-            }
-          },
-        ),
-        Expanded(
-          flex: 1,
-          child: Align(
-            child: Text(snapshot.data![0].name),
-            alignment: Alignment.centerLeft,
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('JAKARTA BARAT'), Text('3 HARI LALU')],
-          ),
-        ),
-      ],
-    ),
-  );
-}
+
+
+
+
 
 
 class OurSearchDelegate extends SearchDelegate<String> {
