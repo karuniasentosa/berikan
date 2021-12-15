@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'model/account.dart';
 
-class AccountService
-{
+class AccountService {
+  static const collectionName = 'account';
+
   /// No constructor
   AccountService._();
 
@@ -24,8 +25,20 @@ class AccountService
     return (await docRef.get()).data();
   }
 
+  static Future<void> addAccount(String? id,Account account) async {
+    final accountCollectionRef = FirebaseFirestore.instance
+        .collection(collectionName)
+        .withConverter<Account>(
+            fromFirestore: Account.fromFirestore,
+            toFirestore: Account.toFirestore);
+
+
+    accountCollectionRef.doc(id).set(account);
+  }
+
   static Future<void> signIn(String email, String password) async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
     // Should we put credentials inside secure shared preferences?
     // I think we should use native function (Android Kotlin)
     // For now, the credential is persisted until the app is closed.
