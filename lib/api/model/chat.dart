@@ -24,11 +24,11 @@ class Chat
     final data = snapshot.data()!;
 
     final id = snapshot.reference.id;
-    final endpointsDocRef = data['endpoints'] as List<DocumentReference>;
+    final endpointsDocRef = data['endpoints'] as List;
 
     return Chat(id,
-        endpointAccountId1: endpointsDocRef[0].id,
-        endpointAccountId2: endpointsDocRef[1].id
+        endpointAccountId1: (endpointsDocRef[0] as DocumentReference).id,
+        endpointAccountId2: (endpointsDocRef[1] as DocumentReference).id
     );
   }
 
