@@ -4,3 +4,8 @@ class Arguments {
 
   Arguments(this.name, this.imageUrl);
 }
+
+class SignupArguments {
+  final String? id;
+  SignupArguments(this.id);
+}
