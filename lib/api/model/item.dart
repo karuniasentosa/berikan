@@ -101,10 +101,7 @@ class Item
         // Summary, the list only takes the String if the String is an url.
         imagesUrl: imagesUrl.takeWhile((value) {
           if (value is String) {
-            final uri = Uri.tryParse(value);
-            if (uri != null) {
-              return uri.isAbsolute;
-            }
+            return true;
           }
           return false;
         }).map<String>((e) => e).toList(),
