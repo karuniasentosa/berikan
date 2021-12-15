@@ -3,6 +3,7 @@ import 'package:berikan/ui/main_page.dart';
 import 'package:berikan/widget/button/primary_button.dart';
 import 'package:berikan/widget/button/custom_textbutton.dart';
 import 'package:berikan/widget/custom_textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:berikan/api/account_service.dart';
@@ -19,6 +20,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,7 +63,12 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 4,
                   ),
-                  CustomTextField('Seperti: john.doe@mail.com', type: TextInputType.emailAddress, isObscure: false, controller: _emailController,),
+                  CustomTextField(
+                    'Seperti: john.doe@mail.com',
+                    type: TextInputType.emailAddress,
+                    isObscure: false,
+                    controller: _emailController,
+                  ),
                   const SizedBox(
                     height: 16,
                   ),
@@ -75,28 +82,64 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 4,
                   ),
-                  CustomTextField('', type: TextInputType.visiblePassword, isObscure: true, controller: _passwordController,)
+                  CustomTextField(
+                    '',
+                    type: TextInputType.visiblePassword,
+                    isObscure: true,
+                    controller: _passwordController,
+                  )
                 ],
               ),
             ),
-            PrimaryButton(text: 'MASUK', onPressed: () async {
-              try{
-                await AccountService.signIn(_emailController.text, _passwordController.text);
-              } catch (e){
-                final snackBar = SnackBar(content: Text('Error --> $e'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                return;
-              }
-              Navigator.pushNamed(context, MainPage.routeName);
-            },),
+            PrimaryButton(
+              text: 'MASUK',
+              onPressed: () async {
+                try {
+                  await AccountService.signIn(
+                      _emailController.text, _passwordController.text);
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'user-not-found') {
+                    const snackBar = SnackBar(
+                        content: Text('No user found with that email'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    return;
+                  } else if (e.code == 'wrong-password') {
+                    const snackBar = SnackBar(content: Text('Wrong password'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    return;
+                  } else if (e.code == 'invalid-email') {
+                    const snackBar = SnackBar(
+                        content: Text('Please input a proper email address.'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    return;
+                  } else if (e.code == 'unknown') {
+                    const snackBar = SnackBar(content: Text('Email address/password field can\'t be empty'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    return;
+                  } else {
+                    final snackBar = SnackBar(content: Text('Error: $e'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    return;
+                  }
+                }
+                Navigator.pushNamed(context, MainPage.routeName);
+              },
+            ),
             const SizedBox(
               height: 32,
             ),
-            Flexible(child: CustomTextButton(text: 'LUPA PASSWORD?', onPressed: (){},)),
             Flexible(
-              child: CustomTextButton(text: 'KEMBALI', onPressed: (){
-                Navigator.pop(context);
-              },),
+                child: CustomTextButton(
+              text: 'LUPA PASSWORD?',
+              onPressed: () {},
+            )),
+            Flexible(
+              child: CustomTextButton(
+                text: 'KEMBALI',
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
           ],
         ),
@@ -110,6 +153,4 @@ class _LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     _passwordController.dispose();
   }
-
 }
-
