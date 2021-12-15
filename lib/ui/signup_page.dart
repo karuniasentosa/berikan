@@ -1,8 +1,10 @@
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/signup_continue_page.dart';
-import 'package:berikan/widget/button/primary_button.dart';
+import 'package:berikan/utills/arguments.dart';
 import 'package:berikan/widget/button/custom_textbutton.dart';
+import 'package:berikan/widget/button/primary_button.dart';
 import 'package:berikan/widget/custom_textfield.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,6 +21,7 @@ class _SignupPageState extends State<SignupPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _retypePasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,7 +63,12 @@ class _SignupPageState extends State<SignupPage> {
             const SizedBox(
               height: 4,
             ),
-            CustomTextField('Seperti: john.doe@mail.com', isObscure: false, type: TextInputType.emailAddress, controller: _emailController,),
+            CustomTextField(
+              'Seperti: john.doe@mail.com',
+              isObscure: false,
+              type: TextInputType.emailAddress,
+              controller: _emailController,
+            ),
             const SizedBox(
               height: 16,
             ),
@@ -74,7 +82,12 @@ class _SignupPageState extends State<SignupPage> {
             const SizedBox(
               height: 4,
             ),
-            CustomTextField('', type: TextInputType.visiblePassword, isObscure: true, controller: _passwordController,),
+            CustomTextField(
+              '',
+              type: TextInputType.visiblePassword,
+              isObscure: true,
+              controller: _passwordController,
+            ),
             const SizedBox(
               height: 16,
             ),
@@ -88,22 +101,62 @@ class _SignupPageState extends State<SignupPage> {
             const SizedBox(
               height: 4,
             ),
-            CustomTextField('', type: TextInputType.visiblePassword, isObscure: true, controller: _retypePasswordController,),
+            CustomTextField(
+              '',
+              type: TextInputType.visiblePassword,
+              isObscure: true,
+              controller: _retypePasswordController,
+            ),
             const SizedBox(
               height: 40,
             ),
             PrimaryButton(
               text: 'LANJUT',
-              onPressed: () {
-                Navigator.pushNamed(context, SignupContinuePage.routeName);
+              onPressed: () async {
+                if (_emailController.text.isEmpty ||
+                    _passwordController.text.isEmpty ||
+                    _retypePasswordController.text.isEmpty) {
+                  const snackBar =
+                      SnackBar(content: Text('Fields cannot be empty'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                } else if (_passwordController.text !=
+                    _retypePasswordController.text) {
+                  const snackBar = SnackBar(
+                      content:
+                          Text('Password and Retype Password do not match'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                } else {
+                  try {
+                    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        email: _emailController.text,
+                        password: _passwordController.text);
+                    Navigator.pushReplacementNamed(context, SignupContinuePage.routeName,
+                        arguments: SignupArguments(userCredential.user?.uid));
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'email-already-in-use') {
+                      const snackBar =
+                          SnackBar(content: Text('This email has been used'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else if (e.code == 'weak-password') {
+                      const snackBar = SnackBar(
+                        content: Text('The password provided is too weak.'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                  }
+
+                }
               },
             ),
             const SizedBox(
               height: 16,
             ),
-            CustomTextButton(text: 'KEMBALI', onPressed: (){
-              Navigator.pop(context);
-            },),
+            CustomTextButton(
+              text: 'KEMBALI',
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
