@@ -38,7 +38,8 @@ class ChatPage extends StatelessWidget {
             child: Consumer<ChatPageProvider>(
               builder: (context, provider, widget) {
                 if (provider.state == ProviderResultState.hasData) {
-                  final chatDatas = provider.chats;
+                  final chatDatas = provider.chatDatas;
+                  final chats = provider.chats;
                   return ListView.builder(
                     itemBuilder: (context, index) {
                       return Card(
@@ -46,8 +47,8 @@ class ChatPage extends StatelessWidget {
                           onTap: () {
                             Navigator.pushNamed(
                                 context, ChatDetailPage.routeName,
-                                arguments: Arguments('John Doe',
-                                    'https://asset.kompas.com/crops/1g9P4L73NLmOshdRUptmBe_oQgQ=/0x0:698x465/750x500/data/photo/2020/12/07/5fce3837c4f6d.jpg'));
+                                arguments: chats[index],
+                            );
                           },
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(50),
