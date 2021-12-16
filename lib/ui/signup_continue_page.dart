@@ -185,7 +185,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                         joinedSince: DateTime.now(),
                         phoneNumber: _phoneNumberController.text);
                     await AccountService.addAccount(args.id, account);
-                    print('user added');
+
 
                     if (image != null) {
                       final imageRef = FirebaseStorage.instance
@@ -200,6 +200,8 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                           .update({'avatar_url': imageRef.fullPath});
 
                     }
+                    const snackBar = SnackBar(content: Text('Register success, please login'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     Navigator.pop(context);
                   } catch (e) {
                     final snackBar =
