@@ -1,17 +1,42 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:berikan/common/style.dart';
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
-  final String sender;
-  final String text;
+  final TimeOfDay time;
+  final String? text;
+  final Uint8List? imageFile;
   final bool isMyChat;
 
-  MessageBubble(
+  const MessageBubble._(
       {Key? key,
-      required this.sender,
-      required this.text,
+      required this.time,
+      this.text,
+      this.imageFile,
       required this.isMyChat})
       : super(key: key);
+
+  /// Constructs a [MessageBubble] widget only a text.
+  factory MessageBubble.text(
+      {Key? key,
+      required TimeOfDay time,
+      required String text,
+      required bool isMyChat}) {
+    return MessageBubble._(
+        key: key, time: time, isMyChat: isMyChat, text: text);
+  }
+
+  /// Constructs a [MessageBubble] widget only an attachment.
+  factory MessageBubble.attachment(
+      {Key? key,
+      required TimeOfDay time,
+      required Uint8List imageFile,
+      required bool isMyChat}) {
+    return MessageBubble._(
+        time: time, isMyChat: isMyChat, imageFile: imageFile);
+  }
 
   final myBorderRadius = const BorderRadius.only(
     topLeft: Radius.circular(20),
@@ -43,22 +68,32 @@ class MessageBubble extends StatelessWidget {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-              child: Wrap(
-                spacing: 16,
-                direction: Axis.horizontal,
-                alignment: WrapAlignment.end,
-                children: [
-                  Text(
-                    text,
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                  const Text('11:00'),
-                ],
-              ),
+              child: imageFile == null
+                  ? _buildTextBubble(context)
+                  : _buildImageBubble(context),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildTextBubble(BuildContext context) {
+    return Wrap(
+        spacing: 16,
+        direction: Axis.horizontal,
+        alignment: WrapAlignment.end,
+        children: [
+          Text(
+            text!,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+          Text(time.format(context)),
+        ]
+    );
+  }
+
+  Widget _buildImageBubble(BuildContext context) {
+    return Placeholder();
   }
 }
