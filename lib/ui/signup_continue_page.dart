@@ -77,7 +77,12 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                     backgroundColor: Colors.white,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(60),
-                      child: image==null? Image.asset('lib/data/assets/profile1.png') : Image.file(image!, fit: BoxFit.cover,),
+                      child: image == null
+                          ? Image.asset('lib/data/assets/profile1.png')
+                          : Image.file(
+                              image!,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                   Positioned(
@@ -190,16 +195,16 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                       StorageService.putData(
                           imageRef, image!.readAsBytesSync());
 
-                      final accountCollectionRef = FirebaseFirestore.instance
-                          .collection(Account.collectionName);
-
-                      accountCollectionRef
-                          .doc(args.id)
+                      accountDocumentReference(
+                              FirebaseFirestore.instance, args.id!)
                           .update({'avatar_url': imageRef.fullPath});
+
                     }
                     Navigator.pop(context);
                   } catch (e) {
-                    print('Failed to add user, error -> $e');
+                    final snackBar =
+                        SnackBar(content: Text('Error adding user : $e'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                 }
               },
@@ -217,44 +222,37 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
     );
   }
 
-  Future? showCustomDialog(){
+  Future? showCustomDialog() {
     showDialog(
         context: context,
         builder: (_) {
-          return SimpleDialog(
-              title: Text('Ambil gambar dari...'),
-              children: [
-                SimpleDialogOption(
-                  child: IconWithText(
-                      icon: const Icon(Icons.image),
-                      text: 'Galeri'),
-                  onPressed: () async {
-                    final XFile? file =
-                    await _picker.pickImage(
-                        source: ImageSource.gallery);
-                    setState(() {
-                      image = File(file!.path);
-                    });
-                    Navigator.pop(context);
-                  },
-                ),
-                SimpleDialogOption(
-                  child: IconWithText(
-                      icon: const Icon(Icons.camera),
-                      text: 'Kamera'),
-                  onPressed: () async {
-                    final XFile? file =
-                    await _picker.pickImage(
-                        source: ImageSource.camera);
-                    setState(() {
-                      image = File(file!.path);
-                    });
-                    Navigator.pop(context);
-                  },
-                )
-              ]);
+          return SimpleDialog(title: Text('Ambil gambar dari...'), children: [
+            SimpleDialogOption(
+              child:
+                  IconWithText(icon: const Icon(Icons.image), text: 'Galeri'),
+              onPressed: () async {
+                final XFile? file =
+                    await _picker.pickImage(source: ImageSource.gallery);
+                setState(() {
+                  image = File(file!.path);
+                });
+                Navigator.pop(context);
+              },
+            ),
+            SimpleDialogOption(
+              child:
+                  IconWithText(icon: const Icon(Icons.camera), text: 'Kamera'),
+              onPressed: () async {
+                final XFile? file =
+                    await _picker.pickImage(source: ImageSource.camera);
+                setState(() {
+                  image = File(file!.path);
+                });
+                Navigator.pop(context);
+              },
+            )
+          ]);
         });
-
   }
 
   @override
