@@ -26,7 +26,7 @@ class AccountService {
   }
 
   static Future<void> addAccount(String? id,Account account) async {
-    accountDocumentReference(FirebaseFirestore.instance).doc(id).set(account);
+    accountDocumentReference(FirebaseFirestore.instance, id!).set(account);
   }
 
   static Future<void> signIn(String email, String password) async {
