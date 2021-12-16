@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'chat.dart';
 import 'account.dart' show accountDocumentReference;
@@ -10,26 +12,34 @@ class Message
   final String accountId;
 
   final DateTime when;
-  final String content;
+  final String? content;
 
   /// The attached item to this [Message]
   ///
   /// This could be link to an item or
   /// to an image (uploaded by [accountId])
+  /// TODO: By now, I can only attach a message with an image only.
   final String? attachment;
 
   /// Constructs a new [Message] instance.
-  Message({required this.accountId, required this.when, required this.content, this.attachment});
+  Message({required this.accountId, required this.when, this.content, this.attachment});
 
   /// Constructs a new [Message] instance with current [DateTime]
-  factory Message.create(
-      {required String accountId, required String content, String? attachment})
+  factory Message.text({required String accountId, required String content})
   {
     return Message(
         accountId: accountId,
         when: DateTime.now(),
         content: content,
-        attachment: attachment
+    );
+  }
+
+  factory Message.attachment({required String accountId, required String imageRef})
+  {
+    return Message(
+      accountId: accountId,
+      when: DateTime.now(),
+      attachment: imageRef,
     );
   }
 
