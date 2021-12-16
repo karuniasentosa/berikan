@@ -28,6 +28,8 @@ class DateDiffDescriber
       return (dateFormat ?? DateFormat.yMMMMd()).format(from);
     } else if (inDays >= 2) {
       return '$inDays hari lalu';
+    } else if (inDays >= 1){
+      return 'Kemarin';
     } else {
       return 'Hari ini';
     }
