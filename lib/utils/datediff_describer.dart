@@ -12,7 +12,7 @@ class DateDiffDescriber
   {
     final int inHours = _absDiff(from, to).inHours;
     if (inHours > 0) {
-      return '${from.difference(to).abs().inHours} jam lalu';
+      return '$inHours jam lalu';
     } else {
       return 'Baru saja';
     }
@@ -21,11 +21,13 @@ class DateDiffDescriber
   static String dayDiff(DateTime from, DateTime to, {DateFormat? dateFormat})
   {
     final int inDays = _absDiff(from, to).inDays;
-    if (inDays >= 7) {
-      // example: 8 Okt
+    if (inDays >= 30) {
       return (dateFormat ?? DateFormat.yMMM()).format(from);
+    } else if (inDays >= 7) {
+      // example: 8 Okt
+      return (dateFormat ?? DateFormat.yMMMMd()).format(from);
     } else if (inDays >= 2) {
-      return '${from.difference(to).abs().inHours} hari lalu';
+      return '$inDays hari lalu';
     } else {
       return 'Hari ini';
     }
