@@ -159,8 +159,8 @@ class _AddItemPageState extends State<AddItemPage> {
                 }
 
                 // get account and uid
-                Account? account = await AccountService.getCurrentAccount();
-                String? uid = account?.user?.uid;
+                final Account? account = await AccountService.getCurrentAccount();
+                final String? uid = AccountService.getCurrentUser()?.uid;
 
                 // create a new item
                 final item = Item.create(
