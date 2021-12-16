@@ -127,13 +127,19 @@ class _SignupPageState extends State<SignupPage> {
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 } else {
                   try {
-                    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                        email: _emailController.text,
-                        password: _passwordController.text);
-                    Navigator.pushReplacementNamed(context, SignupContinuePage.routeName,
+                    UserCredential userCredential = await FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text);
+                    Navigator.pushReplacementNamed(
+                        context, SignupContinuePage.routeName,
                         arguments: SignupArguments(userCredential.user?.uid));
                   } on FirebaseAuthException catch (e) {
-                    if (e.code == 'email-already-in-use') {
+                    if (e.code == 'invalid-email') {
+                      const snackBar =
+                          SnackBar(content: Text('Invalid email address'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    } else if (e.code == 'email-already-in-use') {
                       const snackBar =
                           SnackBar(content: Text('This email has been used'));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -144,7 +150,6 @@ class _SignupPageState extends State<SignupPage> {
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
                   }
-
                 }
               },
             ),
