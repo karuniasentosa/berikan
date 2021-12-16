@@ -1,4 +1,5 @@
 import 'package:berikan/common/style.dart';
+import 'package:berikan/provider/chat_detail_page_provider.dart';
 import 'package:berikan/provider/chat_page_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:berikan/ui/add_item_page.dart';
@@ -10,6 +11,7 @@ import 'package:berikan/ui/main_page.dart';
 import 'package:berikan/ui/signup_continue_page.dart';
 import 'package:berikan/ui/signup_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'api/model/chat.dart';
 import 'common/style.dart';
 
 import 'package:flutter/material.dart';
@@ -40,7 +42,13 @@ class MyApp extends StatelessWidget {
           create: (_) => ChatPageProvider(),
           child: ChatPage(),
         ),
-        ChatDetailPage.routeName: (context) => ChatDetailPage(),
+        ChatDetailPage.routeName: (context) {
+          final chat = ModalRoute.of(context)?.settings.arguments as Chat;
+          return ChangeNotifierProvider<ChatDetailPageProvider>(
+            create: (_) => ChatDetailPageProvider(),
+            child: ChatDetailPage(chat: chat),
+          );
+        },
       },
     );
   }
