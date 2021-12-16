@@ -1,22 +1,21 @@
 
+
 import 'package:berikan/api/item_service.dart';
 import 'package:berikan/api/model/item.dart';
 import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
 import 'package:berikan/ui/chat_page.dart';
+import 'package:berikan/widget/main_gridview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:berikan/widget/card/main_card.dart';
 
 
 class MainPage extends StatelessWidget {
   static const routeName = '/mainPage';
 
   final _fireStore = FirebaseFirestore.instance;
-  final _fireStorage = FirebaseStorage.instance;
 
   MainPage({Key? key}) : super(key: key);
 
@@ -82,20 +81,9 @@ class MainPage extends StatelessWidget {
                       future: ItemService.getAllItems(_fireStore),
                       builder: (BuildContext context, snapshot) {
                         if (!snapshot.hasData) {
-                          return CircularProgressIndicator();
+                          return const CircularProgressIndicator();
                         } else {
-                          final imageRef = _fireStorage
-                              .refFromURL(snapshot.data![0].imagesUrl[0]);
-                          return GridView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return CardWidget(imageRef: imageRef, snapshot: snapshot,);
-                            },
-                            itemCount: myProducts.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
-                          );
+                          return MainGridView(snapshot: snapshot,);
                         }
                       },
                     ),
@@ -226,6 +214,8 @@ class MainPage extends StatelessWidget {
   }
 
 }
+
+
 
 
 
