@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'model/account.dart';
 
 class AccountService {
-  static const collectionName = 'account';
 
   /// No constructor
   AccountService._();
