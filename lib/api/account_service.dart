@@ -26,14 +26,7 @@ class AccountService {
   }
 
   static Future<void> addAccount(String? id,Account account) async {
-    final accountCollectionRef = FirebaseFirestore.instance
-        .collection(collectionName)
-        .withConverter<Account>(
-            fromFirestore: Account.fromFirestore,
-            toFirestore: Account.toFirestore);
-
-
-    accountCollectionRef.doc(id).set(account);
+    accountDocumentReference(FirebaseFirestore.instance).doc(id).set(account);
   }
 
   static Future<void> signIn(String email, String password) async {
