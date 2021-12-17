@@ -94,6 +94,21 @@ class MessageBubble extends StatelessWidget {
   }
 
   Widget _buildImageBubble(BuildContext context) {
-    return Placeholder();
+    return Stack(
+      children: [
+        Image.memory(imageFile!, width: 240, height: 240),
+        Positioned(
+            child: Container(color: Colors.black.withAlpha(1), width: 40, height: 40),
+            bottom: 0,
+            right: 0,
+        ),
+        Positioned(
+            child: Text(time.format(context), style: TextStyle(color: Colors.white)),
+            bottom: 0,
+            right: 0,
+        ),
+
+      ]
+    );
   }
 }
