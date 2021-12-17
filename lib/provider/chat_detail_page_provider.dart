@@ -9,19 +9,18 @@ import 'package:flutter/material.dart';
 
 class ChatDetailPageProvider extends ChangeNotifier
 {
-  late final Chat _chatReference;
   ProviderResultState _state = ProviderResultState.noData;
-  late Stream<List<Message>> _messageListStream;
+  Stream<List<Message>>? _messageListStream;
   String _errorMessage = "";
 
   ProviderResultState get state => _state;
-  Stream<List<Message>> get messages => _messageListStream;
+  Stream<List<Message>> get messages => _messageListStream!;
   String get errorMessage => _errorMessage;
 
   Future _getMessage(Chat chat) async
   {
     try {
-      _messageListStream = _chatReference.messages.transform(_MyStreamTransformer());
+      _messageListStream = chat.messages.transform(_MyStreamTransformer());
       _state = ProviderResultState.hasData;
     } catch (e) {
       _state = ProviderResultState.error;
@@ -31,7 +30,6 @@ class ChatDetailPageProvider extends ChangeNotifier
   }
 
   void getMessage(Chat chat) {
-    _chatReference = chat;
     _state = ProviderResultState.loading;
     notifyListeners();
     _getMessage(chat);
