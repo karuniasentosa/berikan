@@ -12,43 +12,40 @@ import 'package:firebase_storage/firebase_storage.dart';
 class ChatData
 {
   final String chatId;
-  final Uint8List? _imageData;
-  final String? _name;
-  final DateTime? _lastChat;
-  final String? _lastMessage;
+  final Uint8List theirImageData;
+  final String theirName;
+  final DateTime lastChat;
+  final String? lastMessage;
+  final String lastSentId;
 
-  Uint8List get imageData => _imageData!;
-  String get name => _name!;
-  DateTime get lastChat => _lastChat!;
-  String get lastMessage => _lastMessage!;
-
-  ChatData._(this.chatId, this._imageData, this._lastMessage, this._lastChat, this._name);
+  ChatData._(this.chatId, this.theirImageData, this.lastMessage, this.lastChat, this.theirName, this.lastSentId);
 
   static Future<ChatData> of(Chat chat) async {
     final firebaseStorage = FirebaseStorage.instance;
     final firebaseFirestore = FirebaseFirestore.instance;
 
-    final uid = AccountService.getCurrentUser()!.uid;
+    final myUid = AccountService.getCurrentUser()!.uid;
 
     // chat that has to be shown
-    String showUid;
-    if (uid == chat.endpointAccountId1) {
-      showUid = chat.endpointAccountId2;
+    String theirUid;
+    if (myUid == chat.endpointAccountId1) {
+      theirUid = chat.endpointAccountId2;
     } else {
-      showUid = chat.endpointAccountId1;
+      theirUid = chat.endpointAccountId1;
     }
 
-    final imageRef = firebaseStorage.ref('/user_profile/${showUid}.jpg');
-    final accountDocRef = accountDocumentReference(firebaseFirestore, showUid);
-    final snapshot = await accountDocRef.get();
-
+    final theirImageRef = firebaseStorage.ref('/user_profile/${theirUid}.jpg');
+    final theirAccountDocRef = accountDocumentReference(firebaseFirestore, theirUid);
+    final theirSnapshot = await theirAccountDocRef.get();
+    final theirName = '${theirSnapshot.data()!.firstName} ${theirSnapshot.data()!.lastName}';
+    final theirImageData = await StorageService.getData(theirImageRef);
+    
     // get the data (assign _imageData and the other things)
     final latestMessage = await chat.latestMessage;
-    final name = '${snapshot.data()!.firstName} ${snapshot.data()!.lastName}';
-    final imageData = await StorageService.getData(imageRef);
     final message = latestMessage.content;
     final when = latestMessage.when;
+    final lastSentId = latestMessage.accountId;
 
-    return ChatData._(chat.id, imageData, message, when, name);
+    return ChatData._(chat.id, theirImageData!, message, when, theirName, lastSentId);
   }
 }
