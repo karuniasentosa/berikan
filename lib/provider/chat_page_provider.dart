@@ -23,6 +23,7 @@ class ChatPageProvider extends ChangeNotifier
     try {
       final chats = await ChatService.getMyChats();
       if (chats == null) {
+        _chat = [];
         _chatData = [];
         _state = ProviderResultState.noData;
         _errorMessage = "List is empty";
@@ -46,6 +47,8 @@ class ChatPageProvider extends ChangeNotifier
   }
   
   void getMyChats() {
+    _chat = [];
+    _chatData = [];
     _getChats();
   }
 }
