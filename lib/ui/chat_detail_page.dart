@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:berikan/api/account_service.dart';
@@ -10,20 +11,22 @@ import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/provider/chat_detail_page_provider.dart';
 import 'package:berikan/provider/provider_result_state.dart';
+import 'package:berikan/utils/related_to_strings.dart';
+import 'package:berikan/widget/icon_with_text.dart';
 import 'package:berikan/widget/message_bubble.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ChatDetailPage extends StatelessWidget {
   static const routeName = '/chatDetailPage';
 
   final Chat chat;
+  ChatDetailPage({Key? key, required this.chat}) : super(key: key);
+
   final _textEditingController = TextEditingController();
   final _chatScrollingController = ScrollController();
-  File? imageFile;
-
-  ChatDetailPage({Key? key, required this.chat}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class ChatDetailPage extends StatelessWidget {
                       future: ChatData.of(chat),
                       builder: (context, AsyncSnapshot<ChatData> snapshot) {
                         if (snapshot.hasData) {
-                          return Image.memory(snapshot.data!.imageData);
+                          return Image.memory(snapshot.data!.theirImageData);
                         } else {
                           return Container(color: Colors.grey);
                         }
@@ -55,7 +58,7 @@ class ChatDetailPage extends StatelessWidget {
                   future: ChatData.of(chat),
                   builder: (context, AsyncSnapshot<ChatData> snapshot) {
                     if (snapshot.hasData) {
-                      return Text(snapshot.data!.name);
+                      return Text(snapshot.data!.theirName);
                     } else {
                       return Text('...');
                     }
@@ -136,8 +139,21 @@ class ChatDetailPage extends StatelessWidget {
                     child: IconButton(
                       icon: const Icon(Icons.photo_camera_outlined,
                           color: Colors.white),
-                      onPressed: () {
-
+                      onPressed: () async {
+                        final file = await _showImagePickerDialog(context);
+                        if (file != null) {
+                          final random = Random(DateTime.now().millisecond);
+                          final _storageInstance = FirebaseStorage.instance;
+                          final ref = _storageInstance.ref('chat_attachment')
+                                              .child(chat.id)
+                                              .child(randomString(random, length: 7));
+                          StorageService.putData(ref, file.readAsBytesSync());
+                          final message = Message.attachment(
+                              accountId: AccountService.getCurrentUser()!.uid,
+                              imageRef: ref.fullPath
+                          );
+                          chat.pushMessage(message);
+                        }
                       },
                     ),
                   ),
@@ -183,7 +199,7 @@ class ChatDetailPage extends StatelessWidget {
     );
   }
 
-  void _sendMessage() async {
+  void _sendMessage() {
     if (_textEditingController.text.isNotEmpty) {
       final message = Message.text(
           accountId: AccountService.getCurrentUser()!.uid,
@@ -193,12 +209,65 @@ class ChatDetailPage extends StatelessWidget {
       _textEditingController.clear();
 
       Future.delayed(Duration(milliseconds: 500), () {
-        _chatScrollingController.animateTo(
-            _chatScrollingController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 200),
-            curve: Curves.easeIn
-        );
+        _scrollToBottom();
       });
     }
+  }
+
+  void _scrollToBottom() {
+    _chatScrollingController.animateTo(
+        _chatScrollingController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeIn
+    );
+  }
+
+  Future<File?> _showImagePickerDialog(BuildContext context) async {
+    File? _file;
+
+    Future<File?> chooseImageCamera() async {
+      final XFile? file = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        imageQuality: 80,
+      );
+      if (file != null) {
+        return File(file.path);
+      }
+      return null;
+    }
+
+    Future<File?> chooseImageGallery() async {
+      final XFile? file = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
+      if (file != null) {
+        return File(file.path);
+      }
+      return null;
+    }
+
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(title: Text('Ambil gambar dari...'), children: [
+            SimpleDialogOption(
+              child:
+              IconWithText(icon: const Icon(Icons.image), text: 'Galeri'),
+              onPressed: () async {
+                _file = await chooseImageGallery();
+                Navigator.pop(context);
+              },
+            ),
+            SimpleDialogOption(
+                child: IconWithText(
+                    icon: const Icon(Icons.camera), text: 'Kamera'),
+                onPressed: () async {
+                  _file = await chooseImageCamera();
+                  Navigator.pop(context);
+                })
+          ]);
+        });
+    return _file;
   }
 }
