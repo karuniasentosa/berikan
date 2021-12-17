@@ -1,22 +1,21 @@
-import 'dart:typed_data';
+
 
 import 'package:berikan/api/item_service.dart';
 import 'package:berikan/api/model/item.dart';
-import 'package:berikan/api/storage_service.dart';
+import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
 import 'package:berikan/ui/chat_page.dart';
+import 'package:berikan/widget/main_gridview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:berikan/common/constant.dart';
+
 
 class MainPage extends StatelessWidget {
   static const routeName = '/mainPage';
 
   final _fireStore = FirebaseFirestore.instance;
-  final _fireStorage = FirebaseStorage.instance;
 
   MainPage({Key? key}) : super(key: key);
 
@@ -77,67 +76,14 @@ class MainPage extends StatelessWidget {
                       style:
                           blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
                   SizedBox(
-                    height: 525,
+                    height: 500,
                     child: FutureBuilder<List<Item>>(
                       future: ItemService.getAllItems(_fireStore),
                       builder: (BuildContext context, snapshot) {
                         if (!snapshot.hasData) {
-                          return CircularProgressIndicator();
+                          return const CircularProgressIndicator();
                         } else {
-                          final imageRef = _fireStorage
-                              .refFromURL(snapshot.data![0].imagesUrl[0]);
-                          return GridView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                elevation: 5,
-                                child: Column(
-                                  children: [
-                                    FutureBuilder<Uint8List?>(
-                                      future: StorageService.getData(imageRef),
-                                      builder: (context, storageSnap) {
-                                        if (!storageSnap.hasData){
-                                          return CircularProgressIndicator();
-                                        } else{
-                                          return SizedBox(
-                                            child: Image.memory(
-                                              storageSnap.data!,
-                                              fit: BoxFit.cover,
-                                            ),
-                                            height: 200,
-                                            width: 200,
-                                          );
-                                        }
-
-                                      },
-                                    ),
-                                    SizedBox(
-                                      height: 1,
-                                    ),
-                                    Align(
-                                      child: Text(snapshot.data![0].name),
-                                      alignment: Alignment.centerLeft,
-                                    ),
-                                    SizedBox(
-                                      height: 12,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('JAKARTA BARAT'),
-                                        Text('3 HARI LALU')
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                            itemCount: myProducts.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
-                          );
+                          return MainGridView(snapshot: snapshot,);
                         }
                       },
                     ),
@@ -266,7 +212,16 @@ class MainPage extends StatelessWidget {
       ),
     );
   }
+
 }
+
+
+
+
+
+
+
+
 
 class OurSearchDelegate extends SearchDelegate<String> {
   final dummyBarangBekas = [

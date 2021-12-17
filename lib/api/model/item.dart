@@ -1,12 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
-    show FirebaseFirestore, CollectionReference, DocumentReference, DocumentSnapshot, SetOptions, SnapshotOptions, Timestamp;
+    show
+        FirebaseFirestore,
+        CollectionReference,
+        DocumentReference,
+        DocumentSnapshot,
+        SetOptions,
+        SnapshotOptions,
+        Timestamp;
 import 'package:collection/collection.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
 
 import 'account.dart';
 
-class Item
-{
+class Item {
   static const String collectionName = 'item';
 
   /// The item id
@@ -31,7 +37,8 @@ class Item
   final String ownerId;
 
   /// Constructs a new [Item] class
-  const Item(this.id, {
+  const Item(
+    this.id, {
     required this.imagesUrl,
     required this.name,
     required this.addedSince,
@@ -43,13 +50,19 @@ class Item
   ///
   /// This can be useful when you don't know what id
   /// should be assigned for this [Item].
-  factory Item.create(String ownerId, {
+  factory Item.create(
+    String ownerId, {
     required List<String> imagesUrl,
     required String name,
     required DateTime addedSince,
     required String description,
-  }) => Item('', imagesUrl: imagesUrl, name: name, addedSince: addedSince, description: description, ownerId: ownerId);
-
+  }) =>
+      Item('',
+          imagesUrl: imagesUrl,
+          name: name,
+          addedSince: addedSince,
+          description: description,
+          ownerId: ownerId);
 
   @override
   bool operator ==(Object other) =>
@@ -70,7 +83,6 @@ class Item
       description.hashCode ^
       ownerId.hashCode;
 
-
   @override
   String toString() {
     return 'Item{imagesUrl: $imagesUrl, name: $name, addedSince: $addedSince, description: $description, ownerId: $ownerId}';
@@ -84,7 +96,8 @@ class Item
   /// See: [CollectionReference.withConverter](https://pub.dev/documentation/cloud_firestore/latest/cloud_firestore/CollectionReference/withConverter.html)
   ///
   /// See also: [FromFirestore](https://pub.dev/documentation/cloud_firestore/latest/cloud_firestore/FromFirestore.html)
-  static Item fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? _) {
+  static Item fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? _) {
     final data = snapshot.data()!;
 
     final itemId = snapshot.reference.id;
@@ -92,26 +105,27 @@ class Item
     final description = data['description'] as String;
     final imagesUrl = data['images'] as List<dynamic>;
     final name = data['name'] as String;
-    final ownerId = (data['owner'] as DocumentReference<Map<String, dynamic>>).id;
+    final ownerId =
+        (data['owner'] as DocumentReference<Map<String, dynamic>>).id;
 
     return Item(
-        itemId,
-        // I am a little bit skeptical. So putting these check would
-        // be worth, i guess.
-        // Summary, the list only takes the String if the String is an url.
-        imagesUrl: imagesUrl.takeWhile((value) {
-          if (value is String) {
-            final uri = Uri.tryParse(value);
-            if (uri != null) {
-              return uri.isAbsolute;
+      itemId,
+      // I am a little bit skeptical. So putting these check would
+      // be worth, i guess.
+      // Summary, the list only takes the String if the String is an url.
+      imagesUrl: imagesUrl
+          .takeWhile((value) {
+            if (value is String) {
+              return true;
             }
-          }
-          return false;
-        }).map<String>((e) => e).toList(),
-        name: name,
-        addedSince: addedSince,
-        description: description,
-        ownerId: ownerId,
+            return false;
+          })
+          .map<String>((e) => e)
+          .toList(),
+      name: name,
+      addedSince: addedSince,
+      description: description,
+      ownerId: ownerId,
     );
   }
 
@@ -128,11 +142,13 @@ class Item
   /// See also: [ToFirestore](https://pub.dev/documentation/cloud_firestore/latest/cloud_firestore/ToFirestore.html)
   static Map<String, Object?> toFirestore(Item model, SetOptions? options) {
     return {
-      'added_since'   :   Timestamp.fromDate(model.addedSince),
-      'description'   :   model.description,
-      'images'        :   model.imagesUrl,
-      'name'          :   model.name,
-      'owner'         :   FirebaseFirestore.instance.collection(Account.collectionName).doc(model.ownerId),
+      'added_since': Timestamp.fromDate(model.addedSince),
+      'description': model.description,
+      'images': model.imagesUrl,
+      'name': model.name,
+      'owner': FirebaseFirestore.instance
+          .collection(Account.collectionName)
+          .doc(model.ownerId),
     };
   }
 }
@@ -141,14 +157,14 @@ class Item
 ///
 /// [instance] is required to... because uh... it is required!
 CollectionReference<Item> itemCollectionReference(FirebaseFirestore instance) =>
-    instance.collection(Item.collectionName).withConverter<Item>
-    (
-      fromFirestore: Item.fromFirestore,
-      toFirestore: Item.toFirestore,
-    );
+    instance.collection(Item.collectionName).withConverter<Item>(
+          fromFirestore: Item.fromFirestore,
+          toFirestore: Item.toFirestore,
+        );
 
 /// Returns a type-safe [DocumentReference] of [Item] class within the document [id].
 ///
 /// [instance] is required to... because uh... it is required!
-DocumentReference<Item> itemDocumentReference(FirebaseFirestore instance, String id) =>
+DocumentReference<Item> itemDocumentReference(
+        FirebaseFirestore instance, String id) =>
     itemCollectionReference(instance).doc(id);
