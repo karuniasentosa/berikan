@@ -56,7 +56,7 @@ class Message
 
     final accountId = (data['who'] as DocumentReference).id;
     final when = (data['when'] as Timestamp).toDate();
-    final content = data['content'] as String;
+    final content = data['content'] as String?;
     final attachment = data['attachment'] as String?;
 
     return Message(
