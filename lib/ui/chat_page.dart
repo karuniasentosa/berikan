@@ -2,6 +2,7 @@ import 'package:berikan/provider/chat_page_provider.dart';
 import 'package:berikan/provider/provider_result_state.dart';
 import 'package:berikan/ui/chat_detail_page.dart';
 import 'package:berikan/utills/arguments.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -52,10 +53,26 @@ class ChatPage extends StatelessWidget {
                           },
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(50),
-                            child: Image.memory(chatDatas[index].imageData),
+                            child: Image.memory(chatDatas[index].theirImageData),
                           ),
-                          title: Text(chatDatas[index].name),
-                          subtitle: Text(chatDatas[index].lastMessage),
+                          title: Text(chatDatas[index].theirName),
+                          subtitle: RichText(
+                              text: TextSpan(
+                                style: TextStyle(color: Colors.black),
+                                children: [
+                                  // sorry for the long line :((
+                                  TextSpan(
+                                      text: chatDatas[index].lastSentId ==
+                                            FirebaseAuth.instance.currentUser!.uid ?
+                                            'Anda: ' : '',
+                                      style: const TextStyle(fontWeight: FontWeight.bold)
+                                  ),
+                                  TextSpan(
+                                      text: chatDatas[index].lastMessage ?? 'Mengirim gambar'
+                                  )
+                                ]
+                              ),
+                          )
                         ),
                       );
                     },
