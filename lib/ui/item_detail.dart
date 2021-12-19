@@ -246,15 +246,21 @@ class CarouselBuilder extends StatefulWidget {
 
 class _CarouselBuilderState extends State<CarouselBuilder> {
   int _current = 0;
-  late List<Uint8List?> loadedImageList;
+  List<Uint8List?> loadedImageList = [];
 
   @override
-  void initState() async {
-    for(int i in widget.imageRefList){
-      final img = await StorageService.getData(widget.imageRefList[i]);
-      loadedImageList.add(img);
-    }
+  void initState()  {
     super.initState();
+    loadImage();
+  }
+
+  void loadImage() async {
+    for(int i =0; i<widget.imageRefList.length; i++){
+      final img = await StorageService.getData(widget.imageRefList[i]);
+      setState(() {
+        loadedImageList.add(img);
+      });
+    }
   }
 
 
@@ -266,18 +272,11 @@ class _CarouselBuilderState extends State<CarouselBuilder> {
         CarouselSlider.builder(
           itemCount: widget.args.itemDetail.imagesUrl.length,
           itemBuilder: (context, index, pageViewIndex) {
-            return FutureBuilder<Uint8List?>(
-                future: StorageService.getData(widget.imageRefList[index]),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else {
-                    return Image.memory(
-                      snapshot.data!,
-                      fit: BoxFit.fill,
-                    );
-                  }
-                });
+            if(loadedImageList.length != widget.args.itemDetail.imagesUrl.length){
+              return CircularProgressIndicator();
+            } else{
+              return Image.memory(loadedImageList[index]!);
+            }
           },
           options: CarouselOptions(
               enableInfiniteScroll: false,
