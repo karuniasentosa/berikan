@@ -1,7 +1,11 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:berikan/common/style.dart';
+import 'package:berikan/ui/image_viewer_page.dart';
+import 'package:berikan/utills/arguments.dart';
+import 'package:berikan/utils/related_to_strings.dart';
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -89,26 +93,45 @@ class MessageBubble extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyText1,
           ),
           Text(time.format(context)),
-        ]
-    );
+        ]);
   }
 
   Widget _buildImageBubble(BuildContext context) {
-    return Stack(
-      children: [
-        Image.memory(imageFile!, width: 240, height: 240),
-        Positioned(
-            child: Container(color: Colors.black.withAlpha(1), width: 40, height: 40),
+    final id = randomString(Random(DateTime.now().millisecond), length: 10);
+    return SizedBox(
+      width: 240,
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: isMyChat ? myBorderRadius : otherBorderRadius,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                    context,
+                    ImageViewerPage.routeName,
+                    arguments: ImageViewerArguments(id, imageFile!)
+                );
+              },
+              child: Hero(
+                tag: id,
+                child: AspectRatio(aspectRatio: 1,child: Image.memory(imageFile!, fit: BoxFit.cover)),
+              ),
+            ),
+          ),
+          Positioned(
+            child: Container(
+                color: Colors.black.withAlpha(1), width: 40, height: 40),
             bottom: 0,
             right: 0,
-        ),
-        Positioned(
-            child: Text(time.format(context), style: TextStyle(color: Colors.white)),
+          ),
+          Positioned(
+            child: Text(time.format(context),
+                style: TextStyle(color: Colors.white)),
             bottom: 0,
             right: 0,
-        ),
-
-      ]
+          ),
+        ],
+      ),
     );
   }
 }
