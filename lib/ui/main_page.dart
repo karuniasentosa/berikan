@@ -81,7 +81,7 @@ class MainPage extends StatelessWidget {
                       future: ItemService.getAllItems(_fireStore),
                       builder: (BuildContext context, snapshot) {
                         if (!snapshot.hasData) {
-                          return const CircularProgressIndicator();
+                          return const Center(child: CircularProgressIndicator());
                         } else {
                           return MainGridView(snapshot: snapshot,);
                         }
