@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/image_viewer_page.dart';
@@ -117,12 +118,6 @@ class MessageBubble extends StatelessWidget {
                 child: AspectRatio(aspectRatio: 1,child: Image.memory(imageFile!, fit: BoxFit.cover)),
               ),
             ),
-          ),
-          Positioned(
-            child: Container(
-                color: Colors.black.withAlpha(1), width: 40, height: 40),
-            bottom: 0,
-            right: 0,
           ),
           Positioned(
             child: Text(time.format(context),
