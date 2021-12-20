@@ -41,6 +41,7 @@ class ChatPage extends StatelessWidget {
                 if (provider.state == ProviderResultState.hasData) {
                   final chatDatas = provider.chatDatas;
                   final chats = provider.chats;
+
                   return ListView.builder(
                     itemBuilder: (context, index) {
                       return Card(

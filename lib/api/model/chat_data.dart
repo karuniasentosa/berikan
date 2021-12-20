@@ -20,6 +20,7 @@ class ChatData
 
   ChatData._(this.chatId, this.theirImageData, this.lastMessage, this.lastChat, this.theirName, this.lastSentId);
 
+
   static Future<ChatData> of(Chat chat) async {
     final firebaseStorage = FirebaseStorage.instance;
     final firebaseFirestore = FirebaseFirestore.instance;
@@ -47,5 +48,6 @@ class ChatData
     final lastSentId = latestMessage.accountId;
 
     return ChatData._(chat.id, theirImageData!, message, when, theirName, lastSentId);
+
   }
 }
