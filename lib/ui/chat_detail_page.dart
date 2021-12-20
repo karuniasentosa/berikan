@@ -82,6 +82,7 @@ class ChatDetailPage extends StatelessWidget {
                         if (snapshot.hasData) {
                           final messageList = snapshot.requireData;
                           return ListView.builder(
+                            reverse: true,
                             controller: _chatScrollingController,
                             itemCount: messageList.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -216,7 +217,7 @@ class ChatDetailPage extends StatelessWidget {
 
   void _scrollToBottom() {
     _chatScrollingController.animateTo(
-        _chatScrollingController.position.maxScrollExtent,
+        _chatScrollingController.position.minScrollExtent,
         duration: Duration(milliseconds: 200),
         curve: Curves.easeIn
     );
