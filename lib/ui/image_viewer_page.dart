@@ -15,7 +15,10 @@ class ImageViewerPage extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.black,
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
