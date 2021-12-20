@@ -273,7 +273,7 @@ class _CarouselBuilderState extends State<CarouselBuilder> {
           itemCount: widget.args.itemDetail.imagesUrl.length,
           itemBuilder: (context, index, pageViewIndex) {
             if(loadedImageList.length != widget.args.itemDetail.imagesUrl.length){
-              return CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             } else{
               return Image.memory(loadedImageList[index]!);
             }
