@@ -3,6 +3,7 @@ import 'package:berikan/ui/add_item_page.dart';
 import 'package:berikan/ui/chat_detail_page.dart';
 import 'package:berikan/ui/chat_page.dart';
 import 'package:berikan/ui/home_page.dart';
+import 'package:berikan/ui/item_detail.dart';
 import 'package:berikan/ui/login_page.dart';
 import 'package:berikan/ui/main_page.dart';
 import 'package:berikan/ui/signup_continue_page.dart';
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
         LoginPage.routeName: (context) => const LoginPage(),
         AddItemPage.routeName: (context) => AddItemPage(),
         ChatPage.routeName: (context) => const ChatPage(),
-        ChatDetailPage.routeName: (context) => ChatDetailPage(),
+        ChatDetailPage.routeName: (context) => const ChatDetailPage(),
+        ItemDetailPage.routeName: (context) => ItemDetailPage()
       },
     );
   }
