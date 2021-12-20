@@ -36,11 +36,20 @@ class MyApp extends StatelessWidget {
         HomePage.routeName: (context) => const HomePage(),
         LoginPage.routeName: (context) => const LoginPage(),
         AddItemPage.routeName: (context) => AddItemPage(),
-        ChatPage.routeName: (context) => const ChatPage(),
-        ChatDetailPage.routeName: (context) => ChatDetailPage(),
+        ChatPage.routeName: (context) => ChangeNotifierProvider<ChatPageProvider>(
+          create: (_) => ChatPageProvider(),
+          child: ChatPage(),
+        ),
+        ChatDetailPage.routeName: (context) {
+          final chat = ModalRoute.of(context)?.settings.arguments as Chat;
+          return ChangeNotifierProvider<ChatDetailPageProvider>(
+            create: (_) => ChatDetailPageProvider(),
+            child: ChatDetailPage(chat: chat),
+          );
+        },
         ImageViewerPage.routeName: (context) {
-          final arguments = ModalRoute.of(context)?.settings.arguments as ImageViewerArguments;
-          return ImageViewerPage(imageId: arguments.imageId, imageData: arguments.imageData);
+          final args = ModalRoute.of(context)?.settings.arguments as ImageViewerArguments;
+          return ImageViewerPage(imageId: args.imageId, imageData: args.imageData);
         }
       },
     );
