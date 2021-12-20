@@ -17,7 +17,7 @@ class ChatService
     if (account == null) return null;
 
     final uid = AccountService.getCurrentUser()!.uid;
-    // TODO: Comeback later and check this code.
+
     final query = chatCollectionReference(FirebaseFirestore.instance)
         .where('endpoints', arrayContains: accountDocumentReference(FirebaseFirestore.instance, uid));
 
