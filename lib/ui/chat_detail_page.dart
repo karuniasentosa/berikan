@@ -3,9 +3,11 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:berikan/api/account_service.dart';
+import 'package:berikan/api/item_service.dart';
 import 'package:berikan/api/model/chat.dart';
 import 'package:berikan/api/model/extensions/chat_extensions.dart';
 import 'package:berikan/api/model/chat_data.dart';
+import 'package:berikan/api/model/item.dart';
 import 'package:berikan/api/model/message.dart';
 import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/common/style.dart';
@@ -13,7 +15,9 @@ import 'package:berikan/provider/chat_detail_page_provider.dart';
 import 'package:berikan/provider/provider_result_state.dart';
 import 'package:berikan/utils/related_to_strings.dart';
 import 'package:berikan/widget/icon_with_text.dart';
+import 'package:berikan/widget/item_preview_on_chat.dart';
 import 'package:berikan/widget/message_bubble.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,6 +28,15 @@ class ChatDetailPage extends StatelessWidget {
 
   final Chat chat;
   ChatDetailPage({Key? key, required this.chat}) : super(key: key);
+  factory ChatDetailPage.putItem({Key? key, required Chat chat, required String itemId}) {
+    // push the message first before building this widget
+    final message = Message.itemAttachment(
+        accountId: AccountService.getCurrentUser()!.uid,
+        itemId: itemId
+    );
+    chat.pushMessage(message);
+    return ChatDetailPage(chat: chat);
+  }
 
   final _textEditingController = TextEditingController();
   final _chatScrollingController = ScrollController();
@@ -88,27 +101,42 @@ class ChatDetailPage extends StatelessWidget {
                             itemBuilder: (BuildContext context, int index) {
                               final message = messageList[index];
                               if (message.attachment != null) {
-                                // TODO: bagian ini jelek banget ::(
-                                return FutureBuilder<Uint8List?>(
-                                    future: StorageService.getData(FirebaseStorage.instance.ref(message.attachment!)),
+                                if (message.attachmentType == AttachmentType.image) {
+                                  return FutureBuilder<Uint8List?>(
+                                      future: StorageService.getData(FirebaseStorage.instance.ref(message.attachment!)),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return MessageBubble.imageAttachment(
+                                              time: TimeOfDay.fromDateTime(message.when),
+                                              imageData: snapshot.requireData!,
+                                              isMyChat: AccountService.getCurrentUser()!.uid == message.accountId);
+                                        } else {
+                                          return Placeholder();
+                                        }
+                                      }
+                                  );
+                                } else { // if (message.attachmentType == AttachmentType.item
+                                  return FutureBuilder<Item?>(
+                                    future: ItemService.getItem(FirebaseFirestore.instance, message.attachment!),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
-                                        return MessageBubble.attachment(
+                                        return MessageBubble.itemAttachment(
                                             time: TimeOfDay.fromDateTime(message.when),
-                                            imageFile: snapshot.requireData!,
-                                            isMyChat: AccountService.getCurrentUser()!.uid == message.accountId);
+                                            itemWidget: ItemPreviewOnChat(item: snapshot.data!),
+                                            isMyChat: AccountService.getCurrentUser()!.uid == message.accountId
+                                        );
                                       } else {
-                                          return Placeholder();
+                                        return Placeholder();
                                       }
                                     }
-                                );
+                                  );
+                                }
                               } else {
                                 return MessageBubble.text(
                                     time: TimeOfDay.fromDateTime(message.when),
                                     text: message.content!,
-                                    isMyChat:
-                                        AccountService.getCurrentUser()!.uid ==
-                                            message.accountId);
+                                    isMyChat: AccountService.getCurrentUser()!.uid == message.accountId
+                                );
                               }
                             },
                           );
@@ -149,7 +177,7 @@ class ChatDetailPage extends StatelessWidget {
                                               .child(chat.id)
                                               .child(randomString(random, length: 7));
                           StorageService.putData(ref, file.readAsBytesSync());
-                          final message = Message.attachment(
+                          final message = Message.imageAttachment(
                               accountId: AccountService.getCurrentUser()!.uid,
                               imageRef: ref.fullPath
                           );
