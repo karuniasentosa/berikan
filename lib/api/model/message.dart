@@ -4,6 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'chat.dart';
 import 'account.dart' show accountDocumentReference;
 
+
+enum AttachmentType {
+  image,
+  item,
+}
+
 class Message
 {
   static const String collectionName = 'message';
@@ -18,11 +24,12 @@ class Message
   ///
   /// This could be link to an item or
   /// to an image (uploaded by [accountId])
-  /// TODO: By now, I can only attach a message with an image only.
   final String? attachment;
 
+  final AttachmentType? attachmentType;
+
   /// Constructs a new [Message] instance.
-  Message({required this.accountId, required this.when, this.content, this.attachment});
+  Message({required this.accountId, required this.when, this.content, this.attachment, this.attachmentType});
 
   /// Constructs a new [Message] instance with current [DateTime]
   factory Message.text({required String accountId, required String content})
@@ -34,12 +41,23 @@ class Message
     );
   }
 
-  factory Message.attachment({required String accountId, required String imageRef})
+  factory Message.imageAttachment({required String accountId, required String imageRef})
   {
     return Message(
       accountId: accountId,
       when: DateTime.now(),
       attachment: imageRef,
+      attachmentType: AttachmentType.image,
+    );
+  }
+
+  factory Message.itemAttachment({required String accountId, required String itemId})
+  {
+    return Message(
+      accountId: accountId,
+      when: DateTime.now(),
+      attachment: itemId,
+      attachmentType: AttachmentType.item,
     );
   }
 
@@ -58,12 +76,23 @@ class Message
     final when = (data['when'] as Timestamp).toDate();
     final content = data['content'] as String?;
     final attachment = data['attachment'] as String?;
+    final attachmentTypeString = data['attachment_type'] as String?;
+
+    AttachmentType attachmentType;
+    if (attachmentTypeString == null) {
+      attachmentType = AttachmentType.image;
+    } else if (attachmentTypeString == 'item') {
+      attachmentType = AttachmentType.item;
+    } else {
+      attachmentType = AttachmentType.image;
+    }
 
     return Message(
         accountId: accountId,
         when: when,
         content: content,
-        attachment: attachment
+        attachment: attachment,
+        attachmentType: attachmentType,
     );
   }
 
@@ -84,6 +113,7 @@ class Message
       'when'       : Timestamp.fromDate(model.when),
       'content'    : model.content,
       'attachment' : model.attachment,
+      'attachment_type' : model.attachmentType == AttachmentType.item ? 'item' : 'image',
     };
   }
 }
