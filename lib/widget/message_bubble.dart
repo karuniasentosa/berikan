@@ -7,19 +7,22 @@ import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/image_viewer_page.dart';
 import 'package:berikan/utills/arguments.dart';
 import 'package:berikan/utils/related_to_strings.dart';
+import 'package:berikan/widget/item_preview_on_chat.dart';
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
   final TimeOfDay time;
   final String? text;
-  final Uint8List? imageFile;
+  final Uint8List? imageData;
+  final ItemPreviewOnChat? itemAttachment;
   final bool isMyChat;
 
   const MessageBubble._(
       {Key? key,
       required this.time,
       this.text,
-      this.imageFile,
+      this.imageData,
+      this.itemAttachment,
       required this.isMyChat})
       : super(key: key);
 
@@ -34,13 +37,22 @@ class MessageBubble extends StatelessWidget {
   }
 
   /// Constructs a [MessageBubble] widget only an attachment.
-  factory MessageBubble.attachment(
+  factory MessageBubble.imageAttachment(
       {Key? key,
       required TimeOfDay time,
-      required Uint8List imageFile,
+      required Uint8List imageData,
       required bool isMyChat}) {
     return MessageBubble._(
-        time: time, isMyChat: isMyChat, imageFile: imageFile);
+        time: time, isMyChat: isMyChat, imageData: imageData);
+  }
+
+  factory MessageBubble.itemAttachment(
+      {Key? key,
+      required TimeOfDay time,
+      required ItemPreviewOnChat itemWidget,
+      required bool isMyChat}) {
+    return MessageBubble._(
+        time: time, itemAttachment: itemWidget, isMyChat: isMyChat);
   }
 
   final myBorderRadius = const BorderRadius.only(
@@ -73,9 +85,11 @@ class MessageBubble extends StatelessWidget {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-              child: imageFile == null
-                  ? _buildTextBubble(context)
-                  : _buildImageBubble(context),
+              child: itemAttachment == null
+                  ? (imageData == null
+                      ? _buildTextBubble(context)
+                      : _buildImageBubble(context))
+                  : _buildItemAttachment(context), // lol
             ),
           ),
         ],
@@ -107,15 +121,14 @@ class MessageBubble extends StatelessWidget {
             borderRadius: isMyChat ? myBorderRadius : otherBorderRadius,
             child: GestureDetector(
               onTap: () {
-                Navigator.pushNamed(
-                    context,
-                    ImageViewerPage.routeName,
-                    arguments: ImageViewerArguments(id, imageFile!)
-                );
+                Navigator.pushNamed(context, ImageViewerPage.routeName,
+                    arguments: ImageViewerArguments(id, imageData!));
               },
               child: Hero(
                 tag: id,
-                child: AspectRatio(aspectRatio: 1,child: Image.memory(imageFile!, fit: BoxFit.cover)),
+                child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Image.memory(imageData!, fit: BoxFit.cover)),
               ),
             ),
           ),
@@ -126,6 +139,27 @@ class MessageBubble extends StatelessWidget {
             right: 0,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildItemAttachment(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // TODO: pushNamed to ItemDetailPage
+      },
+      child: Stack(
+        children: [
+          itemAttachment!,
+          Positioned(
+            child: Text(
+              time.format(context),
+              style: TextStyle(color: Colors.black),
+            ),
+            bottom: 0,
+            right: 0,
+          ),
+        ]
       ),
     );
   }
