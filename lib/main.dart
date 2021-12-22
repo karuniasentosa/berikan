@@ -1,6 +1,7 @@
 import 'package:berikan/common/style.dart';
 import 'package:berikan/provider/chat_detail_page_provider.dart';
 import 'package:berikan/provider/chat_page_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:berikan/ui/add_item_page.dart';
 import 'package:berikan/ui/chat_detail_page.dart';
@@ -25,15 +26,41 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+// Firebase Login with Flutter using onAuthStateChanged
+// https://stackoverflow.com/a/50632612
+class _MyAppState extends State<MyApp> {
+  final app = Firebase.initializeApp();
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: lightTheme,
-      initialRoute: HomePage.routeName,
+      navigatorKey: _navigatorKey,
+      home: Builder(
+        builder: (context) {
+          FirebaseAuth.instance.authStateChanges().listen((user) {
+            if (user != null) {
+              _navigatorKey.currentState!.pushReplacementNamed(MainPage.routeName);
+            } else {
+              _navigatorKey.currentState!.pushReplacementNamed(HomePage.routeName);
+            }
+          });
+
+          // TODO: Add some splash screen maybe?
+          return Scaffold(
+            body: Container(color: Colors.white),
+          );
+        },
+      ),
       routes: {
         MainPage.routeName: (context) => MainPage(),
         SignupContinuePage.routeName: (context) => const SignupContinuePage(),
