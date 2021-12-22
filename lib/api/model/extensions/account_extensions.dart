@@ -1,18 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth, User;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../account_service.dart';
 import '../account.dart';
 import '../item.dart';
 
 extension AccountExtension on Account
 {
-  /// The associated [User] for this [Account]
-  User? get user => FirebaseAuth.instance.currentUser;
-
   /// The list of user's liked items
   Future<List<Item>> get likedItems async {
     final accountDocRef = FirebaseFirestore.instance
-        .collection('account').doc(user!.uid);
+        .collection('account').doc(AccountService.getCurrentUser()!.uid);
     final snapshot = await accountDocRef.get();
 
     final likedItemsDocumentReference = snapshot.data()!['liked_item'] as List<DocumentReference>;
@@ -36,7 +34,7 @@ extension AccountExtension on Account
   /// e.g. Cilincing, Kota Jakarta Utara
   Future<String> get location2 async {
     final accountDocRef = FirebaseFirestore.instance
-        .collection('account').doc(user!.uid);
+        .collection('account').doc(AccountService.getCurrentUser()!.uid);
     final snapshot = await accountDocRef.get();
 
     final location = snapshot.data()!['location'] as List<String>;
@@ -44,9 +42,9 @@ extension AccountExtension on Account
     return '${location[3]}, ${location[2]}';
   }
 
-  Future<dynamic> getKecamatan(String itemId) async {
+  Future<dynamic> getKecamatan(String ownerId) async {
     final accountDocRef = FirebaseFirestore.instance
-        .collection('account').doc(itemId);
+        .collection('account').doc(ownerId);
     final snapshot = await accountDocRef.get();
 
     final location = snapshot.data()!['location'] as List<dynamic>;
@@ -59,7 +57,7 @@ extension AccountExtension on Account
     // create a copy of item
     // a bit sus
     final _item = Item.create(
-        user!.uid,
+        AccountService.getCurrentUser()!.uid,
         imagesUrl: item.imagesUrl,
         name: item.name,
         addedSince: item.addedSince,
@@ -79,7 +77,7 @@ extension AccountExtension on Account
     // get a document reference for an account
     // I cannot use [accountDocumentReference] since it relies on [Acocunt] class.
     final accountDocRef = FirebaseFirestore.instance
-        .collection('account').doc(user!.uid);
+        .collection('account').doc(AccountService.getCurrentUser()!.uid);
 
     // get liked items for this account
     final _likedItems = await likedItems;

@@ -8,6 +8,11 @@ class AccountService {
   /// No constructor
   AccountService._();
 
+  /// The associated [User] for current signed in account.
+  static User? getCurrentUser() {
+    return FirebaseAuth.instance.currentUser;
+  }
+
   /// Gets the current account
   ///
   /// Returns [null] if there is no user logged in
