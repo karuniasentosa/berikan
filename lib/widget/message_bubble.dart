@@ -3,8 +3,10 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:berikan/api/account_service.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/image_viewer_page.dart';
+import 'package:berikan/ui/item_detail.dart';
 import 'package:berikan/utills/arguments.dart';
 import 'package:berikan/utils/related_to_strings.dart';
 import 'package:berikan/widget/item_preview_on_chat.dart';
@@ -145,8 +147,13 @@ class MessageBubble extends StatelessWidget {
 
   Widget _buildItemAttachment(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         // TODO: pushNamed to ItemDetailPage
+        final item = itemAttachment!.item;
+        final locationList = await AccountService.getLocation(item.ownerId);
+        final location = locationList[2] as String;
+        final args = DetailArguments(item, location);
+        Navigator.of(context).pushNamed(ItemDetailPage.routeName, arguments: args);
       },
       child: Stack(
         children: [
