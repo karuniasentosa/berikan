@@ -17,4 +17,13 @@ extension ChatExtension on Chat
     final messageColRef = messageCollectionReference(FirebaseFirestore.instance, id);
     messageColRef.add(message);
   }
+  
+  /// gets the latest message
+  Future<Message> get latestMessage async {
+    final messageColRef = messageCollectionReference(FirebaseFirestore.instance, id);
+    // to bring latest message front.
+    final query = messageColRef.orderBy('when', descending: true).limit(1);
+    final snapshot = await  query.get();
+    return snapshot.docs[0].data();
+  }
 }

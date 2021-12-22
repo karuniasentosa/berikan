@@ -24,10 +24,12 @@ class Chat
     final data = snapshot.data()!;
 
     final id = snapshot.reference.id;
-    final endpoint1 = (data['endpoint1'] as DocumentReference).id;
-    final endpoint2 = (data['endpoint2'] as DocumentReference).id;
+    final endpointsDocRef = data['endpoints'] as List;
 
-    return Chat(id, endpointAccountId1: endpoint1, endpointAccountId2: endpoint2);
+    return Chat(id,
+        endpointAccountId1: (endpointsDocRef[0] as DocumentReference).id,
+        endpointAccountId2: (endpointsDocRef[1] as DocumentReference).id
+    );
   }
 
   /// Converts from this api class to Firestore api.
@@ -43,8 +45,10 @@ class Chat
   /// See also: [ToFirestore](https://pub.dev/documentation/cloud_firestore/latest/cloud_firestore/ToFirestore.html)
   static Map<String, Object?> toFirestore(Chat model, SetOptions? _) {
     return {
-      'endpoint1': accountDocumentReference(FirebaseFirestore.instance, model.endpointAccountId1),
-      'endpoint2': accountDocumentReference(FirebaseFirestore.instance, model.endpointAccountId2),
+      'endpoints': [
+        accountDocumentReference(FirebaseFirestore.instance, model.endpointAccountId1),
+        accountDocumentReference(FirebaseFirestore.instance, model.endpointAccountId2)
+      ],
     };
   }
 }
