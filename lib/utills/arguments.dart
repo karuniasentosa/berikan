@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:berikan/api/model/chat.dart';
 import 'package:berikan/api/model/item.dart';
 
 class Arguments {
@@ -25,4 +26,11 @@ class DetailArguments {
   final dynamic location;
 
   DetailArguments(this.itemDetail, this.location);
+}
+
+class ChatDetailItemArguments {
+  final Chat chat;
+  final String itemId;
+
+  ChatDetailItemArguments(this.chat, this.itemId);
 }
