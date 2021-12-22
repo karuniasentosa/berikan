@@ -25,6 +25,7 @@ import 'package:provider/provider.dart';
 
 class ChatDetailPage extends StatelessWidget {
   static const routeName = '/chatDetailPage';
+  static const routeNameWithItem = '/chatDetailPage?item';
 
   final Chat chat;
   ChatDetailPage({Key? key, required this.chat}) : super(key: key);
@@ -35,7 +36,8 @@ class ChatDetailPage extends StatelessWidget {
         itemId: itemId
     );
     chat.pushMessage(message);
-    return ChatDetailPage(chat: chat);
+    return ChatDetailPage(chat: chat)
+      .._textEditingController.text = 'Halo, barang ini masih ada?';
   }
 
   final _textEditingController = TextEditingController();
