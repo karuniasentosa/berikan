@@ -1,4 +1,6 @@
 import 'package:berikan/api/chat_service.dart';
+
+import 'package:berikan/api/model/chat.dart';
 import 'package:berikan/api/model/chat_data.dart';
 import 'package:berikan/provider/provider_result_state.dart';
 import 'package:flutter/foundation.dart';
@@ -6,10 +8,14 @@ import 'package:flutter/foundation.dart';
 class ChatPageProvider extends ChangeNotifier
 {
   ProviderResultState _state = ProviderResultState.noData;
-  List<ChatData> _chatList = [];
+
+  List<Chat> _chat = [];
+  List<ChatData> _chatData = [];
   String _errorMessage = "";
 
-  List<ChatData> get chats => _chatList;
+  List<Chat> get chats => _chat;
+  List<ChatData> get chatDatas => _chatData;
+
   String get errorMessage => _errorMessage;
   ProviderResultState get state => _state;
 
@@ -20,17 +26,21 @@ class ChatPageProvider extends ChangeNotifier
     try {
       final chats = await ChatService.getMyChats();
       if (chats == null) {
-        // provide empty chat list
-        _chatList = [];
+
+        _chat = [];
+        _chatData = [];
+
         _state = ProviderResultState.noData;
         _errorMessage = "List is empty";
         notifyListeners();
         return;
       }
-      _chatList.clear();
+
       for (final c in chats) {
-        _chatList.add(await ChatData.of(c));
+        _chat.add(c);
+        _chatData.add(await ChatData.of(c));
       }
+      
       _state = ProviderResultState.hasData;
       notifyListeners();
     } catch (e) {
@@ -43,6 +53,8 @@ class ChatPageProvider extends ChangeNotifier
   }
   
   void getMyChats() {
+    _chat = [];
+    _chatData = [];
     _getChats();
   }
 }

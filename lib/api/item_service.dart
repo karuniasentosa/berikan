@@ -24,4 +24,10 @@ class ItemService {
     final List<Item> items = snapshot.docs.map((qds) => qds.data()).toList();
     return items;
   }
+
+  static Future<Item?> getItem(FirebaseFirestore instance, String itemId) async {
+    final query = itemDocumentReference(instance, itemId);
+    final snapshot = await query.get();
+    return snapshot.data();
+  }
 }

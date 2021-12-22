@@ -1,6 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'chat.dart';
 import 'account.dart' show accountDocumentReference;
+
+
+enum AttachmentType {
+  image,
+  item,
+}
 
 class Message
 {
@@ -10,7 +18,7 @@ class Message
   final String accountId;
 
   final DateTime when;
-  final String content;
+  final String? content;
 
   /// The attached item to this [Message]
   ///
@@ -18,18 +26,38 @@ class Message
   /// to an image (uploaded by [accountId])
   final String? attachment;
 
+  final AttachmentType? attachmentType;
+
   /// Constructs a new [Message] instance.
-  Message({required this.accountId, required this.when, required this.content, this.attachment});
+  Message({required this.accountId, required this.when, this.content, this.attachment, this.attachmentType});
 
   /// Constructs a new [Message] instance with current [DateTime]
-  factory Message.create(
-      {required String accountId, required String content, String? attachment})
+  factory Message.text({required String accountId, required String content})
   {
     return Message(
         accountId: accountId,
         when: DateTime.now(),
         content: content,
-        attachment: attachment
+    );
+  }
+
+  factory Message.imageAttachment({required String accountId, required String imageRef})
+  {
+    return Message(
+      accountId: accountId,
+      when: DateTime.now(),
+      attachment: imageRef,
+      attachmentType: AttachmentType.image,
+    );
+  }
+
+  factory Message.itemAttachment({required String accountId, required String itemId})
+  {
+    return Message(
+      accountId: accountId,
+      when: DateTime.now(),
+      attachment: itemId,
+      attachmentType: AttachmentType.item,
     );
   }
 
@@ -46,14 +74,25 @@ class Message
 
     final accountId = (data['who'] as DocumentReference).id;
     final when = (data['when'] as Timestamp).toDate();
-    final content = data['content'] as String;
+    final content = data['content'] as String?;
     final attachment = data['attachment'] as String?;
+    final attachmentTypeString = data['attachment_type'] as String?;
+
+    AttachmentType attachmentType;
+    if (attachmentTypeString == null) {
+      attachmentType = AttachmentType.image;
+    } else if (attachmentTypeString == 'item') {
+      attachmentType = AttachmentType.item;
+    } else {
+      attachmentType = AttachmentType.image;
+    }
 
     return Message(
         accountId: accountId,
         when: when,
         content: content,
-        attachment: attachment
+        attachment: attachment,
+        attachmentType: attachmentType,
     );
   }
 
@@ -74,6 +113,7 @@ class Message
       'when'       : Timestamp.fromDate(model.when),
       'content'    : model.content,
       'attachment' : model.attachment,
+      'attachment_type' : model.attachmentType == AttachmentType.item ? 'item' : 'image',
     };
   }
 }

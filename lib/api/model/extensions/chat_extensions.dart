@@ -8,7 +8,7 @@ extension ChatExtension on Chat
   /// The stream of this chat
   Stream<QuerySnapshot<Message>> get messages {
     final messageColRef = messageCollectionReference(FirebaseFirestore.instance, id);
-    final query = messageColRef.orderBy('when');
+    final query = messageColRef.orderBy('when', descending: true);
     return query.snapshots();
   }
 
