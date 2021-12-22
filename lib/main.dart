@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         HomePage.routeName: (context) => const HomePage(),
         LoginPage.routeName: (context) => const LoginPage(),
         AddItemPage.routeName: (context) => AddItemPage(),
-        ItemDetailPage.routeName: (context) => ItemDetailPage()
+        ItemDetailPage.routeName: (context) => ItemDetailPage(),
         ChatPage.routeName: (context) => ChangeNotifierProvider<ChatPageProvider>(
           create: (_) => ChatPageProvider(),
           child: ChatPage(),
