@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
-import 'package:berikan/api/model/account.dart';
-import 'package:berikan/api/model/extensions/item_extensions.dart';
+import 'package:berikan/api/account_service.dart';
 import 'package:berikan/api/model/item.dart';
 import 'package:berikan/api/storage_service.dart';
+import 'package:berikan/ui/item_detail.dart';
+import 'package:berikan/utills/arguments.dart';
 import 'package:berikan/utils/datediff_describer.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:berikan/api/model/extensions/account_extensions.dart';
 
 class MainGridView extends StatelessWidget {
   final AsyncSnapshot<List<Item>> snapshot;
@@ -21,67 +21,68 @@ class MainGridView extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
         final imageRef = _fireStorage.ref(snapshot.data![index].imagesUrl[0]);
-        return Card(
-          elevation: 5,
-          child: Column(
-            children: [
-              FutureBuilder<Uint8List?>(
-                future: StorageService.getData(imageRef),
-                builder: (context, storageSnap) {
-                  if (!storageSnap.hasData) {
-                    return const Expanded(
-                        flex: 6, child: CircularProgressIndicator());
-                  } else {
-                    return Expanded(
-                      flex: 6,
-                      child: Image.memory(
-                        storageSnap.data!,
-                        fit: BoxFit.cover,
-                        width: 240,
-                      ),
-                    );
-                  }
+        return FutureBuilder(
+          future: AccountService.getLocation(snapshot.data![index].ownerId),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<dynamic>> locationSnap) {
+            return Card(
+              elevation: 5,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, ItemDetailPage.routeName,
+                      arguments: DetailArguments(
+                          snapshot.data![index], locationSnap.data![2]));
                 },
-              ),
-              Expanded(
-                flex: 1,
-                child: Align(
-                  child: Text(snapshot.data![index].name),
-                  alignment: Alignment.centerLeft,
+                child: Column(
+                  children: [
+                    FutureBuilder<Uint8List?>(
+                      future: StorageService.getData(imageRef),
+                      builder: (context, storageSnap) {
+                        if (!storageSnap.hasData) {
+                          return Expanded(
+                              flex: 6,
+                              child:
+                                  Center(child: CircularProgressIndicator()));
+                        } else {
+                          return Expanded(
+                            flex: 6,
+                            child: Image.memory(
+                              storageSnap.data!,
+                              fit: BoxFit.cover,
+                              width: 240,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Align(
+                        child: Text(snapshot.data![index].name),
+                        alignment: Alignment.centerLeft,
+                      ),
+                    ),
+                    !locationSnap.hasData
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Expanded(
+                            flex: 1,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(locationSnap.data![2]),
+                                Text(DateDiffDescriber.dayDiff(
+                                    snapshot.data![index].addedSince,
+                                    DateTime.now()))
+                              ],
+                            ),
+                          ),
+                  ],
                 ),
               ),
-              FutureBuilder<Account?>(future: snapshot.data?[index].owner,
-                  builder: (context, accountSnap) {
-                if(!accountSnap.hasData){
-                  return const CircularProgressIndicator();
-                } else {
-                  return FutureBuilder<dynamic>(
-                    future: accountSnap.data!.getKecamatan(snapshot.data![index].ownerId),
-                    builder: (context, locationSnap) {
-                      if(!locationSnap.hasData){
-                        print(locationSnap);
-                        return const CircularProgressIndicator();
-                      } else {
-                        return Expanded(
-                          flex: 1,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(locationSnap.data!),
-                              Text(DateDiffDescriber.dayDiff(
-                                  snapshot.data![index].addedSince, DateTime.now()))
-                            ],
-                          ),
-                        );
-                      }
-
-                    },
-                  );
-                }
-
-              }),
-            ],
-          ),
+            );
+          },
         );
       },
       itemCount: snapshot.data?.length,
