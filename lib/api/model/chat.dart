@@ -12,6 +12,14 @@ class Chat
 
   Chat(this.id, {required this.endpointAccountId1, required this.endpointAccountId2});
 
+  factory Chat.create({
+    required String endpointAccountId1,
+    required String endpointAccountId2}) {
+    return Chat('',
+        endpointAccountId1: endpointAccountId1,
+        endpointAccountId2: endpointAccountId2);
+  }
+
   /// Converts from a Firestore api to [Chat] class.
   ///
   /// This function should not be called directly — and should be passed to

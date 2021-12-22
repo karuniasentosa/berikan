@@ -42,14 +42,15 @@ extension AccountExtension on Account
     return '${location[3]}, ${location[2]}';
   }
 
+
   Future<dynamic> getKecamatan(String ownerId) async {
     final accountDocRef = FirebaseFirestore.instance
         .collection('account').doc(ownerId);
     final snapshot = await accountDocRef.get();
 
-    final location = snapshot.data()!['location'] as List<dynamic>;
+    final location = snapshot.data()!['location'] as List<String>;
 
-    return location[2];
+    return location[3];
   }
 
   /// Adds [item] from this account.

@@ -4,6 +4,7 @@ import 'package:berikan/api/account_service.dart';
 import 'package:berikan/api/model/account.dart';
 import 'package:berikan/api/model/item.dart';
 import 'package:berikan/api/storage_service.dart';
+import 'package:berikan/utils/related_to_strings.dart';
 import 'package:berikan/widget/button/primary_button.dart';
 import 'package:berikan/widget/custom_textfield.dart';
 
@@ -159,8 +160,8 @@ class _AddItemPageState extends State<AddItemPage> {
                 }
 
                 // get account and uid
-                final Account? account = await AccountService.getCurrentAccount();
-                final String? uid = AccountService.getCurrentUser()?.uid;
+                Account? account = await AccountService.getCurrentAccount();
+                String? uid = AccountService.getCurrentUser()?.uid;
 
                 // create a new item
                 final item = Item.create(
@@ -217,16 +218,4 @@ class _AddItemPageState extends State<AddItemPage> {
     _nameController.dispose();
     _descriptionController.dispose();
   }
-}
-
-const String _choice = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-String randomString(Random random, {required int length})
-{
-  String result = "";
-  while (length-- != 0) {
-    int c = random.nextInt(_choice.length);
-    result += _choice[c];
-  }
-
-  return result;
 }
