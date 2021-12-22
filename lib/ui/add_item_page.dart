@@ -28,6 +28,7 @@ class _AddItemPageState extends State<AddItemPage> {
   final _descriptionController = TextEditingController();
 
   static const _imagePickWidth = 120.0;
+  static const _maxFileLength = 1024 * 1024 * 2;
 
   final List<File?> imageFile = List<File?>.filled(5, null, growable: true);
 
@@ -82,7 +83,16 @@ class _AddItemPageState extends State<AddItemPage> {
                           width: _imagePickWidth,
                           height: _imagePickWidth,
                           onImageSelect: (file) {
-                            imageFile[0] = file;
+                            // if file's length is `leq` 2MB
+                            if (file.lengthSync() <= _maxFileLength) {
+                              imageFile[0] = file;
+                            } else {
+                              const snackBar = SnackBar(
+                                content: Text('File yang diunggah harus kurang dari 2MB!'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            }
                           },
                           onImageDrop: () { imageFile[0] = null; },
                       ),
@@ -90,7 +100,16 @@ class _AddItemPageState extends State<AddItemPage> {
                         width: _imagePickWidth,
                         height: _imagePickWidth,
                         onImageSelect: (file) {
-                          imageFile[1] = file;
+                          // if file's length is `leq` 2MB
+                          if (file.lengthSync() <= _maxFileLength) {
+                            imageFile[1] = file;
+                          } else {
+                            const snackBar = SnackBar(
+                              content: Text('File yang diunggah harus kurang dari 2MB!'),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
                         },
                         onImageDrop: () { imageFile[1] = null; },
                       ),
@@ -98,7 +117,16 @@ class _AddItemPageState extends State<AddItemPage> {
                         width: _imagePickWidth,
                         height: _imagePickWidth,
                         onImageSelect: (file) {
-                          imageFile[2] = file;
+                          // if file's length is `leq` 2MB
+                          if (file.lengthSync() <= _maxFileLength) {
+                            imageFile[2] = file;
+                          } else {
+                            const snackBar = SnackBar(
+                              content: Text('File yang diunggah harus kurang dari 2MB!'),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
                         },
                         onImageDrop: () { imageFile[2] = null; },
                       ),
@@ -106,7 +134,16 @@ class _AddItemPageState extends State<AddItemPage> {
                         width: _imagePickWidth,
                         height: _imagePickWidth,
                         onImageSelect: (file) {
-                          imageFile[3] = file;
+                          // if file's length is `leq` 2MB
+                          if (file.lengthSync() <= _maxFileLength) {
+                            imageFile[3] = file;
+                          } else {
+                            const snackBar = SnackBar(
+                              content: Text('File yang diunggah harus kurang dari 2MB!'),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
                         },
                         onImageDrop: () { imageFile[3] = null; },
                       ),
@@ -114,7 +151,16 @@ class _AddItemPageState extends State<AddItemPage> {
                         width: _imagePickWidth,
                         height: _imagePickWidth,
                         onImageSelect: (file) {
-                          imageFile[4] = file;
+                          // if file's length is `leq` 2MB
+                          if (file.lengthSync() <= _maxFileLength) {
+                            imageFile[4] = file;
+                          } else {
+                            const snackBar = SnackBar(
+                              content: Text('File yang diunggah harus kurang dari 2MB!'),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
                         },
                         onImageDrop: () { imageFile[4] = null; },
                       ),
