@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:berikan/api/model/item.dart';
 
 class Arguments {
   final String name;
@@ -17,4 +18,11 @@ class ImageViewerArguments {
   final Uint8List imageData;
 
   ImageViewerArguments(this.imageId, this.imageData);
+}
+
+class DetailArguments {
+  final Item itemDetail;
+  final dynamic location;
+
+  DetailArguments(this.itemDetail, this.location);
 }
