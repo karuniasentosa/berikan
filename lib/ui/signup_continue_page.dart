@@ -98,7 +98,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                       child: IconButton(
                         icon: Icon(Icons.add_a_photo),
                         onPressed: () async {
-                          await showCustomDialog();
+                          await showCustomDialog(context);
                         },
                       ),
                     ),
@@ -123,7 +123,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               '',
               type: TextInputType.text,
               isObscure: false,
-              controller: _firstNameController,
+              controller: _firstNameController, labelText: '',
             ),
             const SizedBox(
               height: 16,
@@ -142,7 +142,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               '',
               type: TextInputType.text,
               isObscure: false,
-              controller: _lastNameController,
+              controller: _lastNameController, labelText: '',
             ),
             const SizedBox(
               height: 16,
@@ -161,7 +161,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               'Diawali dengan +62',
               type: TextInputType.phone,
               isObscure: false,
-              controller: _phoneNumberController,
+              controller: _phoneNumberController, labelText: '',
             ),
             const SizedBox(
               height: 40,
@@ -224,7 +224,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
     );
   }
 
-  Future? showCustomDialog() {
+  Future? showCustomDialog(BuildContext context) {
     showDialog(
         context: context,
         builder: (_) {

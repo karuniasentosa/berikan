@@ -3,13 +3,17 @@ import 'package:berikan/provider/chat_detail_page_provider.dart';
 import 'package:berikan/provider/chat_page_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:berikan/ui/add_item_page.dart';
+import 'package:berikan/ui/change_password_page.dart';
 import 'package:berikan/ui/chat_detail_page.dart';
 import 'package:berikan/ui/chat_page.dart';
+import 'package:berikan/ui/edit_profile_page.dart';
 import 'package:berikan/ui/home_page.dart';
 import 'package:berikan/ui/image_viewer_page.dart';
 import 'package:berikan/ui/item_detail.dart';
 import 'package:berikan/ui/login_page.dart';
 import 'package:berikan/ui/main_page.dart';
+import 'package:berikan/ui/my_item_page.dart';
+import 'package:berikan/ui/settings_page.dart';
 import 'package:berikan/ui/signup_continue_page.dart';
 import 'package:berikan/ui/signup_page.dart';
 import 'package:berikan/utills/arguments.dart';
@@ -42,6 +46,10 @@ class MyApp extends StatelessWidget {
         LoginPage.routeName: (context) => const LoginPage(),
         AddItemPage.routeName: (context) => AddItemPage(),
         ItemDetailPage.routeName: (context) => ItemDetailPage(),
+        SettingsPage.routeName: (context) => const SettingsPage(),
+        EditProfilePage.routeName: (context) => EditProfilePage(),
+        ChangePasswordPage.routeName: (context) => ChangePasswordPage(),
+        MyItemPage.routeName: (context) => MyItemPage(),
         ChatPage.routeName: (context) => ChangeNotifierProvider<ChatPageProvider>(
           create: (_) => ChatPageProvider(),
           child: ChatPage(),

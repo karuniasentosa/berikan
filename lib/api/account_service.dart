@@ -37,7 +37,7 @@ class AccountService {
     return data;
   }
 
-  static Future<void> addAccount(String? id,Account account) async {
+  static Future<void> addAccount(String? id, Account account) async {
     accountDocumentReference(FirebaseFirestore.instance, id!).set(account);
   }
 
@@ -77,6 +77,6 @@ class AccountService {
   }
 
   static Future<void> signOut() async {
-    FirebaseAuth.instance.signOut();
+    await FirebaseAuth.instance.signOut();
   }
 }
