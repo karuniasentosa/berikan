@@ -1,11 +1,15 @@
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
+import 'package:berikan/ui/change_password_page.dart';
 import 'package:berikan/ui/chat_detail_page.dart';
 import 'package:berikan/ui/chat_page.dart';
+import 'package:berikan/ui/edit_profile_page.dart';
 import 'package:berikan/ui/home_page.dart';
 import 'package:berikan/ui/item_detail.dart';
 import 'package:berikan/ui/login_page.dart';
 import 'package:berikan/ui/main_page.dart';
+import 'package:berikan/ui/my_item_page.dart';
+import 'package:berikan/ui/settings_page.dart';
 import 'package:berikan/ui/signup_continue_page.dart';
 import 'package:berikan/ui/signup_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,7 +41,11 @@ class MyApp extends StatelessWidget {
         AddItemPage.routeName: (context) => AddItemPage(),
         ChatPage.routeName: (context) => const ChatPage(),
         ChatDetailPage.routeName: (context) => const ChatDetailPage(),
-        ItemDetailPage.routeName: (context) => ItemDetailPage()
+        ItemDetailPage.routeName: (context) => ItemDetailPage(),
+        SettingsPage.routeName: (context) => const SettingsPage(),
+        EditProfilePage.routeName: (context) => EditProfilePage(),
+        ChangePasswordPage.routeName: (context) => ChangePasswordPage(),
+        MyItemPage.routeName: (context) => MyItemPage(),
       },
     );
   }
