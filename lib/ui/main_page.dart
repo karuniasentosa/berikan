@@ -1,12 +1,20 @@
+
+import 'dart:typed_data';
+import 'package:berikan/api/account_service.dart';
 import 'package:berikan/api/item_service.dart';
 import 'package:berikan/api/model/item.dart';
+import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
 import 'package:berikan/ui/chat_page.dart';
 import 'package:berikan/ui/settings_page.dart';
+import 'package:berikan/ui/item_detail.dart';
+import 'package:berikan/utills/arguments.dart';
+import 'package:berikan/utils/datediff_describer.dart';
 import 'package:berikan/widget/main_gridview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -277,8 +285,73 @@ class OurSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    throw UnimplementedError();
+    final itemFuture = ItemService.searchItems(FirebaseFirestore.instance, query);
+    return FutureBuilder<List<Item>>(
+      future: itemFuture,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        } else {
+          final itemResult = snapshot.requireData;
+          if (itemResult.length == 0) {
+            return Text('Tidak ada data yang dapat ditemukan');
+          }
+          return ListView.builder(
+            itemCount: itemResult.length,
+            itemBuilder: (listViewContext, index) {
+              final item = itemResult[index];
+              final itemReference = FirebaseStorage.instance.ref(item.imagesUrl[0]);
+              final imagePreviewFuture = StorageService.getData(itemReference);
+              final locationFuture = AccountService.getLocation(item.ownerId);
+              return GestureDetector(
+                onTap: () async {
+                  final args = DetailArguments(item, (await locationFuture)[2]);
+                  Navigator.pushNamed(context, ItemDetailPage.routeName, arguments: args);
+                },
+                child: ListTile(
+                  shape: Border(
+                    bottom: BorderSide()
+                  ),
+                  leading: AspectRatio(
+                    aspectRatio: 1,
+                    child: FutureBuilder<Uint8List?>(
+                      future: imagePreviewFuture,
+                      builder: (futureBuilderContext, snapshot) {
+                        if (!snapshot.hasData) {
+                          return CircularProgressIndicator();
+                        } else {
+                          return Image.memory(
+                            snapshot.data!,
+                            fit: BoxFit.cover,
+                          );
+                        }
+                      }
+                    )
+                  ),
+                  title: Text(item.name),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      FutureBuilder<List<dynamic>>(
+                        future: locationFuture,
+                        builder: (futureBuilderContext, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Text('...');
+                          } else {
+                            return Text(snapshot.requireData[2]);
+                          }
+                        }
+                      ),
+                      Text(DateDiffDescriber.dayDiff(DateTime.now(), item.addedSince)),
+                    ]
+                  ),
+                ),
+              );
+            }
+          );
+        }
+      }
+    );
   }
 
   @override

@@ -2,10 +2,12 @@ import 'dart:typed_data';
 
 import 'package:berikan/api/account_service.dart';
 import 'package:berikan/api/geolocation_api.dart';
+import 'package:berikan/api/model/chat.dart';
 import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/data/provider/location_provider.dart';
 import 'package:berikan/utills/arguments.dart';
 import 'package:berikan/utils/datediff_describer.dart';
+import 'package:berikan/widget/button/primary_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+
+import 'chat_detail_page.dart';
 
 class ItemDetailPage extends StatelessWidget {
   static const routeName = '/itemDetail';
@@ -214,10 +218,29 @@ class DetailListView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                         )
                       ]),
+                      SizedBox(
+                        height: 4,
+                      ),
                       Align(
                           alignment: Alignment.center,
-                          child: TextButton(
-                              onPressed: () {}, child: Text('CHAT PENGIKLAN')))
+                          child: PrimaryButton(
+                            onPressed: () async {
+                              final newChat = Chat.create(
+                                  endpointAccountId1: AccountService.getCurrentUser()!.uid,
+                                  endpointAccountId2: args.itemDetail.ownerId);
+                              // I should put these lines inside Chat.create but
+                              // factory constructors doesn't allow that.
+                              final docRef = await chatCollectionReference(FirebaseFirestore.instance).add(newChat);
+                              final snapshot = await docRef.get();
+                              final chat = snapshot.data()!;
+                              // until this
+                              final itemId = args.itemDetail.id;
+                              final _args = ChatDetailItemArguments(chat, itemId);
+                              Navigator.of(context).pushReplacementNamed(ChatDetailPage.routeNameWithItem, arguments: _args);
+                            },
+                            text: 'CHAT PENJUAL',
+                          ),
+                      ),
                     ],
                   ),
                 ),
@@ -249,20 +272,19 @@ class _CarouselBuilderState extends State<CarouselBuilder> {
   List<Uint8List?> loadedImageList = [];
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
     loadImage();
   }
 
   void loadImage() async {
-    for(int i =0; i<widget.imageRefList.length; i++){
+    for (int i = 0; i < widget.imageRefList.length; i++) {
       final img = await StorageService.getData(widget.imageRefList[i]);
       setState(() {
         loadedImageList.add(img);
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -272,38 +294,37 @@ class _CarouselBuilderState extends State<CarouselBuilder> {
         CarouselSlider.builder(
           itemCount: widget.args.itemDetail.imagesUrl.length,
           itemBuilder: (context, index, pageViewIndex) {
-            if(loadedImageList.length != widget.args.itemDetail.imagesUrl.length){
+            if (loadedImageList.length !=
+                widget.args.itemDetail.imagesUrl.length) {
               return const Center(child: CircularProgressIndicator());
-            } else{
+            } else {
               return Image.memory(loadedImageList[index]!);
             }
           },
           options: CarouselOptions(
               enableInfiniteScroll: false,
-              onPageChanged: (index, reason){
+              onPageChanged: (index, reason) {
                 setState(() {
                   _current = index;
                 });
-              }
-          ),
+              }),
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
-          children: widget.imageRefList.asMap().entries.map((entry){
+          children: widget.imageRefList.asMap().entries.map((entry) {
             return Container(
               width: 12.0,
               height: 12.0,
               margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.black.withOpacity(_current == entry.key ? 0.9 : 0.4),
+                color:
+                    Colors.black.withOpacity(_current == entry.key ? 0.9 : 0.4),
               ),
             );
           }).toList(),
         )
       ],
-      
     );
   }
-
 }
