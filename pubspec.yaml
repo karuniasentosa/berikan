@@ -28,7 +28,7 @@ dependencies:
   flutter_map: ^0.14.0
   latlong2: any
   flutter_settings_ui: ^2.0.1
-  provider: ^6.0.1
+  provider: any
 
 
 dev_dependencies:
