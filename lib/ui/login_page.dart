@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                     'Seperti: john.doe@mail.com',
                     type: TextInputType.emailAddress,
                     isObscure: false,
-                    controller: _emailController,
+                    controller: _emailController, labelText: '',
                   ),
                   const SizedBox(
                     height: 16,
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                     '',
                     type: TextInputType.visiblePassword,
                     isObscure: true,
-                    controller: _passwordController,
+                    controller: _passwordController, labelText: '',
                   )
                 ],
               ),
