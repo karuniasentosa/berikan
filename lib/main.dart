@@ -56,7 +56,14 @@ class MyApp extends StatelessWidget {
         ImageViewerPage.routeName: (context) {
           final args = ModalRoute.of(context)?.settings.arguments as ImageViewerArguments;
           return ImageViewerPage(imageId: args.imageId, imageData: args.imageData);
-        }
+        },
+        ChatDetailPage.routeNameWithItem: (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as ChatDetailItemArguments;
+          return ChangeNotifierProvider<ChatDetailPageProvider>(
+            create: (_) => ChatDetailPageProvider(),
+            child: ChatDetailPage.putItem(chat: args.chat, itemId: args.itemId),
+          );
+        },
       },
     );
   }

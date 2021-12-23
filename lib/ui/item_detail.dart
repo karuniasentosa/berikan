@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:berikan/api/account_service.dart';
 import 'package:berikan/api/geolocation_api.dart';
+import 'package:berikan/api/model/chat.dart';
 import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/data/provider/location_provider.dart';
 import 'package:berikan/utills/arguments.dart';
@@ -14,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+
+import 'chat_detail_page.dart';
 
 class ItemDetailPage extends StatelessWidget {
   static const routeName = '/itemDetail';
@@ -221,9 +224,23 @@ class DetailListView extends StatelessWidget {
                       Align(
                           alignment: Alignment.center,
                           child: PrimaryButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final newChat = Chat.create(
+                                  endpointAccountId1: AccountService.getCurrentUser()!.uid,
+                                  endpointAccountId2: args.itemDetail.ownerId);
+                              // I should put these lines inside Chat.create but
+                              // factory constructors doesn't allow that.
+                              final docRef = await chatCollectionReference(FirebaseFirestore.instance).add(newChat);
+                              final snapshot = await docRef.get();
+                              final chat = snapshot.data()!;
+                              // until this
+                              final itemId = args.itemDetail.id;
+                              final _args = ChatDetailItemArguments(chat, itemId);
+                              Navigator.of(context).pushReplacementNamed(ChatDetailPage.routeNameWithItem, arguments: _args);
+                            },
                             text: 'CHAT PENJUAL',
-                          ))
+                          ),
+                      ),
                     ],
                   ),
                 ),
