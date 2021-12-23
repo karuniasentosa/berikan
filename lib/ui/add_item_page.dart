@@ -2,22 +2,19 @@ import 'dart:io';
 import 'dart:math';
 import 'package:berikan/api/account_service.dart';
 import 'package:berikan/api/model/account.dart';
+import 'package:berikan/api/model/extensions/account_extensions.dart';
 import 'package:berikan/api/model/item.dart';
 import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/widget/button/primary_button.dart';
 import 'package:berikan/widget/custom_textfield.dart';
-
-import 'package:berikan/api/model/extensions/account_extensions.dart';
 import 'package:berikan/widget/image_pick.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class AddItemPage extends StatefulWidget {
   static const routeName = '/addItemPage';
 
-  AddItemPage({Key? key}) : super(key: key);
+  const AddItemPage({Key? key}) : super(key: key);
 
   @override
   State<AddItemPage> createState() => _AddItemPageState();
@@ -52,27 +49,27 @@ class _AddItemPageState extends State<AddItemPage> {
                     'Seperti: Sepatu Adidas KW',
                     type: TextInputType.text,
                     isObscure: false,
-                    controller: _nameController,
+                    controller: _nameController, labelText: '',
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
-                  Text('Deskripsi Barang'),
+                  const Text('Deskripsi Barang'),
                   TextField(
                     controller: _descriptionController,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(),
                       hintText: 'Deskripsikan barangmu',
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
-                  Text('Tambahkan Foto (Max 5)'),
+                  const Text('Tambahkan Foto (Max 5)'),
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
