@@ -67,7 +67,7 @@ class _SignupPageState extends State<SignupPage> {
               'Seperti: john.doe@mail.com',
               isObscure: false,
               type: TextInputType.emailAddress,
-              controller: _emailController,
+              controller: _emailController, labelText: '',
             ),
             const SizedBox(
               height: 16,
@@ -86,7 +86,7 @@ class _SignupPageState extends State<SignupPage> {
               '',
               type: TextInputType.visiblePassword,
               isObscure: true,
-              controller: _passwordController,
+              controller: _passwordController, labelText: '',
             ),
             const SizedBox(
               height: 16,
@@ -105,7 +105,7 @@ class _SignupPageState extends State<SignupPage> {
               '',
               type: TextInputType.visiblePassword,
               isObscure: true,
-              controller: _retypePasswordController,
+              controller: _retypePasswordController, labelText: '',
             ),
             const SizedBox(
               height: 40,
