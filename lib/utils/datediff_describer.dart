@@ -25,7 +25,7 @@ class DateDiffDescriber
       // example: 8 Okt
       return (dateFormat ?? DateFormat.yMMM()).format(from);
     } else if (inDays >= 2) {
-      return '${from.difference(to).abs().inHours} hari lalu';
+      return '${from.difference(to).abs().inDays} hari lalu';
     } else {
       return 'Hari ini';
     }
