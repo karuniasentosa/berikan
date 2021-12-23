@@ -1,11 +1,10 @@
-
-
 import 'package:berikan/api/item_service.dart';
 import 'package:berikan/api/model/item.dart';
 import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
 import 'package:berikan/ui/chat_page.dart';
+import 'package:berikan/ui/settings_page.dart';
 import 'package:berikan/widget/main_gridview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +49,12 @@ class MainPage extends StatelessWidget {
               Navigator.pushNamed(context, ChatPage.routeName);
             },
             icon: const Icon(Icons.chat_outlined),
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.pushNamed(context, SettingsPage.routeName);
+            },
           )
         ],
       ),
@@ -61,7 +66,10 @@ class MainPage extends StatelessWidget {
         },
         label: Text(
           '+ Tambah',
-          style: Theme.of(context).textTheme.button,
+          style: Theme
+              .of(context)
+              .textTheme
+              .button,
         ),
       ),
       body: CustomScrollView(
@@ -74,14 +82,22 @@ class MainPage extends StatelessWidget {
                 children: [
                   Text('REKOMENDASI',
                       style:
-                          blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
+                      blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
                   SizedBox(
                     height: 500,
-                    child: FutureBuilder<List<Item>>(
-                      future: ItemService.getAllItems(_fireStore),
+                    child: StreamBuilder<List<QueryDocumentSnapshot<Item>>>(
+                      stream: ItemService.getEveryItems(_fireStore),
                       builder: (BuildContext context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.data!.isEmpty) {
+                          // in case there is no data, but this else if statement
+                          // should never be the case since we have dummy data.
+                          return const Center(
+                            child: Text('Belum ada barang gratis, yuk tambahkan!'),
+                          );
                         } else {
                           return MainGridView(snapshot: snapshot,);
                         }
@@ -100,7 +116,7 @@ class MainPage extends StatelessWidget {
                 children: [
                   Text('BARU DILIHAT',
                       style:
-                          blackTitle.copyWith(fontSize: 32, letterSpacing: 3)),
+                      blackTitle.copyWith(fontSize: 32, letterSpacing: 3)),
                   SizedBox(
                     height: 260,
                     child: ListView.builder(
@@ -132,7 +148,7 @@ class MainPage extends StatelessWidget {
                                 ),
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text('JAKARTA BARAT'),
                                     Text('3 HARI LALU'),
@@ -158,7 +174,7 @@ class MainPage extends StatelessWidget {
                 children: [
                   Text('FAVORITKU',
                       style:
-                          blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
+                      blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
                   SizedBox(
                     height: 260,
                     child: ListView.builder(
@@ -190,7 +206,7 @@ class MainPage extends StatelessWidget {
                                 ),
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text('JAKARTA BARAT'),
                                     Text('3 HARI LALU')
@@ -216,13 +232,6 @@ class MainPage extends StatelessWidget {
 }
 
 
-
-
-
-
-
-
-
 class OurSearchDelegate extends SearchDelegate<String> {
   final dummyBarangBekas = [
     'Botol',
@@ -237,7 +246,8 @@ class OurSearchDelegate extends SearchDelegate<String> {
   String? get searchFieldLabel => 'Cari di sini';
 
   @override
-  TextStyle? get searchFieldStyle => GoogleFonts.roboto(
+  TextStyle? get searchFieldStyle =>
+      GoogleFonts.roboto(
         fontSize: 18,
       );
 
@@ -276,8 +286,8 @@ class OurSearchDelegate extends SearchDelegate<String> {
     final dummySuggestion = query.isEmpty
         ? dummyBarangBekas
         : dummyBarangBekas
-            .where((element) => element.startsWith(query))
-            .toList();
+        .where((element) => element.startsWith(query))
+        .toList();
 
     return ListView.builder(
         itemCount: dummySuggestion.length,
@@ -294,7 +304,10 @@ class OurSearchDelegate extends SearchDelegate<String> {
                   children: [
                     TextSpan(
                         text: dummySuggestion[index].substring(query.length),
-                        style: Theme.of(context).textTheme.bodyText2),
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .bodyText2),
                   ]),
             ),
             onTap: () {
