@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:berikan/api/account_service.dart';
+import 'package:berikan/api/chat_service.dart';
 import 'package:berikan/api/geolocation_api.dart';
 import 'package:berikan/api/model/chat.dart';
 import 'package:berikan/api/storage_service.dart';
@@ -222,24 +223,21 @@ class DetailListView extends StatelessWidget {
                         height: 4,
                       ),
                       Align(
-                          alignment: Alignment.center,
-                          child: PrimaryButton(
-                            onPressed: () async {
-                              final newChat = Chat.create(
-                                  endpointAccountId1: AccountService.getCurrentUser()!.uid,
-                                  endpointAccountId2: args.itemDetail.ownerId);
-                              // I should put these lines inside Chat.create but
-                              // factory constructors doesn't allow that.
-                              final docRef = await chatCollectionReference(FirebaseFirestore.instance).add(newChat);
-                              final snapshot = await docRef.get();
-                              final chat = snapshot.data()!;
-                              // until this
-                              final itemId = args.itemDetail.id;
-                              final _args = ChatDetailItemArguments(chat, itemId);
-                              Navigator.of(context).pushReplacementNamed(ChatDetailPage.routeNameWithItem, arguments: _args);
-                            },
-                            text: 'CHAT PENJUAL',
-                          ),
+                        alignment: Alignment.center,
+                        child: PrimaryButton(
+                          onPressed: () async {
+                            final chat = await ChatService.getChatFromEndpoints(
+                                endpointUid1: AccountService.getCurrentUser()!.uid,
+                                endpointUid2: args.itemDetail.ownerId);
+                            final itemId = args.itemDetail.id;
+
+                            final _args = ChatDetailItemArguments(chat, itemId);
+                            Navigator.of(context).pushReplacementNamed(
+                                ChatDetailPage.routeNameWithItem,
+                                arguments: _args);
+                          },
+                          text: 'CHAT PENJUAL',
+                        ),
                       ),
                     ],
                   ),
