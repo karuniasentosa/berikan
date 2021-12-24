@@ -27,6 +27,7 @@ class MainGridView extends StatelessWidget {
           builder: (BuildContext context,
               AsyncSnapshot<List<dynamic>> locationSnap) {
             return Card(
+              key: Key('mainCard$index'),
               elevation: 5,
               child: InkWell(
                 onTap: () {
