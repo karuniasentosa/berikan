@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: _navigatorKey,
       home: Builder(
         builder: (context) {
-          FirebaseAuth.instance.authStateChanges().listen((user) {
+          FirebaseAuth.instance.idTokenChanges().listen((user) {
             if (user != null) {
               _navigatorKey.currentState!.pushReplacementNamed(MainPage.routeName);
             } else {
