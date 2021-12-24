@@ -1,12 +1,11 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:berikan/api/account_service.dart';
 import 'package:berikan/api/item_service.dart';
 import 'package:berikan/api/location_api.dart';
-import 'package:berikan/api/model/account.dart';
 import 'package:berikan/api/model/item.dart';
 import 'package:berikan/api/storage_service.dart';
-import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
 import 'package:berikan/ui/chat_page.dart';
@@ -86,8 +85,8 @@ class MainPage extends StatelessWidget {
                   String _adm3 = "";
                   return Dialog(
                     child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 8.0),
                       child: Column(
                           // crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -96,25 +95,24 @@ class MainPage extends StatelessWidget {
                               style: Theme.of(context).textTheme.headline4,
                               textAlign: TextAlign.center,
                             ),
-                            Text(
+                            const Text(
                                 'Kami perlu mengetahui lokasi kamu agar orang dapat mengetahui letak kamu berada'),
                             Expanded(
                               child: DropdownButtonsLocation(
                                   onAdm1Selected: (adm1) {
-                                    _adm1 = adm1;
-                                  },
-                                  onAdm2Selected: (adm2) {
-                                    _adm2 = adm2;
-                                  },
-                                  onAdm3Selected: (adm3) {
-                                    _adm3 = adm3;
-                                  }
-                              ),
+                                _adm1 = adm1;
+                              }, onAdm2Selected: (adm2) {
+                                _adm2 = adm2;
+                              }, onAdm3Selected: (adm3) {
+                                _adm3 = adm3;
+                              }),
                             ),
-                            Text('Lokasi yang sudah diatur tidak dapat diubah. Pastikan sudah memasukkan dengan benar!',
-                                  style: TextStyle(color: Colors.red)),
+                            const Text(
+                                'Lokasi yang sudah diatur tidak dapat diubah. Pastikan sudah memasukkan dengan benar!',
+                                style: const TextStyle(color: Colors.red)),
                             Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
                                 child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -123,8 +121,7 @@ class MainPage extends StatelessWidget {
                                           onPressed: () {
                                             Navigator.pop(context, false);
                                           },
-                                          child: Text('Cancel')
-                                      ),
+                                          child: const Text('Cancel')),
                                       PrimaryButton(
                                           text: 'Lanjut',
                                           onPressed: () {
@@ -133,31 +130,26 @@ class MainPage extends StatelessWidget {
                                               'adm2': _adm2,
                                               'adm3': _adm3,
                                             });
-                                          }
-                                      ),
-                                    ]
-                                )
-                            )
-                          ]
-                      ),
+                                          }),
+                                    ]))
+                          ]),
                     ),
                   );
-                }
-            );
+                });
             if (result == false) {
               return;
             } else {
-              AccountService.setLocation(uid, adm1: result['adm1'], adm2: result['adm2'], adm3: result['adm3']);
+              AccountService.setLocation(uid,
+                  adm1: result['adm1'],
+                  adm2: result['adm2'],
+                  adm3: result['adm3']);
             }
           }
           Navigator.pushNamed(context, AddItemPage.routeName);
         },
         label: Text(
           '+ Tambah',
-          style: Theme
-              .of(context)
-              .textTheme
-              .button,
+          style: Theme.of(context).textTheme.button,
         ),
       ),
       body: CustomScrollView(
@@ -170,7 +162,7 @@ class MainPage extends StatelessWidget {
                 children: [
                   Text('REKOMENDASI',
                       style:
-                      blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
+                          blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
                   SizedBox(
                     height: 500,
                     child: StreamBuilder<List<QueryDocumentSnapshot<Item>>>(
@@ -184,7 +176,8 @@ class MainPage extends StatelessWidget {
                           // in case there is no data, but this else if statement
                           // should never be the case since we have dummy data.
                           return const Center(
-                            child: Text('Belum ada barang gratis, yuk tambahkan!'),
+                            child:
+                                Text('Belum ada barang gratis, yuk tambahkan!'),
                           );
                         } else {
                           return MainGridView(
@@ -192,122 +185,6 @@ class MainPage extends StatelessWidget {
                           );
                         }
                       },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('BARU DILIHAT',
-                      style:
-                      blackTitle.copyWith(fontSize: 32, letterSpacing: 3)),
-                  SizedBox(
-                    height: 260,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return SizedBox(
-                          width: 225,
-                          child: Card(
-                            elevation: 5,
-                            child: Column(
-                              children: [
-                                Container(
-                                  child: Image.network(
-                                    'https://caps.team/assets/img/merchandise/test1.png',
-                                    fit: BoxFit.cover,
-                                  ),
-                                  height: 200,
-                                  width: 200,
-                                ),
-                                SizedBox(
-                                  height: 1,
-                                ),
-                                Align(
-                                  child: Text(myProducts[index]['name']),
-                                  alignment: Alignment.centerLeft,
-                                ),
-                                SizedBox(
-                                  height: 12,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('JAKARTA BARAT'),
-                                    Text('3 HARI LALU'),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                      itemCount: myProducts.length,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('FAVORITKU',
-                      style:
-                      blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
-                  SizedBox(
-                    height: 260,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return SizedBox(
-                          width: 225,
-                          child: Card(
-                            elevation: 5,
-                            child: Column(
-                              children: [
-                                Container(
-                                  child: Image.network(
-                                    'https://caps.team/assets/img/merchandise/test1.png',
-                                    fit: BoxFit.cover,
-                                  ),
-                                  height: 200,
-                                  width: 200,
-                                ),
-                                SizedBox(
-                                  height: 1,
-                                ),
-                                Align(
-                                  child: Text(myProducts[index]['name']),
-                                  alignment: Alignment.centerLeft,
-                                ),
-                                SizedBox(
-                                  height: 12,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('JAKARTA BARAT'),
-                                    Text('3 HARI LALU')
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                      itemCount: myProducts.length,
                     ),
                   ),
                 ],
@@ -334,8 +211,7 @@ class OurSearchDelegate extends SearchDelegate<String> {
   String? get searchFieldLabel => 'Cari di sini';
 
   @override
-  TextStyle? get searchFieldStyle =>
-      GoogleFonts.roboto(
+  TextStyle? get searchFieldStyle => GoogleFonts.roboto(
         fontSize: 18,
       );
 
@@ -365,73 +241,72 @@ class OurSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final itemFuture = ItemService.searchItems(FirebaseFirestore.instance, query);
+    final itemFuture =
+        ItemService.searchItems(FirebaseFirestore.instance, query);
     return FutureBuilder<List<Item>>(
-      future: itemFuture,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return CircularProgressIndicator();
-        } else {
-          final itemResult = snapshot.requireData;
-          if (itemResult.length == 0) {
-            return Text('Tidak ada data yang dapat ditemukan');
-          }
-          return ListView.builder(
-            itemCount: itemResult.length,
-            itemBuilder: (listViewContext, index) {
-              final item = itemResult[index];
-              final itemReference = FirebaseStorage.instance.ref(item.imagesUrl[0]);
-              final imagePreviewFuture = StorageService.getData(itemReference);
-              final locationFuture = AccountService.getLocation(item.ownerId);
-              return GestureDetector(
-                onTap: () async {
-                  final args = DetailArguments(item, (await locationFuture)[2]);
-                  Navigator.pushNamed(context, ItemDetailPage.routeName, arguments: args);
-                },
-                child: ListTile(
-                  shape: Border(
-                    bottom: BorderSide()
-                  ),
-                  leading: AspectRatio(
-                    aspectRatio: 1,
-                    child: FutureBuilder<Uint8List?>(
-                      future: imagePreviewFuture,
-                      builder: (futureBuilderContext, snapshot) {
-                        if (!snapshot.hasData) {
-                          return CircularProgressIndicator();
-                        } else {
-                          return Image.memory(
-                            snapshot.data!,
-                            fit: BoxFit.cover,
-                          );
-                        }
-                      }
-                    )
-                  ),
-                  title: Text(item.name),
-                  subtitle: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      FutureBuilder<List<dynamic>>(
-                        future: locationFuture,
-                        builder: (futureBuilderContext, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Text('...');
-                          } else {
-                            return Text(snapshot.requireData[2]);
-                          }
-                        }
-                      ),
-                      Text(DateDiffDescriber.dayDiff(DateTime.now(), item.addedSince)),
-                    ]
-                  ),
-                ),
-              );
+        future: itemFuture,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
+          } else {
+            final itemResult = snapshot.requireData;
+            if (itemResult.length == 0) {
+              return const Text('Tidak ada data yang dapat ditemukan');
             }
-          );
-        }
-      }
-    );
+            return ListView.builder(
+                itemCount: itemResult.length,
+                itemBuilder: (listViewContext, index) {
+                  final item = itemResult[index];
+                  final itemReference =
+                      FirebaseStorage.instance.ref(item.imagesUrl[0]);
+                  final imagePreviewFuture =
+                      StorageService.getData(itemReference);
+                  final locationFuture =
+                      AccountService.getLocation(item.ownerId);
+                  return GestureDetector(
+                    onTap: () async {
+                      final args =
+                          DetailArguments(item, (await locationFuture)[2]);
+                      Navigator.pushNamed(context, ItemDetailPage.routeName,
+                          arguments: args);
+                    },
+                    child: ListTile(
+                      shape: const Border(bottom: const BorderSide()),
+                      leading: AspectRatio(
+                          aspectRatio: 1,
+                          child: FutureBuilder<Uint8List?>(
+                              future: imagePreviewFuture,
+                              builder: (futureBuilderContext, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const CircularProgressIndicator();
+                                } else {
+                                  return Image.memory(
+                                    snapshot.data!,
+                                    fit: BoxFit.cover,
+                                  );
+                                }
+                              })),
+                      title: Text(item.name),
+                      subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FutureBuilder<List<dynamic>>(
+                                future: locationFuture,
+                                builder: (futureBuilderContext, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return const Text('...');
+                                  } else {
+                                    return Text(snapshot.requireData[2]);
+                                  }
+                                }),
+                            Text(DateDiffDescriber.dayDiff(
+                                DateTime.now(), item.addedSince)),
+                          ]),
+                    ),
+                  );
+                });
+          }
+        });
   }
 
   @override
@@ -439,8 +314,8 @@ class OurSearchDelegate extends SearchDelegate<String> {
     final dummySuggestion = query.isEmpty
         ? dummyBarangBekas
         : dummyBarangBekas
-        .where((element) => element.startsWith(query))
-        .toList();
+            .where((element) => element.startsWith(query))
+            .toList();
 
     return ListView.builder(
         itemCount: dummySuggestion.length,
@@ -457,10 +332,7 @@ class OurSearchDelegate extends SearchDelegate<String> {
                   children: [
                     TextSpan(
                         text: dummySuggestion[index].substring(query.length),
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .bodyText2),
+                        style: Theme.of(context).textTheme.bodyText2),
                   ]),
             ),
             onTap: () {
@@ -476,10 +348,10 @@ class DropdownButtonsLocation extends StatefulWidget {
   final Function(String) onAdm2Selected;
   final Function(String) onAdm3Selected;
 
-  DropdownButtonsLocation(
-      {required this.onAdm1Selected,
+  const DropdownButtonsLocation(
+      {Key? key, required this.onAdm1Selected,
       required this.onAdm2Selected,
-      required this.onAdm3Selected});
+      required this.onAdm3Selected}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DropdownButtonsLocationState();
