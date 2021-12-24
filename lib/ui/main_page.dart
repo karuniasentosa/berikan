@@ -10,17 +10,16 @@ import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
 import 'package:berikan/ui/chat_page.dart';
-import 'package:berikan/widget/button/primary_button.dart';
-import 'package:berikan/ui/settings_page.dart';
 import 'package:berikan/ui/item_detail.dart';
+import 'package:berikan/ui/settings_page.dart';
 import 'package:berikan/utills/arguments.dart';
 import 'package:berikan/utils/datediff_describer.dart';
+import 'package:berikan/widget/button/primary_button.dart';
 import 'package:berikan/widget/main_gridview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:http/http.dart' as http;
 
 class MainPage extends StatelessWidget {

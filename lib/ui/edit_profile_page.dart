@@ -44,15 +44,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final _currentAccount =
-        ModalRoute.of(context)?.settings.arguments as EditProfileArguments;
-    final _profileRef =
-        FirebaseStorage.instance.ref(_currentAccount.account.avatarUrl);
+    final _currentAccount = ModalRoute.of(context)?.settings.arguments as EditProfileArguments;
+    final _profileRef = FirebaseStorage.instance.ref(_currentAccount.account.avatarUrl);
     return Scaffold(
       body: ListView(
         children: [
           Container(
-            padding: EdgeInsets.all(24),
+            padding: const EdgeInsets.all(24),
             color: colorPrimaryLight,
             child: Center(
               child: Column(
@@ -114,7 +112,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Padding(
@@ -128,7 +126,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               labelText: 'First Name',
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Padding(
@@ -142,7 +140,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               labelText: 'Last Name',
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Padding(
@@ -156,7 +154,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               labelText: 'Phone Number',
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           Padding(
@@ -170,57 +168,55 @@ class _EditProfilePageState extends State<EditProfilePage> {
               labelText: 'Current Password',
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
-          SizedBox(
+          const SizedBox(
             height: 24,
           ),
           PrimaryButton(
               text: 'Simpan',
               onPressed: () async {
+                //credential for checking user password later.
+                AuthCredential credential =
+                EmailAuthProvider.credential(email: widget.email!, password: _passwordController.text);
 
-                AuthCredential credential = EmailAuthProvider.credential(
-                    email: widget.email!, password: _passwordController.text);
                 try {
-                  final user = await FirebaseAuth.instance.currentUser!
-                      .reauthenticateWithCredential(credential);
-                  var account = accountDocumentReference(
-                      FirebaseFirestore.instance, user.user!.uid);
+                  //check if password input from the user is correct
+                  final user = await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credential);
+                  var account = accountDocumentReference(FirebaseFirestore.instance, user.user!.uid);
+
                   if (_firstNameController.text.isEmpty) {
-                    _firstNameController.text =
-                        _currentAccount.account.firstName;
+                    _firstNameController.text = _currentAccount.account.firstName;
                   }
                   if (_lastNameController.text.isEmpty) {
                     _lastNameController.text = _currentAccount.account.lastName;
                   }
                   if (_phoneNumberController.text.isEmpty) {
-                    _phoneNumberController.text =
-                        _currentAccount.account.phoneNumber;
+                    _phoneNumberController.text = _currentAccount.account.phoneNumber;
                   }
+                  //update account
                   account.update({
                     'first_name': _firstNameController.text,
                     'last_name': _lastNameController.text,
                     'phone_number': _phoneNumberController.text,
                   });
 
-                  /// if user updated their profile picture
+                  // if user updated their profile picture
                   if (image != null) {
                     final imageRef = FirebaseStorage.instance
                         .ref('user_profile/')
                         .child('${user.user?.uid}.jpg');
 
-                   await StorageService.putData(
-                        imageRef, image!.readAsBytesSync());
+                   await StorageService.putData(imageRef, image!.readAsBytesSync());
                   }
 
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Account updated')));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Account updated')));
 
                 } catch (e) {
-                  final snackBar = SnackBar(
-                    content: Text('Password Incorrect.'),
+                  const snackBar = SnackBar(content: Text('Password Incorrect.'),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
@@ -234,10 +230,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     showDialog(
         context: context,
         builder: (_) {
-          return SimpleDialog(title: Text('Ambil gambar dari...'), children: [
+          return SimpleDialog(title: const Text('Ambil gambar dari...'), children: [
             SimpleDialogOption(
-              child:
-                  IconWithText(icon: const Icon(Icons.image), text: 'Galeri'),
+              child: IconWithText(icon: const Icon(Icons.image), text: 'Galeri'),
               onPressed: () async {
                 final XFile? file =
                     await _picker.pickImage(source: ImageSource.gallery);
@@ -248,8 +243,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               },
             ),
             SimpleDialogOption(
-              child:
-                  IconWithText(icon: const Icon(Icons.camera), text: 'Kamera'),
+              child: IconWithText(icon: const Icon(Icons.camera), text: 'Kamera'),
               onPressed: () async {
                 final XFile? file =
                     await _picker.pickImage(source: ImageSource.camera);

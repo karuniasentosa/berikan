@@ -28,13 +28,12 @@ class ChatDetailPage extends StatelessWidget {
   static const routeNameWithItem = '/chatDetailPage?item';
 
   final Chat chat;
+
   ChatDetailPage({Key? key, required this.chat}) : super(key: key);
+
   factory ChatDetailPage.putItem({Key? key, required Chat chat, required String itemId}) {
     // push the message first before building this widget
-    final message = Message.itemAttachment(
-        accountId: AccountService.getCurrentUser()!.uid,
-        itemId: itemId
-    );
+    final message = Message.itemAttachment(accountId: AccountService.getCurrentUser()!.uid, itemId: itemId);
     chat.pushMessage(message);
     return ChatDetailPage(chat: chat)
       .._textEditingController.text = 'Halo, barang ini masih ada?';
@@ -45,8 +44,7 @@ class ChatDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ChatDetailPageProvider>(context, listen: false)
-        .getMessage(chat);
+    Provider.of<ChatDetailPageProvider>(context, listen: false).getMessage(chat);
     return Scaffold(
         appBar: AppBar(
           title: Row(
@@ -66,7 +64,7 @@ class ChatDetailPage extends StatelessWidget {
                       }),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 12,
               ),
               FutureBuilder<ChatData>(
@@ -75,7 +73,7 @@ class ChatDetailPage extends StatelessWidget {
                     if (snapshot.hasData) {
                       return Text(snapshot.data!.theirName);
                     } else {
-                      return Text('...');
+                      return const Text('...');
                     }
                   }),
             ],
@@ -87,9 +85,9 @@ class ChatDetailPage extends StatelessWidget {
               child: Consumer<ChatDetailPageProvider>(
                 builder: (context, provider, _) {
                   if (provider.state == ProviderResultState.loading) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   } else if (provider.state == ProviderResultState.noData) {
-                    return Text('no data');
+                    return const Text('no data');
                   } else if (provider.state == ProviderResultState.hasData) {
                     return StreamBuilder<List<Message>>(
                       stream: provider.messages,
@@ -113,37 +111,34 @@ class ChatDetailPage extends StatelessWidget {
                                               imageData: snapshot.requireData!,
                                               isMyChat: AccountService.getCurrentUser()!.uid == message.accountId);
                                         } else {
-                                          return Placeholder();
+                                          return const Placeholder();
                                         }
-                                      }
-                                  );
-                                } else { // if (message.attachmentType == AttachmentType.item
+                                      });
+                                } else {
+                                  // if (message.attachmentType == AttachmentType.item
                                   return FutureBuilder<Item?>(
-                                    future: ItemService.getItem(FirebaseFirestore.instance, message.attachment!),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return MessageBubble.itemAttachment(
-                                            time: TimeOfDay.fromDateTime(message.when),
-                                            itemWidget: ItemPreviewOnChat(item: snapshot.data!),
-                                            isMyChat: AccountService.getCurrentUser()!.uid == message.accountId
-                                        );
-                                      } else {
-                                        return Placeholder();
-                                      }
-                                    }
-                                  );
+                                      future: ItemService.getItem(FirebaseFirestore.instance, message.attachment!),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return MessageBubble.itemAttachment(
+                                              time: TimeOfDay.fromDateTime(message.when),
+                                              itemWidget: ItemPreviewOnChat(item: snapshot.data!),
+                                              isMyChat: AccountService.getCurrentUser()!.uid == message.accountId);
+                                        } else {
+                                          return const Placeholder();
+                                        }
+                                      });
                                 }
                               } else {
                                 return MessageBubble.text(
                                     time: TimeOfDay.fromDateTime(message.when),
                                     text: message.content!,
-                                    isMyChat: AccountService.getCurrentUser()!.uid == message.accountId
-                                );
+                                    isMyChat: AccountService.getCurrentUser()!.uid == message.accountId);
                               }
                             },
                           );
                         } else {
-                          return CircularProgressIndicator();
+                          return const CircularProgressIndicator();
                         }
                       },
                     );
@@ -163,7 +158,7 @@ class ChatDetailPage extends StatelessWidget {
                   child: Container(
                     width: 50,
                     height: 40,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: colorPrimary,
                     ),
@@ -175,14 +170,14 @@ class ChatDetailPage extends StatelessWidget {
                         if (file != null) {
                           final random = Random(DateTime.now().millisecond);
                           final _storageInstance = FirebaseStorage.instance;
-                          final ref = _storageInstance.ref('chat_attachment')
-                                              .child(chat.id)
-                                              .child(randomString(random, length: 7));
+                          final ref = _storageInstance
+                              .ref('chat_attachment')
+                              .child(chat.id)
+                              .child(randomString(random, length: 7));
                           StorageService.putData(ref, file.readAsBytesSync());
                           final message = Message.imageAttachment(
                               accountId: AccountService.getCurrentUser()!.uid,
-                              imageRef: ref.fullPath
-                          );
+                              imageRef: ref.fullPath);
                           chat.pushMessage(message);
                         }
                       },
@@ -191,8 +186,7 @@ class ChatDetailPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(right: 8.0, top: 8, bottom: 8),
+                    padding: const EdgeInsets.only(right: 8.0, top: 8, bottom: 8),
                     child: TextField(
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(8.0),
@@ -209,16 +203,10 @@ class ChatDetailPage extends StatelessWidget {
                   child: Container(
                     height: 40,
                     width: 50,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: colorPrimary
-                    ),
+                    decoration: const BoxDecoration(shape: BoxShape.circle, color: colorPrimary),
                     child: IconButton(
                       disabledColor: Colors.grey,
-                      icon: const Icon(
-                        Icons.send,
-                        color: Colors.white,
-                      ),
+                      icon: const Icon(Icons.send, color: Colors.white,),
                       onPressed: _sendMessage,
                     ),
                   ),
@@ -226,20 +214,18 @@ class ChatDetailPage extends StatelessWidget {
               ],
             ),
           ],
-        )
-    );
+        ));
   }
 
   void _sendMessage() {
     if (_textEditingController.text.isNotEmpty) {
       final message = Message.text(
           accountId: AccountService.getCurrentUser()!.uid,
-          content: _textEditingController.text
-      );
+          content: _textEditingController.text);
       chat.pushMessage(message);
       _textEditingController.clear();
 
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         _scrollToBottom();
       });
     }
@@ -248,9 +234,8 @@ class ChatDetailPage extends StatelessWidget {
   void _scrollToBottom() {
     _chatScrollingController.animateTo(
         _chatScrollingController.position.minScrollExtent,
-        duration: Duration(milliseconds: 200),
-        curve: Curves.easeIn
-    );
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeIn);
   }
 
   Future<File?> _showImagePickerDialog(BuildContext context) async {
@@ -281,18 +266,16 @@ class ChatDetailPage extends StatelessWidget {
     await showDialog(
         context: context,
         builder: (context) {
-          return SimpleDialog(title: Text('Ambil gambar dari...'), children: [
+          return SimpleDialog(title: const Text('Ambil gambar dari...'), children: [
             SimpleDialogOption(
-              child:
-              IconWithText(icon: const Icon(Icons.image), text: 'Galeri'),
+              child: IconWithText(icon: const Icon(Icons.image), text: 'Galeri'),
               onPressed: () async {
                 _file = await chooseImageGallery();
                 Navigator.pop(context);
               },
             ),
             SimpleDialogOption(
-                child: IconWithText(
-                    icon: const Icon(Icons.camera), text: 'Kamera'),
+                child: IconWithText(icon: const Icon(Icons.camera), text: 'Kamera'),
                 onPressed: () async {
                   _file = await chooseImageCamera();
                   Navigator.pop(context);

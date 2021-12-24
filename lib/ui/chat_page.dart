@@ -21,8 +21,7 @@ class ChatPage extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             child: Stack(alignment: Alignment.centerRight, children: [
               TextField(
                 style: Theme.of(context).textTheme.overline,
@@ -30,9 +29,7 @@ class ChatPage extends StatelessWidget {
                     hintText: 'Cari orang',
                     hintStyle: Theme.of(context).textTheme.subtitle1),
               ),
-              const Icon(
-                Icons.search,
-              ),
+              const Icon(Icons.search,),
             ]),
           ),
           Expanded(
@@ -59,9 +56,8 @@ class ChatPage extends StatelessWidget {
                           title: Text(chatDatas[index].theirName),
                           subtitle: RichText(
                               text: TextSpan(
-                                style: TextStyle(color: Colors.black),
+                                style: const TextStyle(color: Colors.black),
                                 children: [
-                                  // sorry for the long line :((
                                   TextSpan(
                                       text: chatDatas[index].lastSentId ==
                                             FirebaseAuth.instance.currentUser!.uid ?
@@ -80,16 +76,13 @@ class ChatPage extends StatelessWidget {
                     itemCount: chatDatas.length,
                   );
                 } else if (provider.state == ProviderResultState.noData) {
-                  // TODO: Add no chat widget(?)
-                  return Text('no chat');
+                  return const Text('no chat');
                 } else if (provider.state == ProviderResultState.loading) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (provider.state == ProviderResultState.error) {
-                  // TODO: Add error widget(?)
                   return Text(provider.errorMessage);
                 } else {
-                  // TODO: handle no connectyion
-                  return Placeholder();
+                  return const Placeholder();
                 }
               },
             ),
