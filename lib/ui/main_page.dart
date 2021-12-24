@@ -23,10 +23,7 @@ import 'package:http/http.dart' as http;
 
 class MainPage extends StatelessWidget {
   static const routeName = '/mainPage';
-
-  final _fireStore = FirebaseFirestore.instance;
-
-  MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +163,7 @@ class MainPage extends StatelessWidget {
                   SizedBox(
                     height: 500,
                     child: StreamBuilder<List<QueryDocumentSnapshot<Item>>>(
-                      stream: ItemService.getEveryItems(_fireStore),
+                      stream: ItemService.getEveryItems(FirebaseFirestore.instance),
                       builder: (BuildContext context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -176,8 +173,7 @@ class MainPage extends StatelessWidget {
                           // in case there is no data, but this else if statement
                           // should never be the case since we have dummy data.
                           return const Center(
-                            child:
-                                Text('Belum ada barang gratis, yuk tambahkan!'),
+                            child: Text('Belum ada barang gratis, yuk tambahkan!'),
                           );
                         } else {
                           return MainGridView(
