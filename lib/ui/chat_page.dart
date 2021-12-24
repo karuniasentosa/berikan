@@ -1,7 +1,6 @@
 import 'package:berikan/provider/chat_page_provider.dart';
 import 'package:berikan/provider/provider_result_state.dart';
 import 'package:berikan/ui/chat_detail_page.dart';
-import 'package:berikan/utills/arguments.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
