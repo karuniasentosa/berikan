@@ -1,12 +1,11 @@
+import 'package:berikan/api/account_service.dart';
 import 'package:berikan/common/style.dart';
-import 'package:berikan/ui/main_page.dart';
-import 'package:berikan/widget/button/primary_button.dart';
 import 'package:berikan/widget/button/custom_textbutton.dart';
+import 'package:berikan/widget/button/primary_button.dart';
 import 'package:berikan/widget/custom_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:berikan/api/account_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
