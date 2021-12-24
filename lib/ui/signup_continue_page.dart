@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:berikan/api/storage_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:berikan/api/account_service.dart';
 import 'package:berikan/api/model/account.dart';
+import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/utills/arguments.dart';
 import 'package:berikan/widget/button/custom_textbutton.dart';
@@ -14,6 +12,7 @@ import 'package:berikan/widget/icon_with_text.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignupContinuePage extends StatefulWidget {
   static const routeName = '/signupContinuePage';
@@ -180,9 +179,12 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   } else {
                     try {
+                      final imageRef = FirebaseStorage.instance
+                          .ref('user_profile/')
+                          .child('${args.id}.jpg');
                       final account = Account(
                           firstName: _firstNameController.text,
-                          avatarUrl: '',
+                          avatarUrl: imageRef.fullPath,
                           lastName: _lastNameController.text,
                           joinedSince: DateTime.now(),
                           phoneNumber: _phoneNumberController.text);
@@ -190,18 +192,10 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
 
 
                       if (image != null) {
-                        final imageRef = FirebaseStorage.instance
-                            .ref('user_profile/')
-                            .child('${args.id}.jpg');
-
                         StorageService.putData(
                             imageRef, image!.readAsBytesSync());
-
-                        accountDocumentReference(
-                                FirebaseFirestore.instance, args.id!)
-                            .update({'avatar_url': imageRef.fullPath});
-
                       }
+
                       const snackBar = SnackBar(content: Text('Register success, please login'));
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       Navigator.pop(context);
