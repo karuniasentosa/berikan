@@ -20,11 +20,8 @@ class ItemService {
     return items;
   }
 
-  static Future<List<Item>> searchItems(
-      FirebaseFirestore instance,
-      String query) async {
-    final _query = itemCollectionReference(instance)
-        .where('name', isGreaterThanOrEqualTo: query);
+  static Future<List<Item>> searchItems(FirebaseFirestore instance, String query) async {
+    final _query = itemCollectionReference(instance).where('name', isGreaterThanOrEqualTo: query);
     final snapshot = await _query.get();
     final List<Item> items = snapshot.docs.map((qds) => qds.data()).toList();
     return items;
