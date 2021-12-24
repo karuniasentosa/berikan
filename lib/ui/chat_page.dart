@@ -77,7 +77,7 @@ class ChatPage extends StatelessWidget {
                 } else if (provider.state == ProviderResultState.noData) {
                   return const Text('no chat');
                 } else if (provider.state == ProviderResultState.loading) {
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 } else if (provider.state == ProviderResultState.error) {
                   return Text(provider.errorMessage);
                 } else {
