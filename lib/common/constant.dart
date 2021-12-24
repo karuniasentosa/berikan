@@ -1,6 +1,4 @@
-const lorem =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed molestie velit et augue laoreet, blandit semper dui ornare. Etiam eu egestas sapien.';
-
+const berikanDescription = 'Berikan merupakan sebuah platform dimana anda bisa menghibahkan barang-barang bekas anda, maupun menerima barang bekas dari orang lain.';
 final List<Map> myProducts = List.generate(
     100,
     (index) => {

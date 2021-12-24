@@ -14,10 +14,11 @@ class CustomTextButton extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         text,
-        style: Theme.of(context).textTheme.subtitle1?.apply(
-            decoration: TextDecoration.underline,
-            fontSizeDelta: 4,
-            letterSpacingDelta: 2),
+        style: Theme.of(context).textTheme.subtitle1?.copyWith(
+          decoration: TextDecoration.underline,
+          letterSpacing: 2,
+          fontSize: 16
+        )
       ),
     );
   }

@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Text(
-                  lorem,
+                  berikanDescription,
                   style: Theme.of(context).textTheme.bodyText1,
                   textAlign: TextAlign.center,
                 ),
@@ -58,7 +58,8 @@ class HomePage extends StatelessWidget {
             Flexible(
               child: PrimaryButton(text: 'MASUK', onPressed: (){
                 Navigator.pushNamed(context, LoginPage.routeName);
-              },),
+              },
+              key: const Key('homePageLoginButton'),),
             ),
             const SizedBox(
               height: 16,

@@ -1,5 +1,9 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:berikan/ui/image_viewer_page.dart';
+import 'package:berikan/utills/arguments.dart';
+import 'package:berikan/utils/related_to_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,7 +17,11 @@ class ImagePick extends StatefulWidget {
   final ReceiveImageCallback? onImageSelect;
   final Function()? onImageDrop;
 
-  ImagePick({required this.width, required this.height, this.onImageSelect, this.onImageDrop});
+  ImagePick(
+      {required this.width,
+      required this.height,
+      this.onImageSelect,
+      this.onImageDrop});
 
   @override
   State<StatefulWidget> createState() => _ImagePickState();
@@ -24,21 +32,25 @@ class _ImagePickState extends State<ImagePick> {
 
   @override
   Widget build(BuildContext context) {
+    final imageId = randomString(Random(DateTime.now().millisecond), length: 5);
     return GestureDetector(
       child: imageFile == null
           ? noImage()
-          : Image.file(
-        imageFile!,
-        width: widget.width,
-        height: widget.height,
-        fit: BoxFit.none,
-        cacheWidth: widget.width.round(),
-        cacheHeight: widget.height.round(),
-      ),
+          : Hero(
+              tag: imageId,
+              child: Image.file(
+                imageFile!,
+                width: widget.width,
+                height: widget.height,
+                fit: BoxFit.none,
+                cacheWidth: widget.width.round(),
+                cacheHeight: widget.height.round(),
+              ),
+            ),
       onTap: () {
         if (imageFile != null) {
-          // TODO: preview image
-
+          final args = ImageViewerArguments(imageId, imageFile!.readAsBytesSync());
+          Navigator.pushNamed(context, ImageViewerPage.routeName, arguments: args);
         } else {
           showImageSourceChooser(context);
         }
@@ -112,7 +124,7 @@ class _ImagePickState extends State<ImagePick> {
           return SimpleDialog(title: Text('Ambil gambar dari...'), children: [
             SimpleDialogOption(
               child:
-              IconWithText(icon: const Icon(Icons.image), text: 'Galeri'),
+                  IconWithText(icon: const Icon(Icons.image), text: 'Galeri'),
               onPressed: () async {
                 chooseImageGallery();
                 Navigator.pop(context);
@@ -144,4 +156,3 @@ class _ImagePickState extends State<ImagePick> {
     );
   }
 }
-

@@ -65,9 +65,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   CustomTextField(
                     'Seperti: john.doe@mail.com',
+                    key: const Key('emailTextField'),
                     type: TextInputType.emailAddress,
                     isObscure: false,
-                    controller: _emailController,
+                    controller: _emailController, labelText: '',
                   ),
                   const SizedBox(
                     height: 16,
@@ -84,16 +85,20 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   CustomTextField(
                     '',
+                    key: const Key('passwordTextField'),
                     type: TextInputType.visiblePassword,
                     isObscure: true,
-                    controller: _passwordController,
+                    controller: _passwordController, labelText: '',
                   )
                 ],
               ),
             ),
             PrimaryButton(
+              key: const Key('loginPageLoginButton'),
               text: 'MASUK',
               onPressed: () async {
+                //Hides the keyboard
+                FocusScope.of(context).unfocus();
                 try {
                   await AccountService.signIn(
                       _emailController.text, _passwordController.text);
@@ -104,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     return;
                   } else if (e.code == 'wrong-password') {
-                    const snackBar = SnackBar(content: Text('Wrong password'));
+                    const snackBar = SnackBar(content: Text('Wrong Password'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     return;
                   } else if (e.code == 'invalid-email') {
@@ -113,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     return;
                   } else if (e.code == 'unknown') {
-                    const snackBar = SnackBar(content: Text('Email address/password field can\'t be empty'));
+                    const snackBar = SnackBar(content: Text('Email address/Password field can\'t be empty'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     return;
                   } else {
@@ -122,7 +127,6 @@ class _LoginPageState extends State<LoginPage> {
                     return;
                   }
                 }
-                Navigator.pushNamed(context, MainPage.routeName);
               },
             ),
             const SizedBox(

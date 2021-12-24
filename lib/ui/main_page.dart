@@ -5,13 +5,19 @@ import 'package:berikan/api/item_service.dart';
 import 'package:berikan/api/location_api.dart';
 import 'package:berikan/api/model/account.dart';
 import 'package:berikan/api/model/item.dart';
+import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/add_item_page.dart';
 import 'package:berikan/ui/chat_page.dart';
 import 'package:berikan/widget/button/primary_button.dart';
+import 'package:berikan/ui/settings_page.dart';
+import 'package:berikan/ui/item_detail.dart';
+import 'package:berikan/utills/arguments.dart';
+import 'package:berikan/utils/datediff_describer.dart';
 import 'package:berikan/widget/main_gridview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -55,6 +61,12 @@ class MainPage extends StatelessWidget {
               Navigator.pushNamed(context, ChatPage.routeName);
             },
             icon: const Icon(Icons.chat_outlined),
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.pushNamed(context, SettingsPage.routeName);
+            },
           )
         ],
       ),
@@ -143,7 +155,10 @@ class MainPage extends StatelessWidget {
         },
         label: Text(
           '+ Tambah',
-          style: Theme.of(context).textTheme.button,
+          style: Theme
+              .of(context)
+              .textTheme
+              .button,
         ),
       ),
       body: CustomScrollView(
@@ -156,15 +171,22 @@ class MainPage extends StatelessWidget {
                 children: [
                   Text('REKOMENDASI',
                       style:
-                          blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
+                      blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
                   SizedBox(
                     height: 500,
-                    child: FutureBuilder<List<Item>>(
-                      future: ItemService.getAllItems(_fireStore),
+                    child: StreamBuilder<List<QueryDocumentSnapshot<Item>>>(
+                      stream: ItemService.getEveryItems(_fireStore),
                       builder: (BuildContext context, snapshot) {
-                        if (!snapshot.hasData) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const Center(
                               child: CircularProgressIndicator());
+                        } else if (snapshot.data!.isEmpty) {
+                          // in case there is no data, but this else if statement
+                          // should never be the case since we have dummy data.
+                          return const Center(
+                            child: Text('Belum ada barang gratis, yuk tambahkan!'),
+                          );
                         } else {
                           return MainGridView(
                             snapshot: snapshot,
@@ -185,7 +207,7 @@ class MainPage extends StatelessWidget {
                 children: [
                   Text('BARU DILIHAT',
                       style:
-                          blackTitle.copyWith(fontSize: 32, letterSpacing: 3)),
+                      blackTitle.copyWith(fontSize: 32, letterSpacing: 3)),
                   SizedBox(
                     height: 260,
                     child: ListView.builder(
@@ -217,7 +239,7 @@ class MainPage extends StatelessWidget {
                                 ),
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text('JAKARTA BARAT'),
                                     Text('3 HARI LALU'),
@@ -243,7 +265,7 @@ class MainPage extends StatelessWidget {
                 children: [
                   Text('FAVORITKU',
                       style:
-                          blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
+                      blackTitle.copyWith(fontSize: 32, letterSpacing: 5)),
                   SizedBox(
                     height: 260,
                     child: ListView.builder(
@@ -275,7 +297,7 @@ class MainPage extends StatelessWidget {
                                 ),
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text('JAKARTA BARAT'),
                                     Text('3 HARI LALU')
@@ -313,7 +335,8 @@ class OurSearchDelegate extends SearchDelegate<String> {
   String? get searchFieldLabel => 'Cari di sini';
 
   @override
-  TextStyle? get searchFieldStyle => GoogleFonts.roboto(
+  TextStyle? get searchFieldStyle =>
+      GoogleFonts.roboto(
         fontSize: 18,
       );
 
@@ -343,8 +366,73 @@ class OurSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    throw UnimplementedError();
+    final itemFuture = ItemService.searchItems(FirebaseFirestore.instance, query);
+    return FutureBuilder<List<Item>>(
+      future: itemFuture,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        } else {
+          final itemResult = snapshot.requireData;
+          if (itemResult.length == 0) {
+            return Text('Tidak ada data yang dapat ditemukan');
+          }
+          return ListView.builder(
+            itemCount: itemResult.length,
+            itemBuilder: (listViewContext, index) {
+              final item = itemResult[index];
+              final itemReference = FirebaseStorage.instance.ref(item.imagesUrl[0]);
+              final imagePreviewFuture = StorageService.getData(itemReference);
+              final locationFuture = AccountService.getLocation(item.ownerId);
+              return GestureDetector(
+                onTap: () async {
+                  final args = DetailArguments(item, (await locationFuture)[2]);
+                  Navigator.pushNamed(context, ItemDetailPage.routeName, arguments: args);
+                },
+                child: ListTile(
+                  shape: Border(
+                    bottom: BorderSide()
+                  ),
+                  leading: AspectRatio(
+                    aspectRatio: 1,
+                    child: FutureBuilder<Uint8List?>(
+                      future: imagePreviewFuture,
+                      builder: (futureBuilderContext, snapshot) {
+                        if (!snapshot.hasData) {
+                          return CircularProgressIndicator();
+                        } else {
+                          return Image.memory(
+                            snapshot.data!,
+                            fit: BoxFit.cover,
+                          );
+                        }
+                      }
+                    )
+                  ),
+                  title: Text(item.name),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      FutureBuilder<List<dynamic>>(
+                        future: locationFuture,
+                        builder: (futureBuilderContext, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Text('...');
+                          } else {
+                            return Text(snapshot.requireData[2]);
+                          }
+                        }
+                      ),
+                      Text(DateDiffDescriber.dayDiff(DateTime.now(), item.addedSince)),
+                    ]
+                  ),
+                ),
+              );
+            }
+          );
+        }
+      }
+    );
   }
 
   @override
@@ -352,8 +440,8 @@ class OurSearchDelegate extends SearchDelegate<String> {
     final dummySuggestion = query.isEmpty
         ? dummyBarangBekas
         : dummyBarangBekas
-            .where((element) => element.startsWith(query))
-            .toList();
+        .where((element) => element.startsWith(query))
+        .toList();
 
     return ListView.builder(
         itemCount: dummySuggestion.length,
@@ -370,7 +458,10 @@ class OurSearchDelegate extends SearchDelegate<String> {
                   children: [
                     TextSpan(
                         text: dummySuggestion[index].substring(query.length),
-                        style: Theme.of(context).textTheme.bodyText2),
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .bodyText2),
                   ]),
             ),
             onTap: () {

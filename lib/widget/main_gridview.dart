@@ -6,11 +6,12 @@ import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/ui/item_detail.dart';
 import 'package:berikan/utills/arguments.dart';
 import 'package:berikan/utils/datediff_describer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class MainGridView extends StatelessWidget {
-  final AsyncSnapshot<List<Item>> snapshot;
+  final AsyncSnapshot<List<QueryDocumentSnapshot<Item>>> snapshot;
   final _fireStorage = FirebaseStorage.instance;
 
   MainGridView({Key? key, required this.snapshot}) : super(key: key);
@@ -20,18 +21,19 @@ class MainGridView extends StatelessWidget {
     return GridView.builder(
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
-        final imageRef = _fireStorage.ref(snapshot.data![index].imagesUrl[0]);
+        final imageRef = _fireStorage.ref(snapshot.data![index].data().imagesUrl[0]);
         return FutureBuilder(
-          future: AccountService.getLocation(snapshot.data![index].ownerId),
+          future: AccountService.getLocation(snapshot.data![index].data().ownerId),
           builder: (BuildContext context,
               AsyncSnapshot<List<dynamic>> locationSnap) {
             return Card(
+              key: Key('mainCard$index'),
               elevation: 5,
               child: InkWell(
                 onTap: () {
                   Navigator.pushNamed(context, ItemDetailPage.routeName,
                       arguments: DetailArguments(
-                          snapshot.data![index], locationSnap.data![2]));
+                          snapshot.data![index].data(), locationSnap.data![2]));
                 },
                 child: Column(
                   children: [
@@ -58,7 +60,7 @@ class MainGridView extends StatelessWidget {
                     Expanded(
                       flex: 1,
                       child: Align(
-                        child: Text(snapshot.data![index].name),
+                        child: Text(snapshot.data![index].data().name),
                         alignment: Alignment.centerLeft,
                       ),
                     ),
@@ -73,7 +75,7 @@ class MainGridView extends StatelessWidget {
                               children: [
                                 Text(locationSnap.data![2]),
                                 Text(DateDiffDescriber.dayDiff(
-                                    snapshot.data![index].addedSince,
+                                    snapshot.data![index].data().addedSince,
                                     DateTime.now()))
                               ],
                             ),

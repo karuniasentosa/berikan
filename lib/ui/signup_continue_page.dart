@@ -98,7 +98,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                       child: IconButton(
                         icon: Icon(Icons.add_a_photo),
                         onPressed: () async {
-                          await showCustomDialog();
+                          await showCustomDialog(context);
                         },
                       ),
                     ),
@@ -123,7 +123,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               '',
               type: TextInputType.text,
               isObscure: false,
-              controller: _firstNameController,
+              controller: _firstNameController, labelText: '',
             ),
             const SizedBox(
               height: 16,
@@ -142,7 +142,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               '',
               type: TextInputType.text,
               isObscure: false,
-              controller: _lastNameController,
+              controller: _lastNameController, labelText: '',
             ),
             const SizedBox(
               height: 16,
@@ -161,55 +161,58 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               'Diawali dengan +62',
               type: TextInputType.phone,
               isObscure: false,
-              controller: _phoneNumberController,
+              controller: _phoneNumberController, labelText: '',
             ),
             const SizedBox(
               height: 40,
             ),
-            PrimaryButton(
-              text: 'SELESAI',
-              onPressed: () async {
-                if (_firstNameController.text.isEmpty ||
-                    _lastNameController.text.isEmpty ||
-                    _phoneNumberController.text.isEmpty) {
-                  const snackBar = SnackBar(
-                      content: Text(
-                          'Firstname/Lastname/Phone Number cannot be empty.'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                } else {
-                  try {
-                    final account = Account(
-                        firstName: _firstNameController.text,
-                        avatarUrl: '',
-                        lastName: _lastNameController.text,
-                        joinedSince: DateTime.now(),
-                        phoneNumber: _phoneNumberController.text);
-                    await AccountService.addAccount(args.id, account);
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 58.0),
+              child: PrimaryButton(
+                text: 'SELESAI',
+                onPressed: () async {
+                  if (_firstNameController.text.isEmpty ||
+                      _lastNameController.text.isEmpty ||
+                      _phoneNumberController.text.isEmpty) {
+                    const snackBar = SnackBar(
+                        content: Text(
+                            'Firstname/Lastname/Phone Number cannot be empty.'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } else {
+                    try {
+                      final account = Account(
+                          firstName: _firstNameController.text,
+                          avatarUrl: '',
+                          lastName: _lastNameController.text,
+                          joinedSince: DateTime.now(),
+                          phoneNumber: _phoneNumberController.text);
+                      await AccountService.addAccount(args.id, account);
 
 
-                    if (image != null) {
-                      final imageRef = FirebaseStorage.instance
-                          .ref('user_profile/')
-                          .child('${args.id}.jpg');
+                      if (image != null) {
+                        final imageRef = FirebaseStorage.instance
+                            .ref('user_profile/')
+                            .child('${args.id}.jpg');
 
-                      StorageService.putData(
-                          imageRef, image!.readAsBytesSync());
+                        StorageService.putData(
+                            imageRef, image!.readAsBytesSync());
 
-                      accountDocumentReference(
-                              FirebaseFirestore.instance, args.id!)
-                          .update({'avatar_url': imageRef.fullPath});
+                        accountDocumentReference(
+                                FirebaseFirestore.instance, args.id!)
+                            .update({'avatar_url': imageRef.fullPath});
 
+                      }
+                      const snackBar = SnackBar(content: Text('Register success, please login'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      Navigator.pop(context);
+                    } catch (e) {
+                      final snackBar =
+                          SnackBar(content: Text('Error adding user : $e'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
-                    const snackBar = SnackBar(content: Text('Register success, please login'));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    Navigator.pop(context);
-                  } catch (e) {
-                    final snackBar =
-                        SnackBar(content: Text('Error adding user : $e'));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
-                }
-              },
+                },
+              ),
             ),
             const SizedBox(
               height: 12,
@@ -224,7 +227,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
     );
   }
 
-  Future? showCustomDialog() {
+  Future? showCustomDialog(BuildContext context) {
     showDialog(
         context: context,
         builder: (_) {

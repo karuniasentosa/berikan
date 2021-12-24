@@ -67,7 +67,7 @@ class _SignupPageState extends State<SignupPage> {
               'Seperti: john.doe@mail.com',
               isObscure: false,
               type: TextInputType.emailAddress,
-              controller: _emailController,
+              controller: _emailController, labelText: '',
             ),
             const SizedBox(
               height: 16,
@@ -86,7 +86,7 @@ class _SignupPageState extends State<SignupPage> {
               '',
               type: TextInputType.visiblePassword,
               isObscure: true,
-              controller: _passwordController,
+              controller: _passwordController, labelText: '',
             ),
             const SizedBox(
               height: 16,
@@ -105,53 +105,56 @@ class _SignupPageState extends State<SignupPage> {
               '',
               type: TextInputType.visiblePassword,
               isObscure: true,
-              controller: _retypePasswordController,
+              controller: _retypePasswordController, labelText: '',
             ),
             const SizedBox(
               height: 40,
             ),
-            PrimaryButton(
-              text: 'LANJUT',
-              onPressed: () async {
-                if (_emailController.text.isEmpty ||
-                    _passwordController.text.isEmpty ||
-                    _retypePasswordController.text.isEmpty) {
-                  const snackBar =
-                      SnackBar(content: Text('Fields cannot be empty'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                } else if (_passwordController.text !=
-                    _retypePasswordController.text) {
-                  const snackBar = SnackBar(
-                      content:
-                          Text('Password and Retype Password do not match'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                } else {
-                  try {
-                    UserCredential userCredential = await FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
-                            email: _emailController.text,
-                            password: _passwordController.text);
-                    Navigator.pushReplacementNamed(
-                        context, SignupContinuePage.routeName,
-                        arguments: SignupArguments(userCredential.user?.uid));
-                  } on FirebaseAuthException catch (e) {
-                    if (e.code == 'invalid-email') {
-                      const snackBar =
-                          SnackBar(content: Text('Invalid email address'));
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    } else if (e.code == 'email-already-in-use') {
-                      const snackBar =
-                          SnackBar(content: Text('This email has been used'));
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    } else if (e.code == 'weak-password') {
-                      const snackBar = SnackBar(
-                        content: Text('The password provided is too weak.'),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 64.0),
+              child: PrimaryButton(
+                text: 'LANJUT',
+                onPressed: () async {
+                  if (_emailController.text.isEmpty ||
+                      _passwordController.text.isEmpty ||
+                      _retypePasswordController.text.isEmpty) {
+                    const snackBar =
+                        SnackBar(content: Text('Fields cannot be empty'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } else if (_passwordController.text !=
+                      _retypePasswordController.text) {
+                    const snackBar = SnackBar(
+                        content:
+                            Text('Password and Retype Password do not match'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } else {
+                    try {
+                      UserCredential userCredential = await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                              email: _emailController.text,
+                              password: _passwordController.text);
+                      Navigator.pushReplacementNamed(
+                          context, SignupContinuePage.routeName,
+                          arguments: SignupArguments(userCredential.user?.uid));
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code == 'invalid-email') {
+                        const snackBar =
+                            SnackBar(content: Text('Invalid email address'));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      } else if (e.code == 'email-already-in-use') {
+                        const snackBar =
+                            SnackBar(content: Text('This email has been used'));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      } else if (e.code == 'weak-password') {
+                        const snackBar = SnackBar(
+                          content: Text('The password provided is too weak.'),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
                     }
                   }
-                }
-              },
+                },
+              ),
             ),
             const SizedBox(
               height: 16,

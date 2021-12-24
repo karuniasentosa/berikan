@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:berikan/api/account_service.dart';
+import 'package:berikan/api/chat_service.dart';
 import 'package:berikan/api/geolocation_api.dart';
+import 'package:berikan/api/model/chat.dart';
 import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/data/provider/location_provider.dart';
 import 'package:berikan/utills/arguments.dart';
@@ -14,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+
+import 'chat_detail_page.dart';
 
 class ItemDetailPage extends StatelessWidget {
   static const routeName = '/itemDetail';
@@ -219,11 +223,22 @@ class DetailListView extends StatelessWidget {
                         height: 4,
                       ),
                       Align(
-                          alignment: Alignment.center,
-                          child: PrimaryButton(
-                            onPressed: () {},
-                            text: 'CHAT PENJUAL',
-                          ))
+                        alignment: Alignment.center,
+                        child: PrimaryButton(
+                          onPressed: () async {
+                            final chat = await ChatService.getChatFromEndpoints(
+                                endpointUid1: AccountService.getCurrentUser()!.uid,
+                                endpointUid2: args.itemDetail.ownerId);
+                            final itemId = args.itemDetail.id;
+
+                            final _args = ChatDetailItemArguments(chat, itemId);
+                            Navigator.of(context).pushReplacementNamed(
+                                ChatDetailPage.routeNameWithItem,
+                                arguments: _args);
+                          },
+                          text: 'CHAT PENJUAL',
+                        ),
+                      ),
                     ],
                   ),
                 ),
