@@ -167,7 +167,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
               height: 40,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 64.0),
+              padding: const EdgeInsets.symmetric(horizontal: 58.0),
               child: PrimaryButton(
                 text: 'SELESAI',
                 onPressed: () async {
