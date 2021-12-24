@@ -174,7 +174,7 @@ class ChatDetailPage extends StatelessWidget {
                               .ref('chat_attachment')
                               .child(chat.id)
                               .child(randomString(random, length: 7));
-                          StorageService.putData(ref, file.readAsBytesSync());
+                          await StorageService.putData(ref, file.readAsBytesSync());
                           final message = Message.imageAttachment(
                               accountId: AccountService.getCurrentUser()!.uid,
                               imageRef: ref.fullPath);

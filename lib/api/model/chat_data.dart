@@ -9,6 +9,8 @@ import 'package:berikan/api/model/account.dart';
 import 'package:berikan/api/model/chat.dart';
 import 'package:berikan/api/model/extensions/chat_extensions.dart';
 
+import 'package:flutter/services.dart' show rootBundle;
+
 /// This class is used to represent chats in chat page.
 class ChatData
 {
@@ -39,8 +41,14 @@ class ChatData
     final theirAccountDocRef = accountDocumentReference(firebaseFirestore, theirUid);
     final theirSnapshot = await theirAccountDocRef.get();
     final theirName = '${theirSnapshot.data()!.firstName} ${theirSnapshot.data()!.lastName}';
-    final theirImageData = await StorageService.getData(theirImageRef);
-    
+    Uint8List? theirImageData;
+    try {
+      theirImageData = await StorageService.getData(theirImageRef);
+    } catch (e) {
+      final byteData = await rootBundle.load('lib/data/assets/profile1.png');
+      theirImageData = byteData.buffer.asUint8List();
+    }
+
     // get the data (assign _imageData and the other things)
     final latestMessage = await chat.latestMessage;
     final message = latestMessage.content;
