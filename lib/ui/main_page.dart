@@ -496,7 +496,6 @@ class _DropdownButtonsLocationState extends State<DropdownButtonsLocation> {
   }
 }
 
-// stres
 class RegencyListStream {
   final http.Client client = http.Client();
   final StreamController<List<RegencyResponse>> _controller;
