@@ -179,20 +179,23 @@ class DetailListView extends StatelessWidget {
                           future: AccountService.getProfilePicture(
                               args.itemDetail.ownerId),
                           builder: (BuildContext context, snapshot) {
-                            if (!snapshot.hasData) {
+                            if(snapshot.connectionState == ConnectionState.waiting){
                               return const CircularProgressIndicator();
-                            } else if (snapshot.data is String) {
-                              return CircleAvatar(
-                                child: Image.network(
-                                    'https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmlld3xlbnwwfHwwfHw%3D&w=1000&q=80'),
-                              );
                             } else {
                               return FutureBuilder<Uint8List?>(
                                   future: StorageService.getData(
                                       snapshot.data as Reference),
                                   builder: (context, imageUintSnap) {
-                                    if (!imageUintSnap.hasData) {
+                                    if(imageUintSnap.connectionState == ConnectionState.waiting){
                                       return const CircularProgressIndicator();
+                                    }
+                                     else if (!imageUintSnap.hasData) {
+                                       return CircleAvatar(
+                                         backgroundColor: Colors.transparent,
+                                         child: ClipRRect(
+                                           child: Image.asset('lib/data/assets/profile1.png', fit: BoxFit.fitHeight, width: 100, height: 100,),
+                                         ),
+                                       );
                                     } else {
                                       return CircleAvatar(
                                         radius: 30.0,

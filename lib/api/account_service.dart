@@ -79,13 +79,9 @@ class AccountService {
     final snapshot = await accountDocRef.get();
     final String profileImage = snapshot.data()!['avatar_url'];
 
-    if(profileImage.isNotEmpty){
-      final imageRef = FirebaseStorage.instance.ref(profileImage);
+    final imageRef = FirebaseStorage.instance.ref(profileImage);
+    return imageRef;
 
-      return imageRef;
-    } else {
-      return 'This user don\'t have a profile picture yet';
-    }
   }
 
   static Future<void> signIn(String email, String password) async {
