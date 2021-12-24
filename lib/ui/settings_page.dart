@@ -136,10 +136,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         title: 'Others',
                         tiles: [
                           SettingsTile(
-                            title: 'Privacy & Policy',
-                            leading: const Icon(Icons.privacy_tip),
-                          ),
-                          SettingsTile(
                             title: 'Log Out',
                             leading: const Icon(Icons.logout),
                             onPressed: (context) async {
