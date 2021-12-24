@@ -106,7 +106,7 @@ class MainPage extends StatelessWidget {
                             ),
                             const Text(
                                 'Lokasi yang sudah diatur tidak dapat diubah. Pastikan sudah memasukkan dengan benar!',
-                                style: const TextStyle(color: Colors.red)),
+                                style: TextStyle(color: Colors.red)),
                             Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8.0),
@@ -267,7 +267,7 @@ class OurSearchDelegate extends SearchDelegate<String> {
                           arguments: args);
                     },
                     child: ListTile(
-                      shape: const Border(bottom: const BorderSide()),
+                      shape: const Border(bottom: BorderSide()),
                       leading: AspectRatio(
                           aspectRatio: 1,
                           child: FutureBuilder<Uint8List?>(
@@ -368,6 +368,7 @@ class _DropdownButtonsLocationState extends State<DropdownButtonsLocation> {
   void initState() {
     RegencyListStream();
     DistrictListStream();
+    super.initState();
   }
 
   @override
