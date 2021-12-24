@@ -6,6 +6,7 @@ import 'package:berikan/api/model/item.dart';
 import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/ui/item_detail.dart';
 import 'package:berikan/utills/arguments.dart';
+import 'package:berikan/utils/datediff_describer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -94,21 +95,27 @@ class MyItemPage extends StatelessWidget {
                             );
                           },);
                         },
-                        child: ListTile(
-                          leading: FutureBuilder<Uint8List?>(
-                            future: StorageService.getData(imageRefList[index]),
-                            builder: (BuildContext context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return const CircularProgressIndicator();
-                              } else {
-                                return Image.memory(snapshot.data!);
-                              }
-                            },
-
+                        child: Card(
+                          elevation: 5,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.all(8),
+                            leading: FutureBuilder<Uint8List?>(
+                              future: StorageService.getData(imageRefList[index]),
+                              builder: (BuildContext context, imgSnap) {
+                                if (!imgSnap.hasData) {
+                                  return const CircularProgressIndicator();
+                                } else {
+                                  return CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: MemoryImage(imgSnap.data!),);
+                                }
+                              },
+                            ),
+                            title: Text(snapshot.data![index]
+                                .data()
+                                .name),
+                            subtitle: Text(DateDiffDescriber.dayDiff(DateTime.now(), snapshot.data![index].data().addedSince)),
                           ),
-                          title: Text(snapshot.data![index]
-                              .data()
-                              .name),
                         ),
                       );
                     }
