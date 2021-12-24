@@ -2,7 +2,6 @@ import 'package:berikan/common/constant.dart';
 import 'package:berikan/common/style.dart';
 import 'package:berikan/ui/login_page.dart';
 import 'package:berikan/widget/button/custom_outlinedbutton.dart';
-import 'package:berikan/widget/button/custom_textbutton.dart';
 import 'package:berikan/widget/button/primary_button.dart';
 import 'package:flutter/material.dart';
 
@@ -68,7 +67,6 @@ class HomePage extends StatelessWidget {
             const SizedBox(
               height: 24,
             ),
-            Flexible(child: CustomTextButton(text: 'TENTANG KAMI', onPressed: (){},)),
           ],
         ),
       ),

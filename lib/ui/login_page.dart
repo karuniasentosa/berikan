@@ -132,11 +132,6 @@ class _LoginPageState extends State<LoginPage> {
               height: 32,
             ),
             Flexible(
-                child: CustomTextButton(
-              text: 'LUPA PASSWORD?',
-              onPressed: () {},
-            )),
-            Flexible(
               child: CustomTextButton(
                 text: 'KEMBALI',
                 onPressed: () {
