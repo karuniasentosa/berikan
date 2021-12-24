@@ -19,18 +19,6 @@ class ChatPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-            child: Stack(alignment: Alignment.centerRight, children: [
-              TextField(
-                style: Theme.of(context).textTheme.overline,
-                decoration: InputDecoration(
-                    hintText: 'Cari orang',
-                    hintStyle: Theme.of(context).textTheme.subtitle1),
-              ),
-              const Icon(Icons.search,),
-            ]),
-          ),
           Expanded(
             child: Consumer<ChatPageProvider>(
               builder: (context, provider, widget) {
