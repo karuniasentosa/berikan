@@ -27,9 +27,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final Stream<DocumentSnapshot<Account>> _accountStream =
-      accountDocumentReference(FirebaseFirestore.instance,
-              FirebaseAuth.instance.currentUser!.uid)
-          .snapshots();
+      accountDocumentReference(FirebaseFirestore.instance, FirebaseAuth.instance.currentUser!.uid).snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -57,24 +55,32 @@ class _SettingsPageState extends State<SettingsPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Center(
-                          child: ClipOval(
-                            child: FutureBuilder<Uint8List?>(
-                              future: StorageService.getData(imageRef),
-                              builder: (context, imageSnapshot) {
-                                if (!imageSnapshot.hasData) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else {
-                                  return Image.memory(
+                          child: FutureBuilder<Uint8List?>(
+                            future: StorageService.getData(imageRef),
+                            builder: (context, imageSnapshot) {
+                              if (imageSnapshot.connectionState == ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if(!imageSnapshot.hasData){
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(60),
+                                  child: Image.asset(
+                                    'lib/data/assets/profile1.png', fit: BoxFit.fitHeight,
+                                  width: 100,
+                                  height: 100,),
+                                );
+                              } else{
+                                return ClipOval(
+                                  child: Image.memory(
                                     imageSnapshot.data!,
                                     fit: BoxFit.cover,
                                     width: 100,
                                     height: 100,
-                                  );
-                                }
-                              },
-                            ),
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ),
                       ),
@@ -85,7 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             .headline6!
                             .copyWith(color: Colors.white),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
                     ],
@@ -98,7 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         title: 'Account',
                         tiles: [
                           SettingsTile(
-                            leading: Icon(Icons.person),
+                            leading: const Icon(Icons.person),
                             title: 'Edit Profil',
                             onPressed: (context) {
                               Navigator.pushNamed(
@@ -118,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             },
                           ),
                           SettingsTile(
-                            leading: Icon(Icons.shopping_cart),
+                            leading: const Icon(Icons.shopping_cart),
                             title: 'Barang saya',
                             onPressed: (context) {
                               Navigator.pushNamed(context, MyItemPage.routeName);
@@ -131,15 +137,15 @@ class _SettingsPageState extends State<SettingsPage> {
                         tiles: [
                           SettingsTile(
                             title: 'Privacy & Policy',
-                            leading: Icon(Icons.privacy_tip),
+                            leading: const Icon(Icons.privacy_tip),
                           ),
                           SettingsTile(
                             title: 'Log Out',
-                            leading: Icon(Icons.logout),
+                            leading: const Icon(Icons.logout),
                             onPressed: (context) async {
+                              //using await so there's no null value error
+                              await Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (Route<dynamic> route) => false);
                               await AccountService.signOut();
-                              Navigator.popUntil(context,
-                                  ModalRoute.withName(HomePage.routeName),);
                             },
                           )
                         ],

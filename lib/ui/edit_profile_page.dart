@@ -69,9 +69,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 width: 100,
                                 height: 100,
                               );
-                            } else if (!snapshot.hasData) {
+                            }
+                            else if(snapshot.connectionState == ConnectionState.waiting){
                               return const Center(
                                 child: CircularProgressIndicator(),
+                              );
+                            } else if (!snapshot.hasData) {
+                              return ClipRRect(
+                                child: Image.asset('lib/data/assets/profile1.png',
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.fitHeight,)
                               );
                             } else {
                               return Image.memory(
