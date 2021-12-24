@@ -52,28 +52,23 @@ class AccountService {
   }
 
   static Future<dynamic> getProfilePicture(String ownerId) async {
-    final accountDocRef = FirebaseFirestore.instance.collection(Account.collectionName).doc(ownerId);
+    final accountDocRef = FirebaseFirestore.instance
+        .collection(Account.collectionName).doc(ownerId);
     final snapshot = await accountDocRef.get();
     final String profileImage = snapshot.data()!['avatar_url'];
 
-    if(profileImage.length>0){
+    if(profileImage.isNotEmpty){
       final imageRef = FirebaseStorage.instance.ref(profileImage);
 
       return imageRef;
     } else {
       return 'This user don\'t have a profile picture yet';
     }
-
-
-
   }
 
   static Future<void> signIn(String email, String password) async {
     await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
-    // Should we put credentials inside secure shared preferences?
-    // I think we should use native function (Android Kotlin)
-    // For now, the credential is persisted until the app is closed.
   }
 
   static Future<void> signOut() async {

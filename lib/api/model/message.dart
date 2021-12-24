@@ -1,9 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'chat.dart';
-import 'account.dart' show accountDocumentReference;
 
+import 'account.dart' show accountDocumentReference;
+import 'chat.dart';
 
 enum AttachmentType {
   image,

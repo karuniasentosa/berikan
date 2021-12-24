@@ -8,14 +8,16 @@ class ApiService {
   Future<dynamic> getLatLngFromDistrict(String district) async {
     const url = 'api.geonames.org';
     const path = '/searchJSON';
-    String name =
-        !district.startsWith('Kecamatan') ? 'Kecamatan ' + district : district;
+    String name = !district.startsWith('Kecamatan') ?
+                  'Kecamatan ' + district :
+                  district;
 
     final Map<String, String> params = {
       'name': name,
       'country': 'id',
       'username': 'csd168_mapapi'
     };
+
     final uri = Uri.http(url, path, params);
 
     final response = await http.get(uri);

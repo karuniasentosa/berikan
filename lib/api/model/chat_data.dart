@@ -1,12 +1,13 @@
 import 'dart:typed_data';
 
+import 'package:berikan/api/storage_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:berikan/api/account_service.dart';
 import 'package:berikan/api/model/account.dart';
 import 'package:berikan/api/model/chat.dart';
 import 'package:berikan/api/model/extensions/chat_extensions.dart';
-import 'package:berikan/api/storage_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 /// This class is used to represent chats in chat page.
 class ChatData
@@ -19,7 +20,6 @@ class ChatData
   final String lastSentId;
 
   ChatData._(this.chatId, this.theirImageData, this.lastMessage, this.lastChat, this.theirName, this.lastSentId);
-
 
   static Future<ChatData> of(Chat chat) async {
     final firebaseStorage = FirebaseStorage.instance;
@@ -48,6 +48,5 @@ class ChatData
     final lastSentId = latestMessage.accountId;
 
     return ChatData._(chat.id, theirImageData!, message, when, theirName, lastSentId);
-
   }
 }

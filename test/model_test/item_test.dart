@@ -28,7 +28,6 @@ void main() async
           imagesUrl: ['http://url1', 'http://url2', 'http://url3'],
           name: 'Buku tulis',
           addedSince: addedSinceDate,
-          location: const GeoPoint(1, 1),
           description: 'Buku yang masih dapat dibaca dan ditulis',
       );
 
@@ -62,7 +61,6 @@ void main() async
           'added_since'   :   Timestamp.fromDate(model.addedSince),
           'description'   :   model.description,
           'images'        :   model.imagesUrl,
-          'location'      :   model.location,
           'name'          :   model.name,
           'owner'         :   instance.collection('item').doc(model.ownerId),
         };
@@ -75,7 +73,6 @@ void main() async
               imagesUrl: ['https://i1'],
               name: 'Item Name',
               addedSince: DateTime.now(),
-              location: const GeoPoint(0, 0),
               description: 'Item name good'
           ));
       final itemDocRef = itemDocumentReference(instance, newItemDocRef.id);
@@ -120,7 +117,6 @@ void main() async
           'added_since'   :   Timestamp.fromDate(model.addedSince),
           'description'   :   model.description,
           'images'        :   model.imagesUrl,
-          'location'      :   model.location,
           'name'          :   model.name,
           'owner'         :   instance.collection(itemCollectionName).doc(model.ownerId),
         };
@@ -135,7 +131,6 @@ void main() async
           imagesUrl: ['https://h1'],
           name: 'Item1',
           addedSince: DateTime(2021,1,1),
-          location: GeoPoint(1, 1),
           description: 'ini adalah item',
       );
 

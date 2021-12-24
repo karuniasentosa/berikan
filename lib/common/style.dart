@@ -9,7 +9,6 @@ const colorPrimaryDark = Color(0xFF005662);
 const colorPrimary = Color(0xFF00838F);
 const colorPrimaryLight = Color(0xFF4FB3BF);
 
-
 ThemeData lightTheme = ThemeData(
   appBarTheme: AppBarTheme(
     iconTheme: const IconThemeData(
@@ -94,7 +93,6 @@ final textTheme = TextTheme(
         color: Colors.white,
       ),
   ),
-
   caption: GoogleFonts.roboto(
       fontSize: 12,
       fontWeight: FontWeight.w400,

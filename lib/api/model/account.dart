@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart'
-    show CollectionReference, DocumentReference, DocumentSnapshot, FirebaseFirestore, SetOptions, SnapshotOptions, Timestamp;
+    show CollectionReference, DocumentReference,
+          DocumentSnapshot, FirebaseFirestore,
+          SetOptions, SnapshotOptions, Timestamp;
 
 /// Account class from FireStore model.
 class Account {
