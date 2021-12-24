@@ -50,7 +50,7 @@ class ChatPage extends StatelessWidget {
                           },
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(50),
-                            child: Image.memory(chatDatas[index].theirImageData),
+                            child: Image.memory(chatDatas[index].theirImageData, width: 55, height: 55, fit: BoxFit.cover,),
                           ),
                           title: Text(chatDatas[index].theirName),
                           subtitle: RichText(
