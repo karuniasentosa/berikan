@@ -68,10 +68,26 @@ class ProvinceResponse {
 
   factory ProvinceResponse.fromMap(Map<String, dynamic> map) {
     return ProvinceResponse(
-        id: map['id'] as int,
+        id: int.parse(map['id']),
         name: map['name']
     );
   }
+
+  @override
+  String toString() {
+    return name;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProvinceResponse &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name;
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode;
 }
 
 class RegencyResponse {
@@ -83,11 +99,28 @@ class RegencyResponse {
 
   factory RegencyResponse.fromMap(Map<String, dynamic> map) {
     return RegencyResponse(
-        id: map['id'] as int,
-        provinceId: map['provinceId'] as int,
+        id: int.parse(map['id']),
+        provinceId: int.parse(map['province_id']),
         name: map['name'] as String
     );
   }
+
+  @override
+  String toString() {
+    return name;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RegencyResponse &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          provinceId == other.provinceId &&
+          name == other.name;
+
+  @override
+  int get hashCode => id.hashCode ^ provinceId.hashCode ^ name.hashCode;
 }
 
 class DistrictResponse {
@@ -99,9 +132,26 @@ class DistrictResponse {
 
   factory DistrictResponse.fromMap(Map<String, dynamic> map) {
     return DistrictResponse(
-        id: map['id'] as int,
-        regencyId: map['regencyId'] as int,
+        id: int.parse(map['id']),
+        regencyId: int.parse(map['regency_id']),
         name: map['name']
     );
   }
+
+  @override
+  String toString() {
+    return name;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DistrictResponse &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          regencyId == other.regencyId &&
+          name == other.name;
+
+  @override
+  int get hashCode => id.hashCode ^ regencyId.hashCode ^ name.hashCode;
 }

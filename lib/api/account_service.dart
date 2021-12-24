@@ -51,6 +51,28 @@ class AccountService {
     return location;
   }
 
+  static Future<bool> isLocationSet(String uid) async {
+    final accountDocRef = FirebaseFirestore.instance
+        .collection(Account.collectionName).doc(uid);
+    final snapshot = await accountDocRef.get();
+
+    final location = snapshot.data()!['location'];
+    
+    return location != null;
+  }
+
+  static void setLocation(String uid, {required String adm1, required String adm2, required String adm3}) async {
+    if (await AccountService.isLocationSet(uid) == true) {
+      return;
+    }
+
+    final accountDocRef = FirebaseFirestore.instance
+        .collection(Account.collectionName).doc(uid);
+    accountDocRef.update({
+      'location': [adm1, adm2, adm3]
+    });
+  }
+
   static Future<dynamic> getProfilePicture(String ownerId) async {
     final accountDocRef = FirebaseFirestore.instance
         .collection(Account.collectionName).doc(ownerId);

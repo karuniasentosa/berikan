@@ -127,7 +127,6 @@ class _LoginPageState extends State<LoginPage> {
                     return;
                   }
                 }
-                Navigator.pushNamed(context, MainPage.routeName);
               },
             ),
             const SizedBox(
