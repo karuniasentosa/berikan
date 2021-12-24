@@ -26,7 +26,7 @@ class ItemPreviewOnChat extends StatelessWidget
               if (snapshot.hasData) {
                 return Image.memory(snapshot.requireData!, fit: BoxFit.cover);
               } else {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
             }
           )

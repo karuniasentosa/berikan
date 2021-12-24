@@ -90,12 +90,12 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
                     child: Container(
                       width: 40,
                       height: 40,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.grey,
                       ),
                       child: IconButton(
-                        icon: Icon(Icons.add_a_photo),
+                        icon: const Icon(Icons.add_a_photo),
                         onPressed: () async {
                           await showCustomDialog(context);
                         },
@@ -225,7 +225,7 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
     showDialog(
         context: context,
         builder: (_) {
-          return SimpleDialog(title: Text('Ambil gambar dari...'), children: [
+          return SimpleDialog(title: const Text('Ambil gambar dari...'), children: [
             SimpleDialogOption(
               child:
                   IconWithText(icon: const Icon(Icons.image), text: 'Galeri'),

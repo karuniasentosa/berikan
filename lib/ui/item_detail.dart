@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:berikan/api/account_service.dart';
 import 'package:berikan/api/chat_service.dart';
 import 'package:berikan/api/geolocation_api.dart';
-import 'package:berikan/api/model/chat.dart';
 import 'package:berikan/api/storage_service.dart';
 import 'package:berikan/data/provider/location_provider.dart';
 import 'package:berikan/utills/arguments.dart';
@@ -154,7 +153,7 @@ class DetailListView extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 8,
         ),
         FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -172,7 +171,7 @@ class DetailListView extends StatelessWidget {
                     children: [
                       Text(
                           'Diiklankan ${DateDiffDescriber.dayDiff(args.itemDetail.addedSince, DateTime.now())} oleh'),
-                      SizedBox(
+                      const SizedBox(
                         height: 4,
                       ),
                       Row(children: [
@@ -206,7 +205,7 @@ class DetailListView extends StatelessWidget {
                             }
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 8,
                         ),
                         Column(
@@ -219,7 +218,7 @@ class DetailListView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                         )
                       ]),
-                      SizedBox(
+                      const SizedBox(
                         height: 4,
                       ),
                       Align(
@@ -313,7 +312,7 @@ class _CarouselBuilderState extends State<CarouselBuilder> {
             return Container(
               width: 12.0,
               height: 12.0,
-              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color:

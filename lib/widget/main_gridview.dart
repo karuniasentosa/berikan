@@ -41,7 +41,7 @@ class MainGridView extends StatelessWidget {
                       future: StorageService.getData(imageRef),
                       builder: (context, storageSnap) {
                         if (!storageSnap.hasData) {
-                          return Expanded(
+                          return const Expanded(
                               flex: 6,
                               child:
                                   Center(child: CircularProgressIndicator()));

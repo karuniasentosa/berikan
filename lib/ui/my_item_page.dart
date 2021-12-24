@@ -48,7 +48,7 @@ class MyItemPage extends StatelessWidget {
                   future: AccountService.getLocation(_currentUser.uid),
                   builder: (BuildContext context, locationSnap) {
                     if (!snapshot.hasData) {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     } else {
@@ -66,7 +66,7 @@ class MyItemPage extends StatelessWidget {
                             return SimpleDialog(
                               children: [
                                 SimpleDialogOption(
-                                  child: Text('Hapus Barang ini'),
+                                  child: const Text('Hapus Barang ini'),
                                   onPressed: () async {
                                     final _fireStorage = FirebaseStorage.instance;
 
