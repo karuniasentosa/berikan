@@ -41,16 +41,6 @@ class MainPage extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          CircleAvatar(
-            backgroundColor: Colors.white,
-            child: IconButton(
-              icon: const Icon(
-                Icons.perm_identity,
-                color: Colors.black,
-              ),
-              onPressed: () {},
-            ),
-          ),
           IconButton(
             onPressed: () {
               Navigator.pushNamed(context, ChatPage.routeName);
