@@ -166,50 +166,53 @@ class _SignupContinuePageState extends State<SignupContinuePage> {
             const SizedBox(
               height: 40,
             ),
-            PrimaryButton(
-              text: 'SELESAI',
-              onPressed: () async {
-                if (_firstNameController.text.isEmpty ||
-                    _lastNameController.text.isEmpty ||
-                    _phoneNumberController.text.isEmpty) {
-                  const snackBar = SnackBar(
-                      content: Text(
-                          'Firstname/Lastname/Phone Number cannot be empty.'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                } else {
-                  try {
-                    final account = Account(
-                        firstName: _firstNameController.text,
-                        avatarUrl: '',
-                        lastName: _lastNameController.text,
-                        joinedSince: DateTime.now(),
-                        phoneNumber: _phoneNumberController.text);
-                    await AccountService.addAccount(args.id, account);
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 64.0),
+              child: PrimaryButton(
+                text: 'SELESAI',
+                onPressed: () async {
+                  if (_firstNameController.text.isEmpty ||
+                      _lastNameController.text.isEmpty ||
+                      _phoneNumberController.text.isEmpty) {
+                    const snackBar = SnackBar(
+                        content: Text(
+                            'Firstname/Lastname/Phone Number cannot be empty.'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } else {
+                    try {
+                      final account = Account(
+                          firstName: _firstNameController.text,
+                          avatarUrl: '',
+                          lastName: _lastNameController.text,
+                          joinedSince: DateTime.now(),
+                          phoneNumber: _phoneNumberController.text);
+                      await AccountService.addAccount(args.id, account);
 
 
-                    if (image != null) {
-                      final imageRef = FirebaseStorage.instance
-                          .ref('user_profile/')
-                          .child('${args.id}.jpg');
+                      if (image != null) {
+                        final imageRef = FirebaseStorage.instance
+                            .ref('user_profile/')
+                            .child('${args.id}.jpg');
 
-                      StorageService.putData(
-                          imageRef, image!.readAsBytesSync());
+                        StorageService.putData(
+                            imageRef, image!.readAsBytesSync());
 
-                      accountDocumentReference(
-                              FirebaseFirestore.instance, args.id!)
-                          .update({'avatar_url': imageRef.fullPath});
+                        accountDocumentReference(
+                                FirebaseFirestore.instance, args.id!)
+                            .update({'avatar_url': imageRef.fullPath});
 
+                      }
+                      const snackBar = SnackBar(content: Text('Register success, please login'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      Navigator.pop(context);
+                    } catch (e) {
+                      final snackBar =
+                          SnackBar(content: Text('Error adding user : $e'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }
-                    const snackBar = SnackBar(content: Text('Register success, please login'));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    Navigator.pop(context);
-                  } catch (e) {
-                    final snackBar =
-                        SnackBar(content: Text('Error adding user : $e'));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
-                }
-              },
+                },
+              ),
             ),
             const SizedBox(
               height: 12,
